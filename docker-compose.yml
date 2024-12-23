@@ -1,0 +1,39 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    working_dir: /psidocs
+    volumes:
+      - ./templates:/psidocs/templates
+      - ./static:/psidocs/static
+    command: ["/wait-for-it.sh", "db:5432", "-t", "45", "--", "/psidocs/app_psidocs"]
+    networks:
+      - psidocs_network
+
+  db:
+    image: postgres:16.4
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/migrations/*.up.sql:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - psidocs_network
+
+networks:
+  psidocs_network:
+
+volumes:
+  db_data:

@@ -1,0 +1,135 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Body and background */
+  body {
+    font-family: Arial, sans-serif;
+    color: white;
+    background: #121212;
+    background-image: linear-gradient(45deg, #ff5c8e, #2a2a2a);
+    background-size: 400% 400%;
+    animation: gradientAnimation 8s ease infinite;
+  }
+  
+  /* Navbar */
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    z-index: 100;
+  }
+  
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .navbar li {
+    margin: 0 15px;
+  }
+  
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s;
+  }
+  
+  .navbar a:hover {
+    color: #ff5c8e;
+  }
+  
+  /* Main content */
+  .main-content {
+    text-align: center;
+    margin-top: 100px;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+  }
+  
+  .main-content h1 {
+    font-size: 48px;
+    font-weight: bold;
+    color: #ff5c8e;
+  }
+  
+  .main-content p {
+    font-size: 20px;
+    margin: 20px 0;
+  }
+  
+  .buttons {
+    margin-top: 30px;
+  }
+  
+  .btn {
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 10px;
+  }
+  
+  .primary {
+    background-color: #ff5c8e;
+    color: white;
+  }
+  
+  .secondary {
+    background-color: transparent;
+    border: 2px solid #ff5c8e;
+    color: #ff5c8e;
+  }
+  
+  .ratings {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #ccc;
+  }
+  
+  /* Offers Section */
+  .offers {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 0;
+  }
+  
+  .offer-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 10px;
+    width: 25%;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .offer-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .offer-card h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .offer-card p {
+    font-size: 16px;
+  }
+  
+  /* Background Gradient Animation */
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
