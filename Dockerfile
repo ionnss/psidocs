@@ -1,5 +1,5 @@
 # Usar imagem oficial do Golang
-FROM golang:1.23.2
+FROM golang:1.23.4
 
 # Definir diretório de trabalho
 WORKDIR /psidocs

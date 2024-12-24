@@ -9,11 +9,12 @@ import (
 
 func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 	// Servir arquivos estáticos
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	fs := http.FileServer(http.Dir("templates/statics"))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
 	// Rota para a página inicial
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "static/index.html")
+		http.ServeFile(w, r, "templates/view/index.html")
 	})
 
 }

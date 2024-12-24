@@ -57,7 +57,7 @@ func Connect() (*sql.DB, error) {
 // ExecuteMigrations executa os scripts de migração no banco
 func ExecuteMigrations(conn *sql.DB) {
 	migrationFiles := []string{
-		"db/migrations/001_create_psicologos_table.sql",
+		"db/001.create_psicologos_tables.sql",
 		//...
 	}
 

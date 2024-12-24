@@ -10,7 +10,6 @@ services:
     working_dir: /psidocs
     volumes:
       - ./templates:/psidocs/templates
-      - ./static:/psidocs/static
     command: ["/wait-for-it.sh", "db:5432", "-t", "45", "--", "/psidocs/app_psidocs"]
     networks:
       - psidocs_network
@@ -23,7 +22,7 @@ services:
       - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./db/migrations/*.up.sql:/docker-entrypoint-initdb.d/
+      - ./db/migrations:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d ${POSTGRES_DB}"]
       interval: 10s

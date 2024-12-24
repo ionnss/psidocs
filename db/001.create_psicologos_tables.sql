@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS psicologos (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_psicologos_hash_crp ON psicologos(hash_crp);
+CREATE INDEX IF NOT EXISTS idx_psicologos_hash_crp ON psicologos(hash_crp);

@@ -159,3 +159,12 @@ CREATE TABLE documentos (
     - Desenvolva o painel do psicólogo com funcionalidades intuitivas para acessar e gerenciar documentos.
 
 Se precisar de ajuda em alguma etapa específica, posso ajudar com exemplos de código ou estratégias! 😊
+
+
+---
+## Registro de psicólogos no Brasil
+
+- https://cadastro.cfp.org.br/
+
+Não existe uma api para consulta de numero de CPR, portanto, é necessário fazer a consulta manualmente. 
+
