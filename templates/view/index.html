@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PsiDocs</title>
-  <!--<link rel="stylesheet" href="static/css/index.css">-->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsiDocs</title>
+    <!--<link rel="stylesheet" href="static/css/index.css">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
 
     <!-- Navbar -->
@@ -16,26 +21,33 @@
             <a class="navbar-brand" href="#">
                 <img src="logo.svg" alt="PsiDocs Logo" style="max-height: 30px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <form class="flex-column flex-sm-row align-items-center mt-4 mb-4">
                     <div class="input-group mb-3 w-auto">
                         <span class="input-group-text" id="basic-addon1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-123" viewBox="0 0 16 16">
-                                <path d="M2.873 11.297V4.142H1.699L0 5.379v1.137l1.64-1.18h.06v5.961zm3.213-5.09v-.063c0-.618.44-1.169 1.196-1.169.676 0 1.174.44 1.174 1.106 0 .624-.42 1.101-.807 1.526L4.99 10.553v.744h4.78v-.99H6.643v-.069L8.41 8.252c.65-.724 1.237-1.332 1.237-2.27C9.646 4.849 8.723 4 7.308 4c-1.573 0-2.36 1.064-2.36 2.15v.057zm6.559 1.883h.786c.823 0 1.374.481 1.379 1.179.01.707-.55 1.216-1.421 1.21-.77-.005-1.326-.419-1.379-.953h-1.095c.042 1.053.938 1.918 2.464 1.918 1.478 0 2.642-.839 2.62-2.144-.02-1.143-.922-1.651-1.551-1.714v-.063c.535-.09 1.347-.66 1.326-1.678-.026-1.053-.933-1.855-2.359-1.845-1.5.005-2.317.88-2.348 1.898h1.116c.032-.498.498-.944 1.206-.944.703 0 1.206.435 1.206 1.07.005.64-.504 1.106-1.2 1.106h-.75z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-123" viewBox="0 0 16 16">
+                                <path
+                                    d="M2.873 11.297V4.142H1.699L0 5.379v1.137l1.64-1.18h.06v5.961zm3.213-5.09v-.063c0-.618.44-1.169 1.196-1.169.676 0 1.174.44 1.174 1.106 0 .624-.42 1.101-.807 1.526L4.99 10.553v.744h4.78v-.99H6.643v-.069L8.41 8.252c.65-.724 1.237-1.332 1.237-2.27C9.646 4.849 8.723 4 7.308 4c-1.573 0-2.36 1.064-2.36 2.15v.057zm6.559 1.883h.786c.823 0 1.374.481 1.379 1.179.01.707-.55 1.216-1.421 1.21-.77-.005-1.326-.419-1.379-.953h-1.095c.042 1.053.938 1.918 2.464 1.918 1.478 0 2.642-.839 2.62-2.144-.02-1.143-.922-1.651-1.551-1.714v-.063c.535-.09 1.347-.66 1.326-1.678-.026-1.053-.933-1.855-2.359-1.845-1.5.005-2.317.88-2.348 1.898h1.116c.032-.498.498-.944 1.206-.944.703 0 1.206.435 1.206 1.07.005.64-.504 1.106-1.2 1.106h-.75z" />
                             </svg>
                         </span>
-                        <input type="text" class="form-control" placeholder="Nº de CRP" aria-label="CRP" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" placeholder="Nº de CRP" aria-label="CRP"
+                            aria-describedby="basic-addon1">
                     </div>
                     <div class="input-group w-auto">
                         <span class="input-group-text" id="basic-addon1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key-fill" viewBox="0 0 16 16">
-                                <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2M2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-key-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2M2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
                             </svg>
                         </span>
-                        <input type="text" class="form-control" placeholder="Chave de acesso" aria-label="Chave" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" placeholder="Chave de acesso" aria-label="Chave"
+                            aria-describedby="basic-addon1">
                     </div>
                 </form>
                 <button class="btn btn-primary">Entrar</button>
@@ -44,326 +56,255 @@
     </nav>
 
 
-    
-
-  <!-- Main Content -->
-  <div class="main-content p-5">
-    <div class="container text-light">
-        <h1 class="display-4 fw-bold mb-4 text-center">PsiDocs</h1>
-        <p class="lead mb-5 text-center">
-            <strong>Plataforma de gerenciamento de documentos e contratos para psicólogos.</strong>
-        </p>
-        
-        <div class="row g-4">
-            
-            <div class="col-md-6">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mx-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-file-earmark-medical-fill" viewBox="0 0 16 16">
-                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-3 2v.634l.549-.317a.5.5 0 1 1 .5.866L7 7l.549.317a.5.5 0 1 1-.5.866L6.5 7.866V8.5a.5.5 0 0 1-1 0v-.634l-.549.317a.5.5 0 1 1-.5-.866L5 7l-.549-.317a.5.5 0 0 1 .5-.866l.549.317V5.5a.5.5 0 1 1 1 0m-2 4.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1m0 2h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1"/>
-                            </svg>
-                        </div>
-                        <div class="mx-2">
-                            <h2 class="h5 text-uppercase">
-                                Documentos
-                            </h2>
-                        </div>
-                    </div>
-                    <ul class="list-unstyled">
-                        <li>• <strong>Laudos</strong></li>
-                        <li>• <strong>Relatórios</strong></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mx-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-file-earmark-text-fill" viewBox="0 0 16 16">
-                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z"/>
-                            </svg>
-                        </div>
-                        <div class="mx-2">
-                            <h2 class="h5 text-uppercase">
-                                Contratos 
-                            </h2>
-                        </div>
-                    </div>
-                    <ul class="list-unstyled">
-                        <li>• <strong>Modelos de contratos</strong></li>
-                        <li>• <strong>Envio para assinatura</strong></li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-
-        <hr class="my-5 text-info">
-        
-        <h3 class="text-center text-info">Como funciona?</h3>
-        <p class="text-center mb-5">
-            O PsiDocs não exige cadastro. Basta acessar pela primeira vez, e o sistema reconhece você automaticamente 
-            com base no seu <strong>CRP</strong> e <strong>Chave de Acesso</strong>. Esses dados serão criptografados para sua segurança.
-        </p>
-
-        <div class="p-4 rounded-4 shadow cards_trans text-light">
-            <h4 class="mb-3 text-info">Exemplo de acesso:</h4>
-            <pre class="bg-secondary text-light p-3 rounded">
-            Chave: A!l#40501993
-            CRP: 936729
-            </pre>
-            <p class="mt-4">
-                O sistema converte sua chave e CRP em hashes utilizando o algoritmo <strong>Argon2id</strong>, 
-                garantindo a segurança dos seus dados.
+    <!-- Main Content -->
+    <div class="main-content p-5">
+        <div class="container text-light">
+            <h1 class="display-4 fw-bold mb-4 text-center">PsiDocs</h1>
+            <p class="lead mb-5 text-center">
+                <strong>Plataforma de gerenciamento de documentos psicológicos e contratos para pacientes e
+                    clientes.</strong>
             </p>
-        </div>
 
-        <div class="text-center mt-5 p-5 bg-dark rounded-4 shadow">
-            <h2 class="text-info">Pronto para começar?</h2>
-            <p class="lead mb-4">
-                Simplifique sua gestão documental hoje mesmo.<br>
-                Sem cadastros complicados, sem mensalidade.
-            </p>
-            <button class="btn btn-primary btn-lg shadow px-5">
-                Começar Gratuitamente
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                </svg>
-            </button>
-        </div>
+            <div class="row g-4">
 
-        <div class="row g-4 mt-5">
-            <h3 class="text-center text-info mb-4">Benefícios do PsiDocs</h3>
-            <div class="col-md-4">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mx-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-shield-lock" viewBox="0 0 16 16">
-                                <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.856C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
-                            </svg>
+                <!--Benefícios do PsiDocs-->
+                <div class="row g-4 mt-5 mb-5">
+                    <h2 class="text-center mt-5 mb-4">Benefícios do PsiDocs</h2>
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-4 shadow bg-dark card-index">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mx-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                                        class="bi bi-shield-lock" viewBox="0 0 16 16">
+                                        <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.856C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z" />
+                                    </svg>
+                                </div>
+                                <h4 class="h5 mb-0">Segurança Avançada</h4>
+                            </div>
+                            <p>Criptografia de ponta a ponta e conformidade com LGPD para proteger seus documentos e
+                                dados
+                                dos pacientes.</p>
                         </div>
-                        <h4 class="h5 mb-0">Segurança Avançada</h4>
                     </div>
-                    <p>Criptografia de ponta a ponta e conformidade com LGPD para proteger seus documentos e dados dos pacientes.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mx-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
-                                <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483m.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535m-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
-                            </svg>
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-4 shadow bg-dark card-index">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mx-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                                        class="bi bi-clock-history" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483m.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535m-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z" />
+                                    </svg>
+                                </div>
+                                <h4 class="h5 mb-0">Histórico Completo</h4>
+                            </div>
+                            <p>Mantenha um registro detalhado de todos os documentos emitidos, com datas e versões,
+                                conforme
+                                exigido pela Resolução CFP Nº 06/2019.</p>
                         </div>
-                        <h4 class="h5 mb-0">Histórico Completo</h4>
                     </div>
-                    <p>Mantenha um registro detalhado de todos os documentos emitidos, com datas e versões, conforme exigido pela Resolução CFP Nº 06/2019.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mx-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
-                                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
-                            </svg>
-                        </div>
-                        <h4 class="h5 mb-0">Templates Normatizados</h4>
-                    </div>
-                    <p>Modelos de documentos alinhados com as normativas do CFP, incluindo todos os elementos obrigatórios para documentos psicológicos.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="p-4 rounded-4 shadow cards_trans mt-5">
-            <h3 class="text-center text-info mb-4">Perguntas Frequentes</h3>
-            <div class="accordion" id="faqAccordion">
-                <div class="accordion-item bg-dark text-light">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button bg-dark text-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                            Como meus documentos são protegidos?
-                        </button>
-                    </h2>
-                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Utilizamos criptografia de ponta a ponta e seguimos todas as diretrizes do CFP e LGPD.
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-4 shadow bg-dark card-index">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mx-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                                        class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                                        <path
+                                            d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
+                                    </svg>
+                                </div>
+                                <h4 class="h5 mb-0">Templates Normatizados</h4>
+                            </div>
+                            <p>Modelos de documentos alinhados com as normativas do CFP, incluindo todos os elementos
+                                obrigatórios para documentos psicológicos.</p>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item bg-dark text-light">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button bg-dark text-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                            Por quanto tempo os documentos ficam armazenados?
-                        </button>
-                    </h2>
-                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Seguimos o prazo mínimo de 5 anos conforme estabelecido pelo CFP, com opção de extensão. Você pode exportar seus documentos a qualquer momento.
+
+                <!--Hero Começar Gratuitamente-->
+                <div class="text-center mt-5 p-5 bg-dark rounded-4 shadow">
+                    <h2 class="text-info">Pronto para começar?</h2>
+                    <p class="lead mb-4">
+                        Simplifique sua gestão documental hoje mesmo.<br>
+                        Sem cadastros complicados, sem mensalidade.
+                    </p>
+                    <button class="btn btn-primary btn-lg shadow px-5">
+                        Começar Gratuitamente
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                        </svg>
+                    </button>
+                </div>
+
+
+                <!--Recursos Completos-->
+                <div class="row g-4 mt-5">
+                    <h3 class="text-center mb-4">Recursos Completos</h3>
+                    <div class="col-md-3">
+                        <div class="p-4 rounded-4 shadow bg-dark card-index">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mx-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file-medical" viewBox="0 0 16 16">
+                                        <path d="M8.5 4.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L7 6l-.549.317a.5.5 0 1 0 .5.866l.549-.317V7.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L9 6l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V4.5zM5.5 9a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
+                                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h4 class="h5 mb-3">Laudos Psicológicos</h4>
+                            <ul class="list-unstyled">
+                                <li>• Templates prontos</li>
+                                <li>• Personalização completa</li>
+                                <li>• Exportação em PDF</li>
+                                <li>• Assinatura digital</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-4 rounded-4 shadow bg-dark card-index">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mx-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clipboard2-pulse" viewBox="0 0 16 16">
+                                        <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"/>
+                                        <path d="M9.979 5.356a.5.5 0 0 0-.968.04L7.92 10.49l-.94-3.135a.5.5 0 0 0-.926-.08L4.69 10H4.5a.5.5 0 0 0 0 1H5a.5.5 0 0 0 .447-.276l.936-1.873 1.138 3.793a.5.5 0 0 0 .968-.04L9.58 7.51l.94 3.135A.5.5 0 0 0 11 11h.5a.5.5 0 0 0 0-1h-.128z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h4 class="h5 mb-3">Relatórios Técnicos</h4>
+                            <ul class="list-unstyled">
+                                <li>• Estrutura padronizada</li>
+                                <li>• Formatação automática</li>
+                                <li>• Numeração única</li>
+                                <li>• Registro de revisões</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-4 rounded-4 shadow bg-dark card-index">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mx-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                                        <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
+                                        <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h4 class="h5 mb-3">Contratos</h4>
+                            <ul class="list-unstyled">
+                                <li>• Termos de consentimento</li>
+                                <li>• Contratos terapêuticos</li>
+                                <li>• Política de faltas</li>
+                                <li>• Avisos de privacidade</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-4 rounded-4 shadow bg-dark card-index">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mx-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-database-check" viewBox="0 0 16 16">
+                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514Z"/>
+                                        <path d="M12.096 6.223A4.92 4.92 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.493 4.493 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.525 4.525 0 0 1-.813-.927C8.5 14.992 8.252 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.552 4.552 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10c.262 0 .52-.008.774-.024a4.525 4.525 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777M3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h4 class="h5 mb-3">Gestão de Dados</h4>
+                            <ul class="list-unstyled">
+                                <li>• Backup automático</li>
+                                <li>• Exportação em lote</li>
+                                <li>• Histórico de acessos</li>
+                                <li>• Logs de alterações</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item bg-dark text-light">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button bg-dark text-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                            Como funciona a assinatura digital dos documentos?
-                        </button>
-                    </h2>
-                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Utilizamos assinatura digital avançada, que inclui seu nome completo, CRP e data/hora, garantindo a autenticidade conforme as diretrizes do CFP.
-                        </div>
-                    </div>
-                </div>
-                <!-- Adicione mais perguntas aqui -->
+
+
+
             </div>
         </div>
 
-        <div class="row g-4 mt-5">
-            <h3 class="text-center text-info mb-4">Recursos Completos</h3>
-            <div class="col-md-3">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <h4 class="h5 mb-3">Laudos Psicológicos</h4>
-                    <ul class="list-unstyled">
-                        <li>• Templates prontos</li>
-                        <li>• Personalização completa</li>
-                        <li>• Exportação em PDF</li>
-                        <li>• Assinatura digital</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <h4 class="h5 mb-3">Relatórios Técnicos</h4>
-                    <ul class="list-unstyled">
-                        <li>• Estrutura padronizada</li>
-                        <li>• Formatação automática</li>
-                        <li>• Numeração única</li>
-                        <li>• Registro de revisões</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <h4 class="h5 mb-3">Contratos</h4>
-                    <ul class="list-unstyled">
-                        <li>• Termos de consentimento</li>
-                        <li>• Contratos terapêuticos</li>
-                        <li>• Política de faltas</li>
-                        <li>• Avisos de privacidade</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="p-4 rounded-4 shadow cards_trans">
-                    <h4 class="h5 mb-3">Gestão de Dados</h4>
-                    <ul class="list-unstyled">
-                        <li>• Backup automático</li>
-                        <li>• Exportação em lote</li>
-                        <li>• Histórico de acessos</li>
-                        <li>• Logs de alterações</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <footer class="text-center text-light p-4 mt-5">
+            <p class="mt-5 mb-3">PsiDocs &copy; 2024</p>
+            <p class="mb-3">De um psicólogo, para psicólogos.</p>
+        </footer>
 
-        <div class="p-4 rounded-4 shadow cards_trans mt-5">
-            <h3 class="text-center text-info mb-4">Conformidade e Regulamentações</h3>
-            <div class="row text-center">
-                <div class="col-md-4">
-                    <h5>CFP</h5>
-                    <p>Seguimos todas as resoluções do Conselho Federal de Psicologia</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>LGPD</h5>
-                    <p>Total conformidade com a Lei Geral de Proteção de Dados</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Backups</h5>
-                    <p>Backup automático e redundante de todos os documentos</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<footer class="text-center text-light p-4">
-    <p>PsiDocs &copy; 2024</p>
-</footer>
-  
 
 </body>
+
 </html>
 
 <style>
-  
-  /* Body and background */
-  body {
-    font-family: Arial, sans-serif;
-    height: auto;
-    margin: 0;
-    --x: calc(var(--posX, 0) * 1px);
-    --y: calc(var(--posY, 0) * 1px);
-    /* Uncomment the following block to use the alternative background */
-    
-    background-image: 
-        linear-gradient(115deg, rgb(255, 244, 211), rgb(0 0 0)), 
-        radial-gradient(90% 100% at calc(50% + var(--x)) calc(0% + var(--y)), rgb(200 200 200), rgb(255, 0, 115)), 
-        radial-gradient(100% 100% at calc(80% - var(--x)) calc(0% - var(--y)), rgb(250 255 0), rgb(120, 101, 101)), 
-        radial-gradient(150% 210% at calc(100% + var(--x)) calc(0% + var(--y)), rgb(20 175 125), rgb(47, 54, 233)), 
-        radial-gradient(100% 100% at calc(100% - var(--x)) calc(30% - var(--y)), rgb(255 77 0), rgb(0 200 255)), 
-        linear-gradient(60deg, rgb(255 0 0), rgb(120 86 255));
-    background-blend-mode: overlay, overlay, difference, difference, difference, normal;
-    /*
-    background-image: 
-        linear-gradient(115deg, rgb(255, 182, 193), rgb(255, 255, 255)), 
-        radial-gradient(90% 100% at calc(50% + var(--x)) calc(0% + var(--y)), rgb(177, 13, 241), rgb(255, 255, 255)), 
-        radial-gradient(100% 100% at calc(80% - var(--x)) calc(0% - var(--y)), rgb(255, 6, 131), rgb(255, 255, 255)), 
-        radial-gradient(150% 210% at calc(100% + var(--x)) calc(0% + var(--y)), rgb(177, 13, 241), rgb(255, 255, 255)), 
-        radial-gradient(100% 100% at calc(100% - var(--x)) calc(30% - var(--y)), rgb(255, 6, 131), rgb(255, 255, 255)), 
-        linear-gradient(60deg, rgb(241, 12, 127), rgb(255, 255, 255));
-    background-blend-mode: overlay, overlay, difference, difference, difference, normal;
-    */
-  }
+    /* Body and background */
+    body {
+        font-family: Arial, sans-serif;
+        height: auto;
+        margin: auto;
+        --x: calc(var(--posX, 0) * 1px);
+        --y: calc(var(--posY, 0) * 1px);
+        /* Uncomment the following block to use the alternative background */
+
+        background-image:
+            linear-gradient(115deg, rgb(86, 235, 104), rgb(231, 53, 88)),
+            radial-gradient(90% 100% at calc(50% + var(--x)) calc(0% + var(--y)), rgb(177, 13, 241), rgba(211, 237, 18, 0.172)),
+            radial-gradient(100% 100% at calc(80% - var(--x)) calc(0% - var(--y)), rgb(255, 6, 131), rgb(237, 184, 49)),
+            radial-gradient(150% 210% at calc(100% + var(--x)) calc(0% + var(--y)), rgb(13, 70, 241), rgb(13, 255, 0)),
+            radial-gradient(100% 100% at calc(100% - var(--x)) calc(30% - var(--y)), rgb(255, 6, 131), rgb(240, 54, 91)),
+            linear-gradient(60deg, rgb(241, 12, 127), rgb(138, 40, 224));
+        background-blend-mode: overlay, normal, overlay, difference, difference, normal;
+    }
 
     /* Background Gradient Animation */
     @keyframes gradientAnimation {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+        0% {
+            background-position: 0% 50%;
+        }
 
-  .navbar {
-    position: sticky;
-    top: 20px;
-    z-index: 1000;
-    backdrop-filter: blur(10px); /* Intensidade do blur */
-    background-color: rgba(0, 0, 0, 0.307); /* Cor de fundo semi-transparente */
-    max-width: 80%;
-    margin: 2rem auto;
-    border-color: #000000 !important;
-  }
+        50% {
+            background-position: 100% 50%;
+        }
 
-  .card-index {
-    background: rgba(0, 0, 0, 0.75);
-  }
-  
-  .cards_trans {
-    backdrop-filter: blur(10px);
-    background-color: rgba(0, 0, 0, 0.307);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
 
+    .navbar {
+        position: sticky;
+        top: 20px;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        background-color: rgba(0, 0, 0, 0.5);
+        max-width: 80%;
+        margin: 2rem auto;
+        border-color: #000000 !important;
+    }
+
+    .card-index:hover {
+        transform: scale(1.05);
+        /* Slightly enlarge the card */
+        transition: transform 0.3s ease-in-out;
+        /* Smooth transition */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* Add shadow */
+    }
+
+    .cards_trans {
+        backdrop-filter: blur(10px);
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 </style>
 
 <script>
 
-document.body.addEventListener("pointermove", (e)=>{
-  const { currentTarget: el, clientX: x, clientY: y } = e;
-  const { top: t, left: l, width: w, height: h } = el.getBoundingClientRect();
-  el.style.setProperty('--posX',  x-l-w/2);
-  el.style.setProperty('--posY',  y-t-h/2);
-})
+    document.body.addEventListener("pointermove", (e) => {
+        const { currentTarget: el, clientX: x, clientY: y } = e;
+        const { top: t, left: l, width: w, height: h } = el.getBoundingClientRect();
+        el.style.setProperty('--posX', x - l - w / 1.5);
+        el.style.setProperty('--posY', y - t - h / 1.5);
+    })
 
 </script>
