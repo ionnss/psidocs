@@ -203,6 +203,11 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		session.Values["email"] = email
 		session.Save(r, w)
 
+		// Adiciona headers no-cache
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+
 		// Redireciona para o dashboard
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 
@@ -225,6 +230,11 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 			session.Values["crp"] = crp
 			session.Values["email"] = userEmail
 			session.Save(r, w)
+
+			// Adiciona headers no-cache
+			w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			w.Header().Set("Pragma", "no-cache")
+			w.Header().Set("Expires", "0")
 
 			// Redireciona para o dashboard
 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)

@@ -59,9 +59,11 @@
                 <div class="user-info">
                     <span>{{.Email}}</span>
                 </div>
-                <button hx-get="/logout" hx-target="body" class="btn btn-outline-danger btn-sm">
-                    <i class="bi bi-box-arrow-right"></i> Sair
-                </button>
+                <form action="/logout" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-box-arrow-right"></i> Sair
+                    </button>
+                </form>
             </div>
         </nav>
 

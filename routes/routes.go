@@ -60,12 +60,13 @@ func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 	// Rota logout
 	//
 	// Rota para deslogar um usuário
-	r.HandleFunc("/logout", handlers.LogoutHandler).Methods("GET")
+	r.HandleFunc("/logout", handlers.LogoutHandler).Methods("POST")
 
 	// Rota dashboard (protegida)
 	//
 	// Rota para a página dashboard
 	r.Handle("/dashboard", handlers.AuthMiddleware(http.HandlerFunc(handlers.DashboardHandler))).Methods("GET")
+	r.HandleFunc("/dashboard", handlers.AuthHandler).Methods("POST")
 
 }
 

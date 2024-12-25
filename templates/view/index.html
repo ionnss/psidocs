@@ -45,17 +45,16 @@
                 {{if .Authenticated}}
                 <div class="input-group mb-3 mt-4 w-auto">
                     <span class="text-light me-3">Olá, {{.Email}}!</span>
-                    <button class="btn btn-outline-danger mt-4" hx-get="/logout" hx-target="body"
-                        class="btn btn-outline-danger">
-                        Sair
-                    </button>
+                    <form action="/logout" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger">Sair</button>
+                    </form>
                 </div>
                 <!-- ou ir para dashboard 
                 <button class="btn btn-outline-primary mt-4" hx-get="/dashboard">
                     Ir para o Dashboard
                 </button>-->
                 {{else}}
-                <form action="/auth" method="POST" class="flex-column flex-sm-row align-items-center mt-4 mb-4">
+                <form action="/dashboard" method="POST" class="flex-column flex-sm-row align-items-center mt-4 mb-4">
                     <!-- Mensagens de erro/sucesso -->
                     <div id="auth-messages"></div>
 
