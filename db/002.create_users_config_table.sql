@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS users_config (
     first_name VARCHAR(255) NOT NULL,
     middle_name VARCHAR(255),
     last_name VARCHAR(255) NOT NULL,
+    date_of_birth DATE NOT NULL,
     cpf VARCHAR(14) UNIQUE,
     rg VARCHAR(12),
     ddd VARCHAR(3) NOT NULL,
@@ -21,19 +22,3 @@ CREATE TABLE IF NOT EXISTS users_config (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Índices para melhorar performance
-CREATE INDEX IF NOT EXISTS idx_users_config_user ON users_config(user_id);
-CREATE INDEX IF NOT EXISTS idx_users_config_status ON users_config(status);
-CREATE INDEX IF NOT EXISTS idx_users_config_cpf ON users_config(cpf);
-
--- Trigger para atualizar updated_at
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
-CREATE TRIGGER update_users_config_updated_at
-    BEFORE UPDATE ON users_config

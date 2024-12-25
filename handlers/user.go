@@ -13,6 +13,7 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
+	"log"
 	"net/http"
 	"os"
 	"psidocs/db"
@@ -351,7 +352,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 // - w: o writer do response
 // - r: o request
 func DashboardHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := Store.Get(r, "psidocs-session")
+	session, err := Store.Get(r, "psidocs-session")
+	if err != nil {
+		http.Error(w, "Erro ao obter sessão", http.StatusInternalServerError)
+		return
+	}
 
 	// Preparar dados do template
 	data := map[string]interface{}{
@@ -374,11 +379,198 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, data)
 }
 
+// UserConfig representa os dados de configuração do usuário
+type UserConfig struct {
+	FirstName   string
+	MiddleName  string
+	LastName    string
+	DateOfBirth time.Time
+	CPF         string
+	RG          string
+	DDD         string
+	Telefone    string
+	WhatsApp    bool
+	Endereco    string
+	Numero      string
+	Bairro      string
+	Cidade      string
+	Estado      string
+	CEP         string
+}
+
 // CreateUserConfig cria a configuração do usuário (dados pessoais para contratos de pacientes e documentos psicológicos)
 //
 // Recebe:
 // - w: o writer do response
 // - r: o request
-func CreateUserConfig(w http.ResponseWriter, r *http.Request) {
+func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("UpdateUserConfigHandler iniciado - Método: %s", r.Method)
 
+	// Verificar sessão
+	session, err := Store.Get(r, "psidocs-session")
+	if err != nil {
+		log.Printf("Erro ao obter sessão: %v", err)
+		http.Error(w, "Erro ao obter sessão", http.StatusInternalServerError)
+		return
+	}
+
+	// Verificar autenticação
+	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+		log.Printf("Usuário não autenticado - ok: %v, auth: %v", ok, auth)
+		http.Error(w, "Usuário não autenticado", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do usuário
+	var userID int
+	email := session.Values["email"]
+	log.Printf("Buscando ID do usuário para email: %v", email)
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&userID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do usuário: %v", err)
+		http.Error(w, "Erro ao obter ID do usuário", http.StatusInternalServerError)
+		return
+	}
+	log.Printf("ID do usuário encontrado: %d", userID)
+
+	if r.Method == "GET" {
+		log.Printf("Processando requisição GET")
+		// Buscar dados existentes
+		var config UserConfig
+		err = db.QueryRow(`
+			SELECT first_name, middle_name, last_name, 
+				   cpf, rg, date_of_birth,
+				   ddd, telefone, whatsapp,
+				   endereco, numero, bairro,
+				   cidade, estado, cep
+			FROM users_config 
+			WHERE user_id = $1
+		`, userID).Scan(
+			&config.FirstName, &config.MiddleName, &config.LastName,
+			&config.CPF, &config.RG, &config.DateOfBirth,
+			&config.DDD, &config.Telefone, &config.WhatsApp,
+			&config.Endereco, &config.Numero, &config.Bairro,
+			&config.Cidade, &config.Estado, &config.CEP,
+		)
+		if err != nil && err != sql.ErrNoRows {
+			log.Printf("Erro ao buscar dados: %v", err)
+			http.Error(w, "Erro ao buscar dados", http.StatusInternalServerError)
+			return
+		}
+		log.Printf("Dados encontrados: %+v", config)
+
+		// Renderizar template
+		log.Printf("Tentando carregar template: templates/view/partials/user_config.html")
+		tmpl, err := template.ParseFiles("templates/view/partials/user_config.html")
+		if err != nil {
+			log.Printf("Erro ao carregar template: %v", err)
+			http.Error(w, "Erro ao carregar template", http.StatusInternalServerError)
+			return
+		}
+
+		log.Printf("Template carregado, tentando renderizar")
+		err = tmpl.Execute(w, config)
+		if err != nil {
+			log.Printf("Erro ao renderizar template: %v", err)
+			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+			return
+		}
+		log.Printf("Template renderizado com sucesso")
+		return
+
+	} else if r.Method == "POST" {
+		// Processar formulário
+		whatsappValue := r.FormValue("whatsapp") == "on"
+		dateOfBirth, err := time.Parse("2006-01-02", r.FormValue("date_of_birth"))
+		if err != nil {
+			http.Error(w, "Data de nascimento inválida", http.StatusBadRequest)
+			return
+		}
+
+		// Verificar se já existe configuração
+		var exists bool
+		err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM users_config WHERE user_id = $1)", userID).Scan(&exists)
+		if err != nil {
+			http.Error(w, "Erro ao verificar configuração existente", http.StatusInternalServerError)
+			return
+		}
+
+		if exists {
+			// Update
+			_, err = db.Exec(`
+				UPDATE users_config 
+				SET first_name = $1, middle_name = $2, last_name = $3, 
+					cpf = $4, rg = $5, date_of_birth = $6,
+					ddd = $7, telefone = $8, whatsapp = $9,
+					endereco = $10, numero = $11, bairro = $12,
+					cidade = $13, estado = $14, cep = $15
+				WHERE user_id = $16`,
+				r.FormValue("first_name"),
+				r.FormValue("middle_name"),
+				r.FormValue("last_name"),
+				r.FormValue("cpf"),
+				r.FormValue("rg"),
+				dateOfBirth,
+				r.FormValue("ddd"),
+				r.FormValue("telefone"),
+				whatsappValue,
+				r.FormValue("endereco"),
+				r.FormValue("numero"),
+				r.FormValue("bairro"),
+				r.FormValue("cidade"),
+				r.FormValue("estado"),
+				r.FormValue("cep"),
+				userID,
+			)
+		} else {
+			// Insert
+			_, err = db.Exec(`
+				INSERT INTO users_config (
+					user_id, first_name, middle_name, last_name,
+					cpf, rg, date_of_birth,
+					ddd, telefone, whatsapp,
+					endereco, numero, bairro,
+					cidade, estado, cep, plan
+				) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+				userID,
+				r.FormValue("first_name"),
+				r.FormValue("middle_name"),
+				r.FormValue("last_name"),
+				r.FormValue("cpf"),
+				r.FormValue("rg"),
+				dateOfBirth,
+				r.FormValue("ddd"),
+				r.FormValue("telefone"),
+				whatsappValue,
+				r.FormValue("endereco"),
+				r.FormValue("numero"),
+				r.FormValue("bairro"),
+				r.FormValue("cidade"),
+				r.FormValue("estado"),
+				r.FormValue("cep"),
+				"free", // Plano inicial gratuito
+			)
+		}
+
+		if err != nil {
+			http.Error(w, "Erro ao salvar configurações", http.StatusInternalServerError)
+			return
+		}
+
+		// Resposta baseada no tipo de requisição
+		if r.Header.Get("HX-Request") == "true" {
+			w.Write([]byte(`<div class="alert alert-success">Configurações salvas com sucesso!</div>`))
+		} else {
+			http.Redirect(w, r, "/dashboard/configuracoes", http.StatusSeeOther)
+		}
+	}
 }
