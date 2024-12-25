@@ -568,7 +568,11 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Resposta baseada no tipo de requisição
 		if r.Header.Get("HX-Request") == "true" {
-			w.Write([]byte(`<div class="alert alert-success">Configurações salvas com sucesso!</div>`))
+			w.Write([]byte(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<i class="bi bi-check-circle-fill me-2"></i>
+				Configurações salvas com sucesso!
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>`))
 		} else {
 			http.Redirect(w, r, "/dashboard/configuracoes", http.StatusSeeOther)
 		}
