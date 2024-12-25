@@ -1,7 +1,10 @@
-<div class="container-fluid"></div>
+<!-- Adicionar CSS -->
+<link rel="stylesheet" href="/static/css/user_config.css">
+
+<div class="container-fluid">
     <h2 class="mb-4">Configurações do Perfil</h2>
     
-    <form id="userConfigForm" hx-post="/dashboard/configuracoes" hx-target="#content-area">
+    <form id="userConfigForm" class="userConfigForm" hx-post="/dashboard/configuracoes" hx-target="#content-area">
         <!-- Dados Pessoais -->
         <div class="card bg-dark shadow-sm mb-4">
             <div class="card-header">
