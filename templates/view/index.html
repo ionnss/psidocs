@@ -24,9 +24,6 @@
     <!-- CSS INDEX-->
     <link rel="stylesheet" href="/static/css/index.css">
 
-    <!-- JS INDEX-->
-    <script src="/static/js/index.js"></script>
-
 </head>
 
 <body>
@@ -117,9 +114,9 @@
     <!-- Main Content -->
     <div id="main-content" class="p-5">
         <div class="container text-light">
-            <h1 class="display-4 fw-bold mb-4 text-center">PsiDocs</h1>
+            <h1 class="display-4 fw-bold mb-4 text-center brand-text">PSIDOCS</h1>
             <p class="lead mb-5 text-center">
-                <strong>Plataforma de gerenciamento de documentos psicológicos e contratos para pacientes e
+                <strong>Sua solução completa para gestão de documentos psicológicos, transformando a maneira de cuidar dos seus
                     clientes.</strong>
             </p>
 
@@ -298,42 +295,22 @@
             </div>
         </div>
 
-        <footer class="text-center text-light p-4 mt-5">
-            <img src="/static/assets/logo.svg" alt="PsiDocs Logo" style="max-height: 80px;" class="mb-4 mt-4">
-            <p class="mt-5 mb-3">PSIDOCS &copy; 2024</p>
-            <p class="mb-3">De um psicólogo, para psicólogos.</p>
+        <footer class="text-center text-light p-4 mt-8">
+            <img src="/static/assets/logo.svg" alt="PsiDocs Logo" style="max-height: 80px;" class="mb-4 mt-4 footer-logo" id="footerLogo">
+            <p class="easter-egg-text mt-2" id="easterEggText">
+                Feito com 💜 e muito ☕<br>
+                <br> De um psicólogo 💜 Para psicólogos
+            </p>
+            <p class="mt-5 mb-3">
+                <span class="brand-text">PSIDOCS</span>
+                <span class="copyright-text">&copy; 2025</span>
+            </p>
         </footer>
     </div>
 
-</body>
+    <!-- JS INDEX-->
+    <script src="/static/js/index.js" defer></script>
 
+</body>
 </html>
 
-<script>
-    document.body.addEventListener("pointermove", (e) => {
-        const { currentTarget: el, clientX: x, clientY: y } = e;
-        const { top: t, left: l, width: w, height: h } = el.getBoundingClientRect();
-        el.style.setProperty('--posX', x - l - w / 1.5);
-        el.style.setProperty('--posY', y - t - h / 1.5);
-    })
-
-    document.querySelector('form').addEventListener('submit', function() {
-        const spinner = document.getElementById('spinner');
-        const submitText = document.getElementById('submitText');
-        const submitBtn = document.getElementById('submitBtn');
-        
-        spinner.classList.remove('d-none');
-        submitText.textContent = 'Entrando...';
-        submitBtn.disabled = true;
-    });
-
-    document.body.addEventListener('htmx:afterSwap', function(event) {
-            // Verifica se o conteúdo carregado é o dashboard
-            if (event.detail.target.id === 'content' && event.detail.target.querySelector('#main-content-dashboard')) {
-                // Adiciona uma classe CSS para destacar o dashboard
-                event.detail.target.classList.add('dashboard-highlight');
-                // Aplica desfoque ao fundo
-                document.body.classList.add('blur-background');
-            }
-        });
-</script>

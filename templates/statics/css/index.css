@@ -1,4 +1,52 @@
 /* Body and background */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap');
+
+.brand-text {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.copyright-text {
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    margin-left: 8px;
+    opacity: 0.8;
+}
+
+/* Easter Egg */
+.footer-logo {
+    transition: transform 0.5s ease;
+    cursor: pointer;
+}
+
+.easter-egg-text {
+    display: none;
+    font-size: 0.9em;
+    color: #ded4f2;
+    font-style: italic;
+    margin: 1rem 0;
+    line-height: 1.8;
+    
+    backdrop-filter: blur(10px);
+}
+
+.easter-egg-text.show {
+    display: block;
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 body {
     font-family: Arial, sans-serif;
     height: auto;
@@ -68,3 +116,10 @@ body {
     background-color: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* Margins */
+.mt-8 {
+    margin-top: 8rem !important;
+}
+
+/* Cards */
