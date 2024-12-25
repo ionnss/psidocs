@@ -64,7 +64,7 @@ Seu projeto **PsiDocs** tem uma proposta sólida e atende a uma necessidade real
 
 ## **Segurança e Criptografia**
 
-Você já está no caminho certo ao usar **Argon2id** como método de hashing para senhas e identificadores (CRP). Aqui estão alguns pontos importantes sobre segurança:
+Você já está no caminho certo ao usar **bcrypt** como método de hashing para senhas e identificadores (CRP). Aqui estão alguns pontos importantes sobre segurança:
 
 1. **Hash de Chave e CRP**:
     
@@ -72,7 +72,7 @@ Você já está no caminho certo ao usar **Argon2id** como método de hashing pa
     - É importante **nunca armazenar a chave ou o CRP original em texto puro**.
 2. **Salt Aleatório**:
     
-    - O `salt` adicionado ao Argon2id precisa ser gerado aleatoriamente para cada hash gerado.
+    - O `salt` adicionado ao bcrypt precisa ser gerado aleatoriamente para cada hash gerado.
     - Certifique-se de armazenar o `salt` com segurança, pois ele é necessário para verificar o hash.
 3. **Acesso e Reconhecimento Automático**:
     
@@ -95,6 +95,11 @@ Você já está no caminho certo ao usar **Argon2id** como método de hashing pa
 - O sistema gera os hashes e os compara com os armazenados no banco de dados.
 - Caso coincida, o painel personalizado do psicólogo é carregado.
 
+### 3. **Criação da Configuração do Psicólogo**
+
+- O psicólogo insere os dados pessoais para contratos de pacientes e documentos psicológicos.
+- O sistema armazena esses dados no banco de dados.
+
 ---
 
 ## **Arquitetura do Sistema**
@@ -102,9 +107,10 @@ Você já está no caminho certo ao usar **Argon2id** como método de hashing pa
 ### **1. Backend**
 
 - **Linguagem**: Golang
-- **Frameworks**: Use o `Gin` ou `Fiber` para criar as rotas do backend.
-- **Autenticação**: Argon2id para hash das credenciais + JWT para gerenciar sessões.
-- **Banco de Dados**: MySQL, PostgreSQL ou SQLite para armazenar informações dos psicólogos e documentos gerados.
+- **Frameworks**: Use o `Mux` para criar as rotas do backend.
+- **Autenticação**: `Gorrila Sessions` para gerenciar sessões e autenticação.
+- **Criptografia**: `bcrypt` para hash das credenciais.
+- **Banco de Dados**: PostgreSQL para armazenar informações dos psicólogos e documentos gerados.
 
 ### **2. Frontend**
 
@@ -112,31 +118,6 @@ Você já está no caminho certo ao usar **Argon2id** como método de hashing pa
     - **HTMX**: Para interatividade sem necessidade de JavaScript pesado.
     - **Bootstrap**: Para uma interface elegante e responsiva.
 - **Templates**: Personalizados para exibir o painel do psicólogo e permitir o upload, criação e edição de documentos.
-
----
-
-## **Exemplo de Banco de Dados**
-
-```sql
--- Tabela de usuários
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    hash_chave TEXT NOT NULL,
-    hash_crp TEXT NOT NULL,
-    salt_chave TEXT NOT NULL,
-    salt_crp TEXT NOT NULL
-);
-
--- Tabela de documentos
-CREATE TABLE documentos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    psicologo_id INTEGER NOT NULL,
-    tipo TEXT NOT NULL, -- 'laudo', 'relatorio', ou 'contrato'
-    conteudo TEXT NOT NULL,
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (psicologo_id) REFERENCES psicologos (id)
-);
-```
 
 ---
 
@@ -165,12 +146,12 @@ docker exec -it psidocs-db-1 psql -U psicodocs -d superviso
 Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do PsiDocs:
 
 0. **Refatorar a página dashboard**
-   - [ ] Navbar sidebar
-   - [ ] UI (se comunicar com a UI index pois gostei do design)
-     - [ ] Background
-     - [ ] Cores
-     - [ ] Animações
-     - [ ] Responsividade
+   - [X] Navbar sidebar
+   - [X] UI (se comunicar com a UI index pois gostei do design)
+     - [X] Background
+     - [X] Cores
+     - [X] Animações
+     - [X] Responsividade
    - [ ] Tour guiado para novos usuários (?)
    
 
@@ -189,7 +170,16 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
    - [ ] CRUD completo de pacientes
    - [ ] Interface intuitiva para gestão
 
-3. **Documentos Psicológicos**
+3. **Configuração do Psicólogo**
+   - [X] Tabela `users_config` com:
+     - [X] Dados pessoais para contratos de pacientes
+     - [X] Dados pessoais para documentos psicológicos
+     - [X] Status (ativo/inativo)
+     - [X] Vinculação com psicólogo
+   - [ ] CRUD completo de configuração
+   - [ ] Interface intuitiva para gestão
+
+4. **Documentos Psicológicos**
    - [ ] Templates conforme Resolução CFP:
      - [ ] Declaração
      - [ ] Atestado
@@ -199,7 +189,7 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
    - [ ] Assinatura digital
    - [ ] Exportação em PDF
 
-4. **Contratos e Termos**
+5. **Contratos e Termos**
    - [ ] Modelos de:
      - [ ] Contrato terapêutico
      - [ ] Termo de consentimento
@@ -207,37 +197,37 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
    - [ ] Personalização de modelos
    - [ ] Histórico de versões
 
-5. **Melhorias de Segurança**
+6. **Melhorias de Segurança**
    - [ ] 2FA (email/app)
    - [ ] Logs de auditoria
    - [ ] Monitoramento de tentativas de invasão
    - [ ] Métricas de segurança
 
-6. **Dashboard Aprimorado**
+7. **Dashboard Aprimorado**
    - [ ] Visão geral de pacientes
    - [ ] Documentos recentes
    - [ ] Alertas e notificações
    - [ ] Métricas e estatísticas
 
-7. **Agenda e Sessões**
+8. **Agenda e Sessões**
    - [ ] Calendário de atendimentos
    - [ ] Registro de sessões
    - [ ] Lembretes automáticos
    - [ ] Gestão de faltas
 
-8. **Financeiro Básico**
+9. **Financeiro Básico**
    - [ ] Registro de pagamentos
    - [ ] Controle de inadimplência
    - [ ] Relatórios financeiros
    - [ ] Exportação para contabilidade
 
-9. **Integrações**
+10. **Integrações**
    - [ ] Envio de emails
    - [ ] WhatsApp para lembretes
    - [ ] Integração com calendário
    - [ ] Backup em nuvem (Google Drive/Dropbox)
 
-10. **Melhorias de UX/UI**
+11. **Melhorias de UX/UI**
     - [ ] Tema escuro/claro
     - [ ] Interface responsiva
     - [ ] Atalhos de teclado

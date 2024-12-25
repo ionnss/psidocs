@@ -59,6 +59,8 @@ func Connect() (*sql.DB, error) {
 func ExecuteMigrations(conn *sql.DB) {
 	migrationFiles := []string{
 		"db/001.create_users_tables.sql",
+		"db/002.create_users_config_table.sql",
+		"db/003.create_pacientes_table.sql",
 		//...
 	}
 

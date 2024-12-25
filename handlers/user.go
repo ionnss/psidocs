@@ -373,3 +373,12 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	))
 	tmpl.Execute(w, data)
 }
+
+// CreateUserConfig cria a configuração do usuário (dados pessoais para contratos de pacientes e documentos psicológicos)
+//
+// Recebe:
+// - w: o writer do response
+// - r: o request
+func CreateUserConfig(w http.ResponseWriter, r *http.Request) {
+
+}
