@@ -160,23 +160,88 @@ docker exec -it psidocs-db-1 psql -U psicodocs -d superviso
 
 ## **Próximos Passos**
 
-1. **Autenticação Básica**:
-    
-    - [x] Configure as rotas para criar e validar os hashes no backend.
-    - [x] Utilize o banco de dados para armazenar e verificar os dados.
-2. **Criação de Documentos**:
-    
-    - [] Implemente uma funcionalidade para psicólogos criarem documentos a partir de templates pré-definidos.
-    - [] Adicione suporte para download em formatos como PDF.
-3. **Segurança**:
-    
-    - [x] Configure HTTPS no servidor para proteger os dados transmitidos.
-    - [x] Armazene os hashes e salts de forma segura no banco de dados.
-4. **Interface do Usuário**:
-    
-    - [x] Desenvolva o painel do psicólogo com funcionalidades intuitivas para acessar e gerenciar documentos.
 
-Se precisar de ajuda em alguma etapa específica, posso ajudar com exemplos de código ou estratégias! 😊
+
+Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do PsiDocs:
+
+0. **Refatorar a página dashboard**
+   - [ ] Navbar sidebar
+   - [ ] UI (se comunicar com a UI index pois gostei do design)
+     - [ ] Background
+     - [ ] Cores
+     - [ ] Animações
+     - [ ] Responsividade
+   - [ ] Tour guiado para novos usuários (?)
+   
+
+1. **Sistema de Backup**
+   - [ ] Script de backup automatizado no VPS
+   - [ ] Rotação de backups (7 dias)
+   - [ ] Monitoramento e alertas
+   - [ ] Documentação do processo de restore
+
+2. **Gestão de Pacientes**
+   - [X] Tabela `pacientes` com:
+     - [X] Dados básicos (nome, data_nascimento, cpf)
+     - [X] Contato (email, telefone)
+     - [X] Status (ativo/inativo)
+     - [X] Vinculação com psicólogo
+   - [ ] CRUD completo de pacientes
+   - [ ] Interface intuitiva para gestão
+
+3. **Documentos Psicológicos**
+   - [ ] Templates conforme Resolução CFP:
+     - [ ] Declaração
+     - [ ] Atestado
+     - [ ] Relatório/Laudo
+     - [ ] Parecer
+   - [ ] Versionamento de documentos
+   - [ ] Assinatura digital
+   - [ ] Exportação em PDF
+
+4. **Contratos e Termos**
+   - [ ] Modelos de:
+     - [ ] Contrato terapêutico
+     - [ ] Termo de consentimento
+     - [ ] Política de faltas
+   - [ ] Personalização de modelos
+   - [ ] Histórico de versões
+
+5. **Melhorias de Segurança**
+   - [ ] 2FA (email/app)
+   - [ ] Logs de auditoria
+   - [ ] Monitoramento de tentativas de invasão
+   - [ ] Métricas de segurança
+
+6. **Dashboard Aprimorado**
+   - [ ] Visão geral de pacientes
+   - [ ] Documentos recentes
+   - [ ] Alertas e notificações
+   - [ ] Métricas e estatísticas
+
+7. **Agenda e Sessões**
+   - [ ] Calendário de atendimentos
+   - [ ] Registro de sessões
+   - [ ] Lembretes automáticos
+   - [ ] Gestão de faltas
+
+8. **Financeiro Básico**
+   - [ ] Registro de pagamentos
+   - [ ] Controle de inadimplência
+   - [ ] Relatórios financeiros
+   - [ ] Exportação para contabilidade
+
+9. **Integrações**
+   - [ ] Envio de emails
+   - [ ] WhatsApp para lembretes
+   - [ ] Integração com calendário
+   - [ ] Backup em nuvem (Google Drive/Dropbox)
+
+10. **Melhorias de UX/UI**
+    - [ ] Tema escuro/claro
+    - [ ] Interface responsiva
+    - [ ] Atalhos de teclado
+    - [ ] Tour guiado para novos usuários
 
 
 ---

@@ -1,38 +1,64 @@
 services:
   app:
     build: .
-    ports:
-      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - SESSION_KEY=${SESSION_KEY}
+    volumes:
+      - .:/app
+      - ./templates:/psidocs/templates
+    networks:
+      - psidocs_network
     depends_on:
       - db
     env_file:
       - .env
     working_dir: /psidocs
-    volumes:
-      - ./templates:/psidocs/templates
     command: ["/wait-for-it.sh", "db:5432", "-t", "45", "--", "/psidocs/app_psidocs"]
-    networks:
-      - psidocs_network
 
   db:
     image: postgres:16.4
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - psidocs_network
     env_file:
       - .env
-    ports:
-      - "5433:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./db/migrations:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  caddy:
+    image: caddy:2.7-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     networks:
       - psidocs_network
+    depends_on:
+      - app
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
 
 networks:
   psidocs_network:
-
-volumes:
-  db_data:
+    driver: bridge

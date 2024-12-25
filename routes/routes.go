@@ -13,6 +13,7 @@ package routes
 
 import (
 	"database/sql"
+	"html/template"
 	"net/http"
 	"psidocs/handlers"
 
@@ -32,24 +33,48 @@ func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 	fs := http.FileServer(http.Dir("templates/statics"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
-	// Rotas públicas
-	//
+	// Health check
+	r.HandleFunc("/health", HealthCheckHandler)
+
 	// Rota para a página inicial
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "templates/view/index.html")
+		// Obter sessão
+		session, _ := handlers.Store.Get(r, "psidocs-session")
+
+		// Se autenticado, redireciona para /dashboard
+		if auth, ok := session.Values["authenticated"].(bool); ok && auth {
+			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+			return
+		}
+
+		// Se não autenticado, mostra a página inicial
+		tmpl := template.Must(template.ParseFiles("templates/view/index.html"))
+		tmpl.Execute(w, nil)
 	})
 
 	// Rota auth
 	//
 	// Rota para autenticar um usuário
-	r.HandleFunc("/auth", func(w http.ResponseWriter, r *http.Request) {
-		handlers.AuthHandler(w, r)
-	}).Methods("POST")
+	r.HandleFunc("/auth", handlers.AuthHandler).Methods("POST")
 
 	// Rota logout
 	//
 	// Rota para deslogar um usuário
-	r.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
-		handlers.LogoutHandler(w, r)
-	}).Methods("POST")
+	r.HandleFunc("/logout", handlers.LogoutHandler).Methods("GET")
+
+	// Rota dashboard (protegida)
+	//
+	// Rota para a página dashboard
+	r.Handle("/dashboard", handlers.AuthMiddleware(http.HandlerFunc(handlers.DashboardHandler))).Methods("GET")
+
+}
+
+// HealthCheckHandler retorna 200 OK para health checks
+//
+// Recebe:
+// - w: o writer do response
+// - r: o request
+func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("OK"))
 }

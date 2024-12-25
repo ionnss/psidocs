@@ -5,13 +5,14 @@ body {
     margin: auto;
     --x: calc(var(--posX, 0) * 1px);
     --y: calc(var(--posY, 0) * 1px);
-    
+    /*204, 255, 0
+    0, 183, 255*/
     background-image:
-        linear-gradient(115deg, rgb(0, 183, 255), rgb(255, 48, 255)),
+        linear-gradient(115deg, rgb(0, 183, 255), rgb(204, 255, 0)),
         /* Top row */
-        radial-gradient(30% 30% at calc(20% + var(--x)) calc(20% + var(--y)), rgb(72, 255, 0), transparent),
-        radial-gradient(25% 25% at calc(50% - var(--x)) calc(10% - var(--y)), rgb(0, 255, 234), transparent),
-        radial-gradient(35% 35% at calc(80% + var(--x)) calc(30% + var(--y)), rgb(255, 196, 0), transparent),
+        radial-gradient(30% 30% at calc(20% + var(--x)) calc(20% + var(--y)), rgb(98, 0, 255), transparent),
+        radial-gradient(25% 25% at calc(50% - var(--x)) calc(40% - var(--y)), rgb(0, 255, 234), transparent),
+        radial-gradient(35% 35% at calc(80% + var(--x)) calc(30% + var(--y)), rgb(204, 255, 0), transparent),
         radial-gradient(20% 20% at calc(35% + var(--x)) calc(25% + var(--y)), rgb(0, 255, 0), transparent),
         /* Middle row */
         radial-gradient(20% 20% at calc(30% - var(--x)) calc(50% - var(--y)), rgb(0, 247, 255), transparent),
@@ -21,7 +22,7 @@ body {
         /* Bottom row */
         radial-gradient(30% 30% at calc(25% + var(--x)) calc(75% + var(--y)), rgb(255, 196, 0), transparent),
         radial-gradient(35% 35% at calc(55% - var(--x)) calc(80% - var(--y)), rgb(0, 255, 234), transparent),
-        radial-gradient(25% 25% at calc(90% + var(--x)) calc(70% + var(--y)), rgb(98, 0, 255), transparent),
+        radial-gradient(25% 25% at calc(90% + var(--x)) calc(70% + var(--y)), rgb(238, 255, 0), transparent),
         radial-gradient(25% 25% at calc(40% - var(--x)) calc(65% - var(--y)), rgb(30, 255, 0), transparent),
         /* Extra spots */
         radial-gradient(15% 15% at calc(70% - var(--x)) calc(35% - var(--y)), rgb(255, 166, 0), transparent),

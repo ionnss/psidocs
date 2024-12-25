@@ -1,0 +1,86 @@
+{{define "dashboard_content"}}
+<div class="container-fluid">
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="dashboard-card text-center">
+                <i class="bi bi-person-plus-fill fs-1"></i>
+                <h4>Novo Paciente</h4>
+                <button class="btn btn-outline-light mt-2" hx-get="/dashboard/pacientes/novo" hx-target="#content-area">
+                    Adicionar
+                </button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dashboard-card text-center">
+                <i class="bi bi-file-earmark-text fs-1"></i>
+                <h4>Novo Documento</h4>
+                <button class="btn btn-outline-light mt-2" hx-get="/dashboard/documentos/novo" hx-target="#content-area">
+                    Criar
+                </button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dashboard-card text-center">
+                <i class="bi bi-calendar-plus fs-1"></i>
+                <h4>Nova Sessão</h4>
+                <button class="btn btn-outline-light mt-2" hx-get="/dashboard/agenda/nova" hx-target="#content-area">
+                    Agendar
+                </button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dashboard-card text-center">
+                <i class="bi bi-graph-up fs-1"></i>
+                <h4>Relatórios</h4>
+                <button class="btn btn-outline-light mt-2" hx-get="/dashboard/relatorios" hx-target="#content-area">
+                    Visualizar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <h4><i class="bi bi-clock-history"></i> Atividades Recentes</h4>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <small class="text-muted">Há 2 horas</small>
+                        <br>Documento criado para João Silva
+                    </li>
+                    <li class="mb-2">
+                        <small class="text-muted">Há 3 horas</small>
+                        <br>Nova sessão agendada com Maria Santos
+                    </li>
+                    <li class="mb-2">
+                        <small class="text-muted">Ontem</small>
+                        <br>Relatório mensal gerado
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <h4><i class="bi bi-calendar-check"></i> Próximas Sessões</h4>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <small class="text-muted">Hoje 14:00</small>
+                        <br>Ana Paula - Sessão Regular
+                    </li>
+                    <li class="mb-2">
+                        <small class="text-muted">Hoje 15:30</small>
+                        <br>Carlos Eduardo - Primeira Sessão
+                    </li>
+                    <li class="mb-2">
+                        <small class="text-muted">Amanhã 09:00</small>
+                        <br>Mariana Costa - Sessão Regular
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}} 
