@@ -14,27 +14,27 @@
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label for="firstName" class="form-label">Nome</label>
-                        <input type="text" class="form-control" id="firstName" name="first_name" required>
+                        <input type="text" class="form-control" id="firstName" name="first_name" value="{{.FirstName}}" required>
                     </div>
                     <div class="col-md-4">
                         <label for="middleName" class="form-label">Nome do Meio</label>
-                        <input type="text" class="form-control" id="middleName" name="middle_name">
+                        <input type="text" class="form-control" id="middleName" name="middle_name" value="{{.MiddleName}}">
                     </div>
                     <div class="col-md-4">
                         <label for="lastName" class="form-label">Sobrenome</label>
-                        <input type="text" class="form-control" id="lastName" name="last_name" required>
+                        <input type="text" class="form-control" id="lastName" name="last_name" value="{{.LastName}}" required>
                     </div>
                     <div class="col-md-4">
                         <label for="dateOfBirth" class="form-label">Data de Nascimento</label>
-                        <input type="date" class="form-control" id="dateOfBirth" name="date_of_birth" required>
+                        <input type="date" class="form-control" id="dateOfBirth" name="date_of_birth" value="{{.DateOfBirth.Format "2006-01-02"}}" required>
                     </div>
                     <div class="col-md-4">
                         <label for="cpf" class="form-label">CPF</label>
-                        <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}">
+                        <input type="text" class="form-control" id="cpf" name="cpf" value="{{.CPF}}" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}">
                     </div>
                     <div class="col-md-4">
                         <label for="rg" class="form-label">RG</label>
-                        <input type="text" class="form-control" id="rg" name="rg">
+                        <input type="text" class="form-control" id="rg" name="rg" value="{{.RG}}">
                     </div>
                 </div>
             </div>
@@ -49,19 +49,17 @@
                 <div class="row g-3">
                     <div class="col-md-2">
                         <label for="ddd" class="form-label">DDD</label>
-                        <input type="text" class="form-control" id="ddd" name="ddd" required maxlength="2">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="telefone" class="form-label">Telefone</label>
-                        <input type="text" class="form-control" id="telefone" name="telefone" required>
+                        <input type="text" class="form-control" id="ddd" name="ddd" value="{{.DDD}}" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">&nbsp;</label>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" id="whatsapp" name="whatsapp">
-                            <label class="form-check-label" for="whatsapp">
-                                Este número é WhatsApp
-                            </label>
+                        <label for="telefone" class="form-label">Telefone</label>
+                        <input type="text" class="form-control" id="telefone" name="telefone" value="{{.Telefone}}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label d-block">WhatsApp</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="whatsapp" name="whatsapp" {{if .WhatsApp}}checked{{end}}>
+                            <label class="form-check-label" for="whatsapp">Sim</label>
                         </div>
                     </div>
                 </div>
@@ -77,56 +75,56 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="endereco" class="form-label">Endereço</label>
-                        <input type="text" class="form-control" id="endereco" name="endereco">
+                        <input type="text" class="form-control" id="endereco" name="endereco" value="{{.Endereco}}" required>
                     </div>
                     <div class="col-md-2">
                         <label for="numero" class="form-label">Número</label>
-                        <input type="text" class="form-control" id="numero" name="numero">
+                        <input type="text" class="form-control" id="numero" name="numero" value="{{.Numero}}" required>
                     </div>
                     <div class="col-md-4">
                         <label for="bairro" class="form-label">Bairro</label>
-                        <input type="text" class="form-control" id="bairro" name="bairro">
+                        <input type="text" class="form-control" id="bairro" name="bairro" value="{{.Bairro}}" required>
                     </div>
                     <div class="col-md-4">
                         <label for="cidade" class="form-label">Cidade</label>
-                        <input type="text" class="form-control" id="cidade" name="cidade">
+                        <input type="text" class="form-control" id="cidade" name="cidade" value="{{.Cidade}}" required>
                     </div>
                     <div class="col-md-4">
                         <label for="estado" class="form-label">Estado</label>
-                        <select class="form-select" id="estado" name="estado" required>
+                        <select class="form-control" id="estado" name="estado" required>
                             <option value="">Selecione...</option>
-                            <option value="AC">Acre</option>
-                            <option value="AL">Alagoas</option>
-                            <option value="AP">Amapá</option>
-                            <option value="AM">Amazonas</option>
-                            <option value="BA">Bahia</option>
-                            <option value="CE">Ceará</option>
-                            <option value="DF">Distrito Federal</option>
-                            <option value="ES">Espírito Santo</option>
-                            <option value="GO">Goiás</option>
-                            <option value="MA">Maranhão</option>
-                            <option value="MT">Mato Grosso</option>
-                            <option value="MS">Mato Grosso do Sul</option>
-                            <option value="MG">Minas Gerais</option>
-                            <option value="PA">Pará</option>
-                            <option value="PB">Paraíba</option>
-                            <option value="PR">Paraná</option>
-                            <option value="PE">Pernambuco</option>
-                            <option value="PI">Piauí</option>
-                            <option value="RJ">Rio de Janeiro</option>
-                            <option value="RN">Rio Grande do Norte</option>
-                            <option value="RS">Rio Grande do Sul</option>
-                            <option value="RO">Rondônia</option>
-                            <option value="RR">Roraima</option>
-                            <option value="SC">Santa Catarina</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="SE">Sergipe</option>
-                            <option value="TO">Tocantins</option>
+                            <option value="AC" {{if eq .Estado "AC"}}selected{{end}}>Acre</option>
+                            <option value="AL" {{if eq .Estado "AL"}}selected{{end}}>Alagoas</option>
+                            <option value="AP" {{if eq .Estado "AP"}}selected{{end}}>Amapá</option>
+                            <option value="AM" {{if eq .Estado "AM"}}selected{{end}}>Amazonas</option>
+                            <option value="BA" {{if eq .Estado "BA"}}selected{{end}}>Bahia</option>
+                            <option value="CE" {{if eq .Estado "CE"}}selected{{end}}>Ceará</option>
+                            <option value="DF" {{if eq .Estado "DF"}}selected{{end}}>Distrito Federal</option>
+                            <option value="ES" {{if eq .Estado "ES"}}selected{{end}}>Espírito Santo</option>
+                            <option value="GO" {{if eq .Estado "GO"}}selected{{end}}>Goiás</option>
+                            <option value="MA" {{if eq .Estado "MA"}}selected{{end}}>Maranhão</option>
+                            <option value="MT" {{if eq .Estado "MT"}}selected{{end}}>Mato Grosso</option>
+                            <option value="MS" {{if eq .Estado "MS"}}selected{{end}}>Mato Grosso do Sul</option>
+                            <option value="MG" {{if eq .Estado "MG"}}selected{{end}}>Minas Gerais</option>
+                            <option value="PA" {{if eq .Estado "PA"}}selected{{end}}>Pará</option>
+                            <option value="PB" {{if eq .Estado "PB"}}selected{{end}}>Paraíba</option>
+                            <option value="PR" {{if eq .Estado "PR"}}selected{{end}}>Paraná</option>
+                            <option value="PE" {{if eq .Estado "PE"}}selected{{end}}>Pernambuco</option>
+                            <option value="PI" {{if eq .Estado "PI"}}selected{{end}}>Piauí</option>
+                            <option value="RJ" {{if eq .Estado "RJ"}}selected{{end}}>Rio de Janeiro</option>
+                            <option value="RN" {{if eq .Estado "RN"}}selected{{end}}>Rio Grande do Norte</option>
+                            <option value="RS" {{if eq .Estado "RS"}}selected{{end}}>Rio Grande do Sul</option>
+                            <option value="RO" {{if eq .Estado "RO"}}selected{{end}}>Rondônia</option>
+                            <option value="RR" {{if eq .Estado "RR"}}selected{{end}}>Roraima</option>
+                            <option value="SC" {{if eq .Estado "SC"}}selected{{end}}>Santa Catarina</option>
+                            <option value="SP" {{if eq .Estado "SP"}}selected{{end}}>São Paulo</option>
+                            <option value="SE" {{if eq .Estado "SE"}}selected{{end}}>Sergipe</option>
+                            <option value="TO" {{if eq .Estado "TO"}}selected{{end}}>Tocantins</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label for="cep" class="form-label">CEP</label>
-                        <input type="text" class="form-control" id="cep" name="cep">
+                        <input type="text" class="form-control" id="cep" name="cep" value="{{.CEP}}" required>
                     </div>
                 </div>
             </div>
