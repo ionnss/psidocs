@@ -119,7 +119,7 @@ Você já está no caminho certo ao usar **Argon2id** como método de hashing pa
 
 ```sql
 -- Tabela de usuários
-CREATE TABLE psicologos (
+CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     hash_chave TEXT NOT NULL,
     hash_crp TEXT NOT NULL,
@@ -140,31 +140,43 @@ CREATE TABLE documentos (
 
 ---
 
-## **Próximos Passos**
-
-1. **Autenticação Básica**:
-    
-    - Configure as rotas para criar e validar os hashes no backend.
-    - Utilize o banco de dados para armazenar e verificar os dados.
-2. **Criação de Documentos**:
-    
-    - Implemente uma funcionalidade para psicólogos criarem documentos a partir de templates pré-definidos.
-    - Adicione suporte para download em formatos como PDF.
-3. **Segurança**:
-    
-    - Configure HTTPS no servidor para proteger os dados transmitidos.
-    - Armazene os hashes e salts de forma segura no banco de dados.
-4. **Interface do Usuário**:
-    
-    - Desenvolva o painel do psicólogo com funcionalidades intuitivas para acessar e gerenciar documentos.
-
-Se precisar de ajuda em alguma etapa específica, posso ajudar com exemplos de código ou estratégias! 😊
-
-
----
 ## Registro de psicólogos no Brasil
 
 - https://cadastro.cfp.org.br/
 
 Não existe uma api para consulta de numero de CPR, portanto, é necessário fazer a consulta manualmente. 
 
+---
+# Produção
+
+## Acesso ao banco de dados pelo docker
+
+```shell
+docker exec -it psidocs-db-1 psql -U psicodocs -d superviso
+```
+
+---
+# Desenvolvimento
+
+## **Próximos Passos**
+
+1. **Autenticação Básica**:
+    
+    - [x] Configure as rotas para criar e validar os hashes no backend.
+    - [x] Utilize o banco de dados para armazenar e verificar os dados.
+2. **Criação de Documentos**:
+    
+    - [] Implemente uma funcionalidade para psicólogos criarem documentos a partir de templates pré-definidos.
+    - [] Adicione suporte para download em formatos como PDF.
+3. **Segurança**:
+    
+    - [x] Configure HTTPS no servidor para proteger os dados transmitidos.
+    - [x] Armazene os hashes e salts de forma segura no banco de dados.
+4. **Interface do Usuário**:
+    
+    - [x] Desenvolva o painel do psicólogo com funcionalidades intuitivas para acessar e gerenciar documentos.
+
+Se precisar de ajuda em alguma etapa específica, posso ajudar com exemplos de código ou estratégias! 😊
+
+
+---

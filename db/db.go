@@ -1,3 +1,9 @@
+// Package db gerencia a conexão e operações com o banco de dados PostgreSQL.
+//
+// Fornece:
+//   - Conexão com o banco de dados
+//   - Execução de migrações
+//   - Gerenciamento de transações
 package db
 
 import (
@@ -9,14 +15,8 @@ import (
 	_ "github.com/lib/pq" // Driver PostgreSQL
 )
 
+// DB é a conexão com o banco de dados
 var DB *sql.DB
-
-// Package db gerencia a conexão e operações com o banco de dados PostgreSQL.
-//
-// Fornece:
-//   - Conexão com o banco de dados
-//   - Execução de migrações
-//   - Gerenciamento de transações
 
 // Connect inicializa e retorna uma conexão com o banco de dados.
 //
@@ -51,13 +51,14 @@ func Connect() (*sql.DB, error) {
 		return nil, err
 	}
 
+	// Retorna a conexão com o banco de dados
 	return db, nil
 }
 
-// ExecuteMigrations executa os scripts de migração no banco
+// ExecuteMigrations executa os scripts de migração e cria as tabelas no banco
 func ExecuteMigrations(conn *sql.DB) {
 	migrationFiles := []string{
-		"db/001.create_psicologos_tables.sql",
+		"db/001.create_users_tables.sql",
 		//...
 	}
 
