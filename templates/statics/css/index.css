@@ -22,13 +22,21 @@
 
 .easter-egg-text {
     display: none;
-    font-size: 0.9em;
+    font-size: 1em;
     color: #ded4f2;
-    font-style: italic;
+    font-style: normal;
     margin: 1rem 0;
     line-height: 1.8;
-    
+    padding: 1rem;
     backdrop-filter: blur(10px);
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.italic-text {
+    font-style: italic !important;
 }
 
 .easter-egg-text.show {
