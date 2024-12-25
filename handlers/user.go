@@ -40,6 +40,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	// Variáveis de entrada
 	crp := r.FormValue("crp")
 	chave := r.FormValue("chave")
+	email := r.FormValue("email")
 
 	// Conectar ao banco de dados
 	db, err := db.Connect()
@@ -66,10 +67,20 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	err = stmt.QueryRow(crp).Scan(&hashChave, &saltChave)
 
 	if err == sql.ErrNoRows {
+		// Verificar se o email já existe
+		var emailExists bool
+		err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)", email).Scan(&emailExists)
+		if err != nil {
+			http.Error(w, "Erro ao verificar email", http.StatusInternalServerError)
+			return
+		}
+		if emailExists {
+			http.Error(w, "Email já cadastrado", http.StatusConflict)
+			return
+		}
+
 		// Preparar statement para insert
-		//
-		// Prepara uma consulta para inserir um novo usuário
-		insertStmt, err := db.Prepare("INSERT INTO users (hash_crp, hash_chave, salt_chave, salt_crp) VALUES ($1, $2, $3, $4)")
+		insertStmt, err := db.Prepare("INSERT INTO users (hash_crp, hash_chave, salt_chave, salt_crp, email) VALUES ($1, $2, $3, $4, $5)")
 		if err != nil {
 			http.Error(w, "Erro ao preparar inserção", http.StatusInternalServerError)
 			return
@@ -84,7 +95,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		hashChave = hashPassword(chave, saltChave)
 
 		// Insere o novo usuário no banco de dados
-		_, err = insertStmt.Exec(crp, hashChave, saltChave, saltCrp)
+		_, err = insertStmt.Exec(crp, hashChave, saltChave, saltCrp, email)
 		if err != nil {
 			http.Error(w, "Erro ao registrar novo usuário", http.StatusInternalServerError)
 			return
@@ -93,6 +104,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		// Set session values
 		session.Values["authenticated"] = true
 		session.Values["crp"] = crp
+		session.Values["email"] = email
 		session.Save(r, w)
 
 		fmt.Fprintf(w, "Usuário registrado com sucesso")
@@ -104,9 +116,18 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		//
 		// Verifica se a senha está correta
 		if checkPasswordHash(chave, hashChave, saltChave) {
+			// Buscar email do usuário
+			var userEmail string
+			err = db.QueryRow("SELECT email FROM users WHERE hash_crp = $1", crp).Scan(&userEmail)
+			if err != nil {
+				http.Error(w, "Erro ao buscar dados do usuário", http.StatusInternalServerError)
+				return
+			}
+
 			// Set session values
 			session.Values["authenticated"] = true
 			session.Values["crp"] = crp
+			session.Values["email"] = userEmail
 			session.Save(r, w)
 
 			fmt.Fprintf(w, "Login realizado com sucesso")
@@ -178,14 +199,23 @@ func hashPassword(password, salt string) string {
 //
 // Recebe:
 // - password: a senha a ser verificada
-// - hash: o hash da senha armazenado no banco de dados
+// - hashBase64: o hash da senha armazenado no banco em base64
 // - salt: o salt da senha armazenado no banco de dados
 //
 // Retorna:
 // - true: se a senha está correta
 // - false: se a senha está incorreta
-func checkPasswordHash(password, hash, salt string) bool {
+func checkPasswordHash(password, hashBase64, salt string) bool {
+	// Decodifica o hash de base64 para bytes
+	hashBytes, err := base64.StdEncoding.DecodeString(hashBase64)
+	if err != nil {
+		return false
+	}
+
+	// Combina senha+salt
 	saltedPassword := password + salt
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(saltedPassword))
+
+	// Compara usando bcrypt
+	err = bcrypt.CompareHashAndPassword(hashBytes, []byte(saltedPassword))
 	return err == nil
 }

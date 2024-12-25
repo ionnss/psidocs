@@ -80,7 +80,7 @@
                         <input type="password" 
                                class="form-control" 
                                name="chave"
-                               placeholder="Chave de acesso" 
+                               placeholder="Chave de acesso (Ex: P!d@123456)" 
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$"
                                title="Mínimo 10 caracteres, incluindo maiúsculas, minúsculas, números e caracteres especiais"
                                required>
@@ -89,17 +89,16 @@
                     <!-- Email Input -->
                     <div class="input-group w-auto">
                         <span class="input-group-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2M2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
                             </svg>
                         </span>
                         <input type="email" 
                                class="form-control" 
                                name="email"
                                placeholder="Email" 
-                               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$"
-                               title="Mínimo 10 caracteres, incluindo maiúsculas, minúsculas, números e caracteres especiais"
+                               pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                               title="Digite um email válido"
                                required>
                     </div>
 
@@ -285,7 +284,8 @@
         </div>
 
         <footer class="text-center text-light p-4 mt-5">
-            <p class="mt-5 mb-3">PsiDocs &copy; 2024</p>
+            <img src="/static/assets/logo.svg" alt="PsiDocs Logo" style="max-height: 80px;" class="mb-4 mt-4">
+            <p class="mt-5 mb-3">PSIDOCS &copy; 2024</p>
             <p class="mb-3">De um psicólogo, para psicólogos.</p>
         </footer>
 

@@ -5,16 +5,29 @@ body {
     margin: auto;
     --x: calc(var(--posX, 0) * 1px);
     --y: calc(var(--posY, 0) * 1px);
-    /* Uncomment the following block to use the alternative background */
-
+    
     background-image:
-        linear-gradient(115deg, rgb(86, 235, 104), rgb(231, 53, 88)),
-        radial-gradient(90% 100% at calc(50% + var(--x)) calc(0% + var(--y)), rgb(177, 13, 241), rgba(211, 237, 18, 0.172)),
-        radial-gradient(100% 100% at calc(80% - var(--x)) calc(0% - var(--y)), rgb(255, 6, 131), rgb(237, 184, 49)),
-        radial-gradient(150% 210% at calc(100% + var(--x)) calc(0% + var(--y)), rgb(13, 70, 241), rgb(13, 255, 0)),
-        radial-gradient(100% 100% at calc(100% - var(--x)) calc(30% - var(--y)), rgb(255, 6, 131), rgb(240, 54, 91)),
-        linear-gradient(60deg, rgb(241, 12, 127), rgb(138, 40, 224));
-    background-blend-mode: overlay, normal, overlay, difference, difference, normal;
+        linear-gradient(115deg, rgb(0, 183, 255), rgb(255, 48, 255)),
+        /* Top row */
+        radial-gradient(30% 30% at calc(20% + var(--x)) calc(20% + var(--y)), rgb(72, 255, 0), transparent),
+        radial-gradient(25% 25% at calc(50% - var(--x)) calc(10% - var(--y)), rgb(0, 255, 234), transparent),
+        radial-gradient(35% 35% at calc(80% + var(--x)) calc(30% + var(--y)), rgb(255, 196, 0), transparent),
+        radial-gradient(20% 20% at calc(35% + var(--x)) calc(25% + var(--y)), rgb(0, 255, 0), transparent),
+        /* Middle row */
+        radial-gradient(20% 20% at calc(30% - var(--x)) calc(50% - var(--y)), rgb(0, 247, 255), transparent),
+        radial-gradient(40% 40% at calc(60% + var(--x)) calc(45% + var(--y)), rgb(98, 0, 255), transparent),
+        radial-gradient(25% 25% at calc(85% - var(--x)) calc(55% - var(--y)), rgb(72, 255, 0), transparent),
+        radial-gradient(30% 30% at calc(45% + var(--x)) calc(40% + var(--y)), rgb(255, 145, 0), transparent),
+        /* Bottom row */
+        radial-gradient(30% 30% at calc(25% + var(--x)) calc(75% + var(--y)), rgb(255, 196, 0), transparent),
+        radial-gradient(35% 35% at calc(55% - var(--x)) calc(80% - var(--y)), rgb(0, 255, 234), transparent),
+        radial-gradient(25% 25% at calc(90% + var(--x)) calc(70% + var(--y)), rgb(98, 0, 255), transparent),
+        radial-gradient(25% 25% at calc(40% - var(--x)) calc(65% - var(--y)), rgb(30, 255, 0), transparent),
+        /* Extra spots */
+        radial-gradient(15% 15% at calc(70% - var(--x)) calc(35% - var(--y)), rgb(255, 166, 0), transparent),
+        radial-gradient(20% 20% at calc(15% + var(--x)) calc(60% + var(--y)), rgb(0, 255, 85), transparent),
+        linear-gradient(60deg, rgb(98, 0, 255), rgb(13, 255, 0));
+    background-blend-mode: multiply, screen, color-dodge, overlay, difference, screen, color-dodge, overlay, difference, screen, overlay, difference, screen, color-dodge, overlay, normal;
 }
 
 /* Background Gradient Animation */
@@ -45,11 +58,8 @@ body {
 
 .card-index:hover {
     transform: scale(1.05);
-    /* Slightly enlarge the card */
     transition: transform 0.3s ease-in-out;
-    /* Smooth transition */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Add shadow */
 }
 
 .cards_trans {
