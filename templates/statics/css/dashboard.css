@@ -15,7 +15,7 @@
     min-width: 250px;
     max-width: 250px;
     min-height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(18, 17, 22);
     backdrop-filter: blur(10px);
     color: #fff;
     transition: all 0.3s;
@@ -35,7 +35,7 @@
 }
 
 .sidebar .logo {
-    max-width: 150px;
+    max-width: 30px;
     height: auto;
 }
 
@@ -89,13 +89,39 @@
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
+    --x: calc(var(--posX, 0) * 1px);
+    --y: calc(var(--posY, 0) * 1px);
+    background-image:
+        linear-gradient(115deg, rgba(0, 183, 255, 0.3), rgba(204, 255, 0, 0.2)),
+        radial-gradient(40% 40% at calc(30% + var(--x)) calc(30% + var(--y)), rgba(98, 0, 255, 0.2), transparent),
+        radial-gradient(35% 35% at calc(70% - var(--x)) calc(40% - var(--y)), rgba(0, 255, 234, 0.2), transparent),
+        radial-gradient(45% 45% at calc(50% + var(--x)) calc(60% + var(--y)), rgba(204, 255, 0, 0.2), transparent),
+        linear-gradient(60deg, rgba(98, 0, 255, 0.1), rgba(13, 255, 0, 0.1));
+    background-blend-mode: overlay, screen, color-dodge, overlay, normal;
+    backdrop-filter: blur(20px);
+}
+
+/* Background Gradient Animation */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* Cards */
 .dashboard-card {
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
+    background: rgba(18, 17, 22);
+    backdrop-filter: blur(100px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 9px rgba(0, 0, 0, 0.4);
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
@@ -104,7 +130,11 @@
 }
 
 .dashboard-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
+}
+
+.text-muted {
+    color: #e0d5d5 !important;
 }
 
 /* Responsive */
