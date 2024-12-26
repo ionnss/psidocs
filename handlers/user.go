@@ -100,6 +100,31 @@ func incrementLoginAttempt(ip string) {
 	}
 }
 
+// checkCRPHash verifica se o CRP está correto
+//
+// Recebe:
+// - crp: o CRP a ser verificado
+// - hashBase64: o hash do CRP armazenado no banco em base64
+// - salt: o salt do CRP armazenado no banco de dados
+//
+// Retorna:
+// - true: se o CRP está correto
+// - false: se o CRP está incorreto
+func checkCRPHash(crp, hashBase64, salt string) bool {
+	// Decodifica o hash de base64 para bytes
+	hashBytes, err := base64.StdEncoding.DecodeString(hashBase64)
+	if err != nil {
+		return false
+	}
+
+	// Combina o CRP com o salt da mesma forma que foi feito na criação
+	saltedCRP := crp + salt
+
+	// Compara usando bcrypt
+	err = bcrypt.CompareHashAndPassword(hashBytes, []byte(saltedCRP))
+	return err == nil
+}
+
 // AuthHandler é um handler que fará a autenticação de usuários
 //
 // Recebe:
@@ -152,72 +177,59 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Primeiro, tentar obter o salt do CRP se o usuário já existir
-	var saltCrp string
-	err = db.QueryRow("SELECT salt_crp FROM users WHERE email = $1", email).Scan(&saltCrp)
-	if err != nil && err != sql.ErrNoRows {
+	// Primeiro, verificar se o usuário existe
+	var userExists bool
+	err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)", email).Scan(&userExists)
+	if err != nil {
 		http.Error(w, "Erro ao verificar usuário", http.StatusInternalServerError)
 		return
 	}
 
-	// Se encontrou o salt, gera o hash do CRP para comparação
-	var hashCrp string
-	if err != sql.ErrNoRows {
-		hashCrp = hashPassword(crp, saltCrp)
-	} else {
-		hashCrp = crp // Caso novo usuário
-	}
+	if userExists {
+		// Usuário existe - FLUXO DE LOGIN
+		log.Printf("Iniciando fluxo de login para email: %s", email)
 
-	// Preparar statement para select
-	stmt, err := db.Prepare("SELECT hash_chave, salt_chave FROM users WHERE hash_crp = $1")
-	if err != nil {
-		http.Error(w, "Erro ao preparar consulta", http.StatusInternalServerError)
-		return
-	}
-	defer stmt.Close()
+		// Buscar todos os dados necessários de uma vez
+		var hashCrpArmazenado, saltCrp, hashChave, saltChave string
+		err = db.QueryRow(`
+			SELECT hash_crp, salt_crp, hash_chave, salt_chave 
+			FROM users 
+			WHERE email = $1
+		`, email).Scan(&hashCrpArmazenado, &saltCrp, &hashChave, &saltChave)
 
-	// Executar a consulta
-	var hashChave, saltChave string
-	err = stmt.QueryRow(hashCrp).Scan(&hashChave, &saltChave)
-
-	if err == sql.ErrNoRows {
-		// Verificar se o email já existe
-		var emailExists bool
-		err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)", email).Scan(&emailExists)
 		if err != nil {
-			http.Error(w, "Erro ao verificar email", http.StatusInternalServerError)
-			return
-		}
-		if emailExists {
-			incrementLoginAttempt(ip) // Incrementa tentativa em caso de erro
-			http.Error(w, "Email já cadastrado", http.StatusConflict)
+			log.Printf("Erro ao buscar dados do usuário: %v", err)
+			http.Error(w, "Erro ao verificar credenciais", http.StatusInternalServerError)
 			return
 		}
 
-		// Preparar statement para insert
-		insertStmt, err := db.Prepare("INSERT INTO users (hash_crp, hash_chave, salt_chave, salt_crp, email) VALUES ($1, $2, $3, $4, $5)")
-		if err != nil {
-			http.Error(w, "Erro ao preparar inserção", http.StatusInternalServerError)
-			return
-		}
-		defer insertStmt.Close()
+		log.Printf("Debug - Verificação do CRP:")
+		log.Printf("- CRP fornecido: %s", crp)
+		log.Printf("- Salt CRP: %s", saltCrp)
 
-		// Registra novo usuário
-		saltChave = generateSalt()
-		saltCrp = generateSalt() // Gera novo salt para CRP
-		hashChave = hashPassword(chave, saltChave)
-		hashCrp = hashPassword(crp, saltCrp) // Gera hash do CRP
-
-		// Insere o novo usuário no banco de dados
-		_, err = insertStmt.Exec(hashCrp, hashChave, saltChave, saltCrp, email)
-		if err != nil {
-			http.Error(w, "Erro ao registrar novo usuário", http.StatusInternalServerError)
+		// Verificar CRP usando bcrypt
+		if !checkCRPHash(crp, hashCrpArmazenado, saltCrp) {
+			log.Printf("CRP incorreto para usuário com email %s", email)
+			incrementLoginAttempt(ip)
+			http.Error(w, "CRP ou chave incorretos", http.StatusUnauthorized)
 			return
 		}
 
-		// Set session values
+		log.Printf("CRP verificado com sucesso, verificando chave")
+
+		// Verificar a chave
+		if !checkPasswordHash(chave, hashChave, saltChave) {
+			log.Printf("Chave incorreta para usuário com email %s", email)
+			incrementLoginAttempt(ip)
+			http.Error(w, "CRP ou chave incorretos", http.StatusUnauthorized)
+			return
+		}
+
+		log.Printf("Login bem sucedido para usuário com email %s", email)
+
+		// Login bem sucedido
 		session.Values["authenticated"] = true
-		session.Values["crp"] = crp // Mantém CRP original na sessão
+		session.Values["crp"] = crp
 		session.Values["email"] = email
 		session.Save(r, w)
 
@@ -229,37 +241,37 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		// Redireciona para o dashboard
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 
-	} else if err != nil {
-		http.Error(w, "Database error query", http.StatusInternalServerError)
-		return
 	} else {
-		// Login de usuário
-		if checkPasswordHash(chave, hashChave, saltChave) {
-			// Buscar email do usuário
-			var userEmail string
-			err = db.QueryRow("SELECT email FROM users WHERE hash_crp = $1", hashCrp).Scan(&userEmail)
-			if err != nil {
-				http.Error(w, "Erro ao buscar dados do usuário", http.StatusInternalServerError)
-				return
-			}
+		// Usuário não existe - FLUXO DE REGISTRO
+		// Gerar salts
+		saltChave := generateSalt()
+		saltCrp := generateSalt()
 
-			// Set session values
-			session.Values["authenticated"] = true
-			session.Values["crp"] = crp // Mantém CRP original na sessão
-			session.Values["email"] = userEmail
-			session.Save(r, w)
+		// Gerar hashes
+		hashChave := hashPassword(chave, saltChave)
+		hashCrp := hashPassword(crp, saltCrp)
 
-			// Adiciona headers no-cache
-			w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-			w.Header().Set("Pragma", "no-cache")
-			w.Header().Set("Expires", "0")
-
-			// Redireciona para o dashboard
-			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-		} else {
-			incrementLoginAttempt(ip) // Incrementa tentativa em caso de senha incorreta
-			http.Error(w, "Senha incorreta", http.StatusUnauthorized)
+		// Inserir novo usuário
+		_, err = db.Exec("INSERT INTO users (hash_crp, hash_chave, salt_chave, salt_crp, email) VALUES ($1, $2, $3, $4, $5)",
+			hashCrp, hashChave, saltChave, saltCrp, email)
+		if err != nil {
+			http.Error(w, "Erro ao registrar novo usuário", http.StatusInternalServerError)
+			return
 		}
+
+		// Set session values
+		session.Values["authenticated"] = true
+		session.Values["crp"] = crp
+		session.Values["email"] = email
+		session.Save(r, w)
+
+		// Adiciona headers no-cache
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+
+		// Redireciona para o dashboard
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	}
 }
 
@@ -306,13 +318,18 @@ func generateSalt() string {
 // - salt: o salt da senha
 //
 // Retorna:
-// - hash: o hash da senha
+// - hash: o hash da senha em base64
 func hashPassword(password, salt string) string {
+	// Combina a senha com o salt
 	saltedPassword := password + salt
+
+	// Gera o hash usando bcrypt
 	hash, err := bcrypt.GenerateFromPassword([]byte(saltedPassword), bcrypt.DefaultCost)
 	if err != nil {
 		panic(err)
 	}
+
+	// Retorna o hash em base64
 	return base64.StdEncoding.EncodeToString(hash)
 }
 
@@ -333,7 +350,7 @@ func checkPasswordHash(password, hashBase64, salt string) bool {
 		return false
 	}
 
-	// Combina senha+salt
+	// Combina a senha com o salt da mesma forma que foi feito na criação
 	saltedPassword := password + salt
 
 	// Compara usando bcrypt
@@ -597,10 +614,223 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetUserAuthHandler(w http.ResponseWriter, r *http.Request) {
-	// Continuar
-}
+// UpdateUserCredentialsHandler lida com a exibição e atualização das credenciais do usuário
+//
+// Recebe:
+// - w: o writer do response
+// - r: o request
+func UpdateUserCredentialsHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("UpdateUserCredentialsHandler iniciado - Método: %s", r.Method)
 
-func UpdateUserPasswordHandler(w http.ResponseWriter, r *http.Request) {
-	// Continuar
+	// Verificar sessão
+	session, err := Store.Get(r, "psidocs-session")
+	if err != nil {
+		log.Printf("Erro ao obter sessão: %v", err)
+		http.Error(w, "Erro ao obter sessão", http.StatusInternalServerError)
+		return
+	}
+
+	// Verificar autenticação
+	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+		log.Printf("Usuário não autenticado - ok: %v, auth: %v", ok, auth)
+		http.Error(w, "Usuário não autenticado", http.StatusUnauthorized)
+		return
+	}
+
+	if r.Method == "GET" {
+		log.Printf("Processando requisição GET")
+		// Preparar dados do template
+		data := map[string]interface{}{
+			"Email": session.Values["email"],
+			"CRP":   session.Values["crp"],
+		}
+
+		// Se for uma requisição HTMX, renderiza só o conteúdo
+		if r.Header.Get("HX-Request") == "true" {
+			log.Printf("Renderizando template para requisição HTMX")
+			tmpl := template.Must(template.ParseFiles("templates/view/partials/user_credentials.html"))
+			if err := tmpl.Execute(w, data); err != nil {
+				log.Printf("Erro ao renderizar template: %v", err)
+				http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+				return
+			}
+			return
+		}
+
+		// Se não for HTMX, renderiza o layout completo
+		log.Printf("Renderizando layout completo")
+		tmpl := template.Must(template.ParseFiles(
+			"templates/view/dashboard_layout.html",
+			"templates/view/partials/user_credentials.html",
+		))
+		if err := tmpl.Execute(w, data); err != nil {
+			log.Printf("Erro ao renderizar template: %v", err)
+			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+			return
+		}
+		return
+	}
+
+	if r.Method == "POST" {
+		// Conectar ao banco
+		db, err := db.Connect()
+		if err != nil {
+			http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+			return
+		}
+		defer db.Close()
+
+		// Obter ID do usuário atual
+		var userID int
+		email := session.Values["email"].(string)
+		err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&userID)
+		if err != nil {
+			http.Error(w, "Erro ao obter dados do usuário", http.StatusInternalServerError)
+			return
+		}
+
+		// Verificar qual campo está sendo atualizado
+		newEmail := r.FormValue("email")
+		newCRP := r.FormValue("crp")
+		newChave := r.FormValue("chave")
+		chaveAtual := r.FormValue("chave_atual")
+
+		// Atualizar email
+		if newEmail != "" && newEmail != email {
+			if err := ValidateEmail(newEmail); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			// Verificar se novo email já existe
+			var exists bool
+			err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = $1 AND id != $2)", newEmail, userID).Scan(&exists)
+			if err != nil {
+				http.Error(w, "Erro ao verificar email", http.StatusInternalServerError)
+				return
+			}
+			if exists {
+				http.Error(w, "Email já está em uso", http.StatusConflict)
+				return
+			}
+
+			// Atualizar email
+			_, err = db.Exec("UPDATE users SET email = $1 WHERE id = $2", newEmail, userID)
+			if err != nil {
+				http.Error(w, "Erro ao atualizar email", http.StatusInternalServerError)
+				return
+			}
+
+			// Atualizar sessão
+			session.Values["email"] = newEmail
+			session.Save(r, w)
+		}
+
+		// Atualizar CRP
+		if newCRP != "" && newCRP != session.Values["crp"] {
+			if err := ValidateCRP(newCRP); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			// Gerar novo salt e hash para o CRP
+			saltCrp := generateSalt()
+			hashCrp := hashPassword(newCRP, saltCrp)
+
+			// Verificar se novo CRP já existe
+			var exists bool
+			err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE hash_crp = $1 AND id != $2)", hashCrp, userID).Scan(&exists)
+			if err != nil {
+				http.Error(w, "Erro ao verificar CRP", http.StatusInternalServerError)
+				return
+			}
+			if exists {
+				http.Error(w, "CRP já está em uso", http.StatusConflict)
+				return
+			}
+
+			// Atualizar CRP
+			_, err = db.Exec("UPDATE users SET hash_crp = $1, salt_crp = $2 WHERE id = $3", hashCrp, saltCrp, userID)
+			if err != nil {
+				http.Error(w, "Erro ao atualizar CRP", http.StatusInternalServerError)
+				return
+			}
+
+			// Atualizar sessão
+			session.Values["crp"] = newCRP
+			session.Save(r, w)
+		}
+
+		// Atualizar chave
+		if newChave != "" {
+			log.Printf("Tentando atualizar chave para usuário %d", userID)
+
+			if err := ValidateChave(newChave); err != nil {
+				log.Printf("Erro na validação da nova chave: %v", err)
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			// Verificar chave atual
+			var hashChaveAtual, saltChaveAtual string
+			err = db.QueryRow("SELECT hash_chave, salt_chave FROM users WHERE id = $1", userID).Scan(&hashChaveAtual, &saltChaveAtual)
+			if err != nil {
+				log.Printf("Erro ao buscar chave atual: %v", err)
+				http.Error(w, "Erro ao verificar chave atual", http.StatusInternalServerError)
+				return
+			}
+
+			log.Printf("Debug - Valores recebidos do formulário:")
+			log.Printf("- chave_atual: %v (vazio: %v)", chaveAtual, chaveAtual == "")
+			log.Printf("- nova_chave: %v (vazio: %v)", newChave, newChave == "")
+
+			log.Printf("Debug - Valores do banco:")
+			log.Printf("- Salt atual: %s", saltChaveAtual)
+			log.Printf("- Hash atual: %s", hashChaveAtual)
+
+			// Gerar hash da chave atual fornecida para comparação
+			hashTeste := hashPassword(chaveAtual, saltChaveAtual)
+			log.Printf("Debug - Hash gerado com a chave atual fornecida: %s", hashTeste)
+			log.Printf("Debug - Os hashes são iguais? %v", hashTeste == hashChaveAtual)
+
+			// Verificar se a chave atual está correta
+			resultado := checkPasswordHash(chaveAtual, hashChaveAtual, saltChaveAtual)
+			log.Printf("Debug - Resultado do checkPasswordHash: %v", resultado)
+
+			if !resultado {
+				log.Printf("Chave atual incorreta para usuário %d", userID)
+				http.Error(w, "Chave atual incorreta", http.StatusUnauthorized)
+				return
+			}
+
+			// Se chegou aqui, a chave atual está correta
+			log.Printf("Chave atual verificada com sucesso, procedendo com atualização")
+
+			// Gerar novo salt e hash para a nova chave
+			saltChave := generateSalt()
+			hashChave := hashPassword(newChave, saltChave)
+
+			// Atualizar chave
+			_, err = db.Exec("UPDATE users SET hash_chave = $1, salt_chave = $2 WHERE id = $3",
+				hashChave, saltChave, userID)
+			if err != nil {
+				log.Printf("Erro ao atualizar chave: %v", err)
+				http.Error(w, "Erro ao atualizar chave", http.StatusInternalServerError)
+				return
+			}
+
+			log.Printf("Chave atualizada com sucesso para usuário %d", userID)
+		}
+
+		// Resposta baseada no tipo de requisição
+		if r.Header.Get("HX-Request") == "true" {
+			w.Write([]byte(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<i class="bi bi-check-circle-fill me-2"></i>
+				Credenciais atualizadas com sucesso!
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>`))
+		} else {
+			http.Redirect(w, r, "/dashboard/credenciais", http.StatusSeeOther)
+		}
+	}
 }
