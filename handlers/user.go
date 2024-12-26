@@ -1,18 +1,11 @@
 // Package handlers é um pacote que contém os handlers da aplicação
-//
-// Fornece:
-// - Autenticação de usuários (psicólogos)
-// - Criação de usuários (psicólogos)
-// - Criação de senhas (psicólogos)
-// - Login de usuários (psicólogos)
-// - Logout de usuários (psicólogos)
-// - Criação de senhas (psicólogos)
 package handlers
 
 import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -833,4 +826,40 @@ func UpdateUserCredentialsHandler(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/dashboard/credenciais", http.StatusSeeOther)
 		}
 	}
+}
+
+// GetCurrentUserInfo obtém o email e CRP do usuário atualmente autenticado
+//
+// Receives:
+// - w: http.ResponseWriter para retornar erros HTTP se necessário
+// - r: *http.Request para acessar a sessão
+//
+// Returns:
+// - email: email do usuário autenticado
+// - crp: CRP do usuário autenticado
+// - error: erro se houver falha ao obter os dados ou se o usuário não estiver autenticado
+func GetCurrentUserInfo(w http.ResponseWriter, r *http.Request) (string, string, error) {
+	// Verificar sessão
+	session, err := Store.Get(r, "psidocs-session")
+	if err != nil {
+		log.Printf("Erro ao obter sessão: %v", err)
+		http.Error(w, "Erro ao obter sessão", http.StatusInternalServerError)
+		return "", "", fmt.Errorf("erro ao obter sessão: %v", err)
+	}
+
+	// Verificar autenticação
+	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+		log.Printf("Usuário não autenticado - ok: %v, auth: %v", ok, auth)
+		http.Error(w, "Usuário não autenticado", http.StatusUnauthorized)
+		return "", "", fmt.Errorf("usuário não autenticado")
+	}
+
+	email, emailOk := session.Values["email"].(string)
+	crp, crpOk := session.Values["crp"].(string)
+
+	if !emailOk || !crpOk {
+		return "", "", fmt.Errorf("email ou CRP não encontrados na sessão")
+	}
+
+	return email, crp, nil
 }

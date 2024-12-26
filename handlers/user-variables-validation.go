@@ -1,3 +1,4 @@
+// Package handlers é um pacote que contém os handlers da aplicação
 package handlers
 
 import (

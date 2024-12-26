@@ -52,6 +52,10 @@ func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 		tmpl.Execute(w, nil)
 	})
 
+	// Rota para a página de recuperação de senha
+	r.HandleFunc("/forgot-password", handlers.ForgotPasswordHandler).Methods("GET", "POST")
+	r.HandleFunc("/reset-password/{token}", handlers.ResetPasswordHandler).Methods("GET", "POST")
+
 	// Rota auth
 	//
 	// Rota para autenticar um usuário

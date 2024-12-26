@@ -60,6 +60,7 @@ func ExecuteMigrations(conn *sql.DB) {
 	migrationFiles := []string{
 		"db/001.create_users_table.sql",
 		"db/002.create_pacientes_table.sql",
+		"db/003.create_password_reset_table.sql",
 		//...
 	}
 
