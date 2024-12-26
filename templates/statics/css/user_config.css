@@ -33,3 +33,9 @@
     background-color: rgb(165, 9, 243);
     color: #ffffff;
 }
+
+.alert {
+    color: #ffffff;
+    background-color: rgb(12, 121, 20);
+    text-align: center;
+}
