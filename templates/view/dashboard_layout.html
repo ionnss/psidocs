@@ -50,7 +50,12 @@
                 </li>
                 <li>
                     <a hx-get="/dashboard/configuracoes" hx-target="#content-area" class="nav-link">
-                        <i class="bi bi-gear-fill"></i> Configurações
+                        <i class="bi bi-person-fill"></i> Dados Pessoais
+                    </a>
+                </li>
+                <li>
+                    <a hx-get="/dashboard/credenciais" hx-target="#content-area" class="nav-link">
+                        <i class="bi bi-key-fill"></i> Credenciais Conta
                     </a>
                 </li>
             </ul>
@@ -58,6 +63,7 @@
             <div class="sidebar-footer">
                 <div class="user-info">
                     <span>{{.Email}}</span>
+                    <span>{{.CRP}}</span>
                 </div>
                 <form action="/logout" method="POST" class="d-inline">
                     <button type="submit" class="btn btn-danger btn-sm">

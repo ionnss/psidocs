@@ -152,6 +152,22 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	// Primeiro, tentar obter o salt do CRP se o usuário já existir
+	var saltCrp string
+	err = db.QueryRow("SELECT salt_crp FROM users WHERE email = $1", email).Scan(&saltCrp)
+	if err != nil && err != sql.ErrNoRows {
+		http.Error(w, "Erro ao verificar usuário", http.StatusInternalServerError)
+		return
+	}
+
+	// Se encontrou o salt, gera o hash do CRP para comparação
+	var hashCrp string
+	if err != sql.ErrNoRows {
+		hashCrp = hashPassword(crp, saltCrp)
+	} else {
+		hashCrp = crp // Caso novo usuário
+	}
+
 	// Preparar statement para select
 	stmt, err := db.Prepare("SELECT hash_chave, salt_chave FROM users WHERE hash_crp = $1")
 	if err != nil {
@@ -162,7 +178,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Executar a consulta
 	var hashChave, saltChave string
-	err = stmt.QueryRow(crp).Scan(&hashChave, &saltChave)
+	err = stmt.QueryRow(hashCrp).Scan(&hashChave, &saltChave)
 
 	if err == sql.ErrNoRows {
 		// Verificar se o email já existe
@@ -188,11 +204,12 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Registra novo usuário
 		saltChave = generateSalt()
-		saltCrp := generateSalt()
+		saltCrp = generateSalt() // Gera novo salt para CRP
 		hashChave = hashPassword(chave, saltChave)
+		hashCrp = hashPassword(crp, saltCrp) // Gera hash do CRP
 
 		// Insere o novo usuário no banco de dados
-		_, err = insertStmt.Exec(crp, hashChave, saltChave, saltCrp, email)
+		_, err = insertStmt.Exec(hashCrp, hashChave, saltChave, saltCrp, email)
 		if err != nil {
 			http.Error(w, "Erro ao registrar novo usuário", http.StatusInternalServerError)
 			return
@@ -200,7 +217,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Set session values
 		session.Values["authenticated"] = true
-		session.Values["crp"] = crp
+		session.Values["crp"] = crp // Mantém CRP original na sessão
 		session.Values["email"] = email
 		session.Save(r, w)
 
@@ -220,7 +237,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 		if checkPasswordHash(chave, hashChave, saltChave) {
 			// Buscar email do usuário
 			var userEmail string
-			err = db.QueryRow("SELECT email FROM users WHERE hash_crp = $1", crp).Scan(&userEmail)
+			err = db.QueryRow("SELECT email FROM users WHERE hash_crp = $1", hashCrp).Scan(&userEmail)
 			if err != nil {
 				http.Error(w, "Erro ao buscar dados do usuário", http.StatusInternalServerError)
 				return
@@ -228,7 +245,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 
 			// Set session values
 			session.Values["authenticated"] = true
-			session.Values["crp"] = crp
+			session.Values["crp"] = crp // Mantém CRP original na sessão
 			session.Values["email"] = userEmail
 			session.Save(r, w)
 
@@ -362,6 +379,7 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{
 		"Authenticated": session.Values["authenticated"],
 		"Email":         session.Values["email"],
+		"CRP":           session.Values["crp"],
 	}
 
 	// Se for uma requisição HTMX, renderiza só o conteúdo
@@ -577,4 +595,12 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/dashboard/configuracoes", http.StatusSeeOther)
 		}
 	}
+}
+
+func GetUserAuthHandler(w http.ResponseWriter, r *http.Request) {
+	// Continuar
+}
+
+func UpdateUserPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	// Continuar
 }
