@@ -1,0 +1,141 @@
+<!-- CSS -->
+<link rel="stylesheet" href="/static/css/patients_profile.css">
+
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>{{.Patient.Nome}}</h2>
+            <span class="badge {{if eq .Patient.Status "ativo"}}bg-success{{else if eq .Patient.Status "inativo"}}bg-warning{{else}}bg-secondary{{end}}">
+                {{.Patient.Status}}
+            </span>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-warning" 
+                    hx-get="/patients/{{.Patient.ID}}/edit" 
+                    hx-target="#content-area">
+                <i class="bi bi-pencil-fill me-2"></i>Editar
+            </button>
+            {{if eq .Patient.Status "ativo"}}
+            <button class="btn btn-danger"
+                    hx-post="/patients/{{.Patient.ID}}/archive"
+                    hx-confirm="Tem certeza que deseja arquivar este paciente?"
+                    hx-target="#content-area">
+                <i class="bi bi-archive-fill me-2"></i>Arquivar
+            </button>
+            {{else}}
+            <button class="btn btn-success"
+                    hx-post="/patients/{{.Patient.ID}}/unarchive"
+                    hx-confirm="Tem certeza que deseja reativar este paciente?"
+                    hx-target="#content-area">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>Reativar
+            </button>
+            {{end}}
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Dados Pessoais -->
+        <div class="col-md-6">
+            <div class="card bg-dark shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-vcard-fill me-2"></i>
+                        Dados Pessoais
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Nome Completo</dt>
+                        <dd class="col-sm-8">{{.Patient.Nome}}</dd>
+
+                        <dt class="col-sm-4">CPF</dt>
+                        <dd class="col-sm-8">{{.Patient.CPF}}</dd>
+
+                        <dt class="col-sm-4">Data de Nascimento</dt>
+                        <dd class="col-sm-8">{{.Patient.DataNascimento.Format "02/01/2006"}}</dd>
+
+                        <dt class="col-sm-4">Sexo</dt>
+                        <dd class="col-sm-8">{{.Patient.Sexo}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contato -->
+        <div class="col-md-6">
+            <div class="card bg-dark shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-telephone-fill me-2"></i>
+                        Contato
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">{{.Patient.Email}}</dd>
+
+                        <dt class="col-sm-4">Telefone</dt>
+                        <dd class="col-sm-8">
+                            {{.Patient.DDD}} {{.Patient.Telefone}}
+                            {{if .Patient.WhatsApp}}
+                            <i class="bi bi-whatsapp text-success ms-2"></i>
+                            {{end}}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="col-md-6">
+            <div class="card bg-dark shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        Endereço
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Logradouro</dt>
+                        <dd class="col-sm-8">{{.Patient.Endereco}}, {{.Patient.Numero}}</dd>
+
+                        <dt class="col-sm-4">Bairro</dt>
+                        <dd class="col-sm-8">{{.Patient.Bairro}}</dd>
+
+                        <dt class="col-sm-4">Cidade/Estado</dt>
+                        <dd class="col-sm-8">{{.Patient.Cidade}}/{{.Patient.Estado}}</dd>
+
+                        <dt class="col-sm-4">CEP</dt>
+                        <dd class="col-sm-8">{{.Patient.CEP}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Observações -->
+        <div class="col-md-6">
+            <div class="card bg-dark shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-journal-text me-2"></i>
+                        Observações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{if .Patient.Observacoes}}{{.Patient.Observacoes}}{{else}}Nenhuma observação registrada.{{end}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé com datas -->
+    <div class="mt-4 text-muted small">
+        <p class="mb-0">
+            Cadastrado em: {{.Patient.CreatedAt.Format "02/01/2006 15:04"}} | 
+            Última atualização: {{.Patient.UpdatedAt.Format "02/01/2006 15:04"}}
+        </p>
+    </div>
+</div>

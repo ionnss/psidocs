@@ -1,0 +1,38 @@
+.card {
+    background-color: rgba(18, 17, 22);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-header {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+dt {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+dd {
+    color: #ffffff;
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.35em 0.65em;
+}
+
+.btn-group {
+    gap: 0.25rem;
+}
+
+h2 {
+    margin-bottom: 0.5rem;
+}
+
+.text-muted {
+    color: rgba(255, 255, 255, 0.5) !important;
+}

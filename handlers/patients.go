@@ -1,12 +1,15 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"psidocs/db"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 // Patient representa a estrutura de dados de um paciente
@@ -34,6 +37,19 @@ type Patient struct {
 }
 
 // CreatePatientHandler processa o formulário de criação de paciente
+//
+// Recebe:
+// - w: o writer do response
+// - r: o request
+//
+// Retorna:
+// - void
+//
+// Descrição:
+// - Processa o formulário de criação de paciente
+// - Renderiza o template de criação de paciente
+// - Insere o paciente no banco de dados
+// - Retorna uma mensagem de sucesso ou erro
 func CreatePatientHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("CreatePatientHandler iniciado - Método: %s", r.Method)
 
@@ -183,19 +199,19 @@ func CreatePatientHandler(w http.ResponseWriter, r *http.Request) {
 	</script>`))
 }
 
-func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func GetPatientHandler(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func DeletePatientHandler(w http.ResponseWriter, r *http.Request) {
-
-}
-
 // ListPatientsHandler lista os pacientes do psicólogo
+//
+// Recebe:
+// - w: o writer do response
+// - r: o request
+//
+// Retorna:
+// - void
+//
+// Descrição:
+// - Lista os pacientes do psicólogo
+// - Renderiza o template de lista de pacientes
+// - Retorna uma mensagem de sucesso ou erro
 func ListPatientsHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("ListPatientsHandler iniciado - Método: %s", r.Method)
 
@@ -308,6 +324,107 @@ func ListPatientsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Erro ao renderizar template: %v", err)
 		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
 	}
+}
+
+// GetPatientHandler mostra os detalhes de um paciente específico
+func GetPatientHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("GetPatientHandler iniciado - Método: %s", r.Method)
+
+	// Obter ID do paciente da URL
+	vars := mux.Vars(r)
+	patientID := vars["id"]
+
+	// Obter ID do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Buscar dados do paciente
+	var patient Patient
+	err = db.QueryRow(`
+		SELECT 
+			id, psicologo_id, nome, email, 
+			ddd, telefone, whatsapp,
+			cpf, data_nascimento, sexo,
+			endereco, numero, bairro,
+			cidade, estado, cep,
+			observacoes, status,
+			created_at, updated_at
+		FROM patients 
+		WHERE id = $1 AND psicologo_id = $2`,
+		patientID, psicologoID,
+	).Scan(
+		&patient.ID, &patient.PsicologoID, &patient.Nome, &patient.Email,
+		&patient.DDD, &patient.Telefone, &patient.WhatsApp,
+		&patient.CPF, &patient.DataNascimento, &patient.Sexo,
+		&patient.Endereco, &patient.Numero, &patient.Bairro,
+		&patient.Cidade, &patient.Estado, &patient.CEP,
+		&patient.Observacoes, &patient.Status,
+		&patient.CreatedAt, &patient.UpdatedAt,
+	)
+
+	if err == sql.ErrNoRows {
+		log.Printf("Paciente não encontrado ou não pertence ao psicólogo: %v", err)
+		http.Error(w, "Paciente não encontrado", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.Printf("Erro ao buscar paciente: %v", err)
+		http.Error(w, "Erro ao buscar paciente", http.StatusInternalServerError)
+		return
+	}
+
+	// Preparar dados para o template
+	data := map[string]interface{}{
+		"Patient": patient,
+	}
+
+	// Se for uma requisição HTMX
+	if r.Header.Get("HX-Request") == "true" {
+		tmpl := template.Must(template.ParseFiles("templates/view/partials/patients_profile.html"))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			log.Printf("Erro ao renderizar template: %v", err)
+			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Se não for HTMX, renderiza o layout completo
+	tmpl := template.Must(template.ParseFiles(
+		"templates/view/dashboard_layout.html",
+		"templates/view/partials/patients_profile.html",
+	))
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		log.Printf("Erro ao renderizar template: %v", err)
+		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+	}
+}
+
+func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func ArchivePatientHandler(w http.ResponseWriter, r *http.Request) {
