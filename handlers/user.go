@@ -496,18 +496,25 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Printf("Dados encontrados: %+v", config)
 
-		// Renderizar template
-		log.Printf("Tentando carregar template: templates/view/partials/user_config.html")
-		tmpl, err := template.ParseFiles("templates/view/partials/user_config.html")
-		if err != nil {
-			log.Printf("Erro ao carregar template: %v", err)
-			http.Error(w, "Erro ao carregar template", http.StatusInternalServerError)
+		// Se for uma requisição HTMX, renderiza só o conteúdo
+		if r.Header.Get("HX-Request") == "true" {
+			log.Printf("Renderizando template para requisição HTMX")
+			tmpl := template.Must(template.ParseFiles("templates/view/partials/user_config.html"))
+			if err := tmpl.Execute(w, config); err != nil {
+				log.Printf("Erro ao renderizar template: %v", err)
+				http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+				return
+			}
 			return
 		}
 
-		log.Printf("Template carregado, tentando renderizar")
-		err = tmpl.Execute(w, config)
-		if err != nil {
+		// Se não for HTMX, renderiza o layout completo
+		log.Printf("Renderizando layout completo")
+		tmpl := template.Must(template.ParseFiles(
+			"templates/view/dashboard_layout.html",
+			"templates/view/partials/user_config.html",
+		))
+		if err := tmpl.Execute(w, config); err != nil {
 			log.Printf("Erro ao renderizar template: %v", err)
 			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
 			return
@@ -602,7 +609,7 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
 			</div>`))
 		} else {
-			http.Redirect(w, r, "/dashboard/configuracoes", http.StatusSeeOther)
+			http.Redirect(w, r, "/dashboard/dados_pessoais", http.StatusSeeOther)
 		}
 	}
 }

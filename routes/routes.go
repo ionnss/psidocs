@@ -71,7 +71,7 @@ func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 	// Rota para a página dashboard
 	r.Handle("/dashboard", handlers.AuthMiddleware(http.HandlerFunc(handlers.DashboardHandler))).Methods("GET")
 	r.HandleFunc("/dashboard", handlers.AuthHandler).Methods("POST")
-	r.Handle("/dashboard/configuracoes", handlers.AuthMiddleware(http.HandlerFunc(handlers.UpdateUserConfigHandler))).Methods("GET", "POST")
+	r.Handle("/dashboard/dados_pessoais", handlers.AuthMiddleware(http.HandlerFunc(handlers.UpdateUserConfigHandler))).Methods("GET", "POST")
 	r.Handle("/dashboard/credenciais", handlers.AuthMiddleware(http.HandlerFunc(handlers.UpdateUserCredentialsHandler))).Methods("GET", "POST")
 }
 

@@ -155,8 +155,14 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
    - [ ] Tour guiado para novos usuários (?)
    - [ ] Melhorar a UI do usuário config
       - [ ] Alterar chave
+         - [X] Estrutura básica
+         - [ ] Verificação por email
       - [ ] Alterar CRP
+         - [X] Estrutura básica
+         - [ ] Verificação por email
       - [ ] Alterar email
+         - [X] Estrutura básica
+         - [ ] Verificação por email
   
 
 1. **Sistema de Backup**
@@ -182,7 +188,7 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
      - [X] Vinculação com psicólogo
    - [ ] CRUD completo de configuração
    - [ ] Interface intuitiva para gestão
-   - [ ] Recuperar chave do usuário página login
+   - [X] Recuperar chave do usuário página login
 
 4. **Documentos Psicológicos**
    - [ ] Templates conforme Resolução CFP:
@@ -232,11 +238,6 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
    - [ ] Integração com calendário
    - [ ] Backup em nuvem (Google Drive/Dropbox)
 
-11. **Melhorias de UX/UI**
-    - [ ] Tema escuro/claro
-    - [ ] Interface responsiva
-    - [ ] Atalhos de teclado
-    - [ ] Tour guiado para novos usuários
 
 
 ---
