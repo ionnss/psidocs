@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap');
+
 .table {
     margin-bottom: 0;
 }
@@ -63,4 +65,24 @@
 .form-select option {
     background-color: rgb(18, 17, 22);
     color: #ffffff;
+}
+
+.name-top {
+    height: auto !important;
+    border-radius: 8px !important;
+    backdrop-filter: blur(18px);
+    background-color: rgba(0, 0, 0, 0.34) !important;
+    background-blend-mode: overlay;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.name-top-text {
+    font-family: Montserrat, sans-serif !important;
+}
+
+h3 {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #ffffffe3 !important;
+    margin-bottom: 0 !important;
 }
