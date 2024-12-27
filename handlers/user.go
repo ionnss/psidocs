@@ -574,8 +574,8 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 					cpf, rg, date_of_birth,
 					ddd, telefone, whatsapp,
 					endereco, numero, bairro,
-					cidade, estado, cep, plan
-				) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+					cidade, estado, cep
+				) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
 				userID,
 				r.FormValue("first_name"),
 				r.FormValue("middle_name"),
@@ -592,7 +592,6 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 				r.FormValue("cidade"),
 				r.FormValue("estado"),
 				r.FormValue("cep"),
-				"free", // Plano inicial gratuito
 			)
 		}
 
