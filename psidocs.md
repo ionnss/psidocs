@@ -409,3 +409,16 @@ Sim, exatamente! Vou fornecer um panorama detalhado de todo o sistema de documen
 5. Que tipos de dados do paciente devem ser preenchidos automaticamente?
 
 Podemos começar por qualquer parte que você considere mais prioritária. Qual aspecto você gostaria de abordar primeiro?
+
+
+"Então. 
+
+O usuário do sistema (psicologo) sem a parte de documentos. A principio é lá que le pode criar e editar os modelos de contratos e documentos psicológicos. 
+
+Mas minha dúvida é: como é que o usuário vai editar? Ele nao pode editar em html puro. Entende?  Ele não pode editar em markdown. 
+
+Existe alguma forma de disponibilizar na web um editor? Existe algo para isso? Seria relativamente simples? 
+"
+
+https://summernote.org/getting-started/
+

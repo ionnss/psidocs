@@ -61,6 +61,7 @@ func ExecuteMigrations(conn *sql.DB) {
 		"db/001.create_users_table.sql",
 		"db/002.create_patients_table.sql",
 		"db/003.create_password_resets_table.sql",
+		"db/004.create_documents_table.sql",
 		//...
 	}
 

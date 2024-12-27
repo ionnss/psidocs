@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Editor de Documentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .actions {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        #editor {
+            height: 400px;
+            margin-bottom: 20px;
+        }
+        .preview {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .template-vars {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .template-vars span {
+            display: inline-block;
+            margin: 5px;
+            padding: 2px 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .ql-editor {
+            min-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Editor de Documentos</h1>
+        
+        <div class="actions">
+            <select id="document-type" onchange="loadTemplate()">
+                <option value="contract">Contrato</option>
+                <option value="psychological">Documento Psicológico</option>
+            </select>
+            <button onclick="saveDocument()" class="ql-button">Salvar Documento</button>
+        </div>
+
+        <div id="message-area"></div>
+
+        <div class="template-vars">
+            <strong>Variáveis disponíveis:</strong><br>
+            <span onclick="insertVariable('cliente_nome')">Nome do Cliente</span>
+            <span onclick="insertVariable('cliente_cpf')">CPF</span>
+            <span onclick="insertVariable('cliente_rg')">RG</span>
+            <span onclick="insertVariable('cliente_endereco')">Endereço</span>
+            <span onclick="insertVariable('psicologo_nome')">Nome do Psicólogo</span>
+            <span onclick="insertVariable('psicologo_crp')">CRP</span>
+            <span onclick="insertVariable('data_atual')">Data Atual</span>
+            <span onclick="insertVariable('valor_sessao')">Valor da Sessão</span>
+        </div>
+
+        <!-- Create the editor container -->
+        <div id="editor"></div>
+
+        <div class="preview">
+            <h3>Pré-visualização</h3>
+            <div id="preview"></div>
+        </div>
+    </div>
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script>
+        // Initialize Quill editor
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Templates
+        const templates = {
+            contract: `
+                <h2>CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE PSICOTERAPIA</h2>
+                <p><br></p>
+                <p>Pelo presente instrumento particular, de um lado <strong>{cliente_nome}</strong>, portador(a) do CPF nº {cliente_cpf} e RG nº {cliente_rg}, residente em {cliente_endereco}, doravante denominado(a) CONTRATANTE, e de outro lado, <strong>{psicologo_nome}</strong>, Psicólogo(a) inscrito(a) no Conselho Regional de Psicologia sob o nº {psicologo_crp}, doravante denominado(a) CONTRATADO(A), têm entre si justo e contratado o seguinte:</p>
+            `,
+            psychological: `
+                <h2>DOCUMENTO PSICOLÓGICO</h2>
+                <p><br></p>
+                <p>Data: {data_atual}</p>
+                <p>Cliente: {cliente_nome}</p>
+                <p><br></p>
+                <p>Conteúdo do documento...</p>
+            `
+        };
+
+        function loadTemplate() {
+            const type = document.getElementById('document-type').value;
+            quill.root.innerHTML = templates[type];
+            updatePreview();
+        }
+
+        function insertVariable(variable) {
+            const range = quill.getSelection(true);
+            quill.insertText(range.index, `{${variable}}`);
+        }
+
+        function updatePreview() {
+            const content = quill.root.innerHTML;
+            document.getElementById('preview').innerHTML = content;
+        }
+
+        function showMessage(message, type) {
+            const messageArea = document.getElementById('message-area');
+            messageArea.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageArea.innerHTML = '';
+            }, 3000);
+        }
+
+        function saveDocument() {
+            const content = quill.root.innerHTML;
+            fetch('/documents/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: content,
+                    type: document.getElementById('document-type').value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage('Documento salvo com sucesso!', 'success');
+                } else {
+                    showMessage('Erro ao salvar documento', 'error');
+                }
+            });
+        }
+
+        // Load initial template
+        loadTemplate();
+
+        // Update preview on change
+        quill.on('text-change', updatePreview);
+    </script>
+</body>
+</html> 
