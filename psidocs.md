@@ -233,7 +233,7 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
    - [ ] Exportação para contabilidade
 
 10. **Integrações**
-   - [ ] Envio de emails
+   - [X] Envio de emails
    - [ ] WhatsApp para lembretes
    - [ ] Integração com calendário
    - [ ] Backup em nuvem (Google Drive/Dropbox)
@@ -241,3 +241,49 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
 
 
 ---
+# PRÓXIMO PASSO
+
+Minha ideia é a seguinte.
+
+Agora que ja temos pacientes e todas as funções para cada paciente, podemos ir para a parte de documentos.
+
+Os documentos seriam:
+- Contratos (contrato psicologo/user)
+- Documentos Psicológicos (laudos, relatórios, prontuários, anamnese, declarações...)
+
+Pensei em ter um página somente para os documentos.
+
+Ja temos no sidebar do dashboard um botão para documentos. 
+
+Essa página de documentos conteria todos os tipos de documentos (separados por tipos: contratos e docs. psicologicos) 
+
+eles seriam basicamente templates, que receberiam as informações dos pacientes cadastrados e do próprio user (contratos e documentos psicologicos geralmente contem dados das duas partes).
+
+Pois daí, no perfil do paciente, teríamos seu contrato e seus documentos psicológicos. Que poderiam ser baixados como pdf, editados e etc. 
+
+E os contratos poderia também sofrerem edições e serem enviados para os pacientes por email para assinatura. (mas acho que isso seria outra etapa devido a complexidade, se eu não estiver enganado).
+
+
+1. Página de Documentos (Templates)
+   - Divisão em duas categorias principais:
+     - Contratos
+     - Documentos Psicológicos (laudos, relatórios, prontuários, etc)
+   - Cada categoria teria seus templates base
+   - Os templates teriam campos dinâmicos para receber dados do:
+     - Psicólogo (user)
+     - Paciente
+
+2. Integração com Perfil do Paciente
+   - Seção de documentos no perfil
+   - Possibilidade de gerar documentos a partir dos templates
+   - Histórico de documentos gerados
+   - Funcionalidades de:
+     - Download em PDF
+     - Edição
+     - Visualização
+
+3. Funcionalidades Futuras (próximas etapas)
+   - Envio por email
+   - Sistema de assinatura digital
+   - Gestão de status dos documentos (enviado, assinado, etc)
+
