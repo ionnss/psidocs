@@ -1,4 +1,4 @@
-CREATE TABLE password_resets (
+CREATE TABLE IF NOT EXISTS password_resets (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     token VARCHAR(64) NOT NULL,

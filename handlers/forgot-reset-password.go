@@ -51,9 +51,25 @@ func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Verificar se usuário existe
 		var userID int
-		err = db.QueryRow("SELECT id FROM users WHERE email = $1 AND hash_crp = $2", email, crp).Scan(&userID)
+		var hashCrpArmazenado, saltCrp string
+
+		// Primeiro, buscar o usuário pelo email e obter o salt e hash do CRP
+		err = db.QueryRow(`
+			SELECT id, hash_crp, salt_crp 
+			FROM users 
+			WHERE email = $1
+		`, email).Scan(&userID, &hashCrpArmazenado, &saltCrp)
+
 		if err != nil {
 			// Não informamos o erro específico por segurança
+			log.Printf("Usuário não encontrado para email %s: %v", email, err)
+			http.Error(w, "Se os dados estiverem corretos, você receberá um email com instruções", http.StatusOK)
+			return
+		}
+
+		// Verificar se o CRP está correto
+		if !checkCRPHash(crp, hashCrpArmazenado, saltCrp) {
+			log.Printf("CRP incorreto para usuário %d", userID)
 			http.Error(w, "Se os dados estiverem corretos, você receberá um email com instruções", http.StatusOK)
 			return
 		}
@@ -65,6 +81,7 @@ func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Erro interno do servidor", http.StatusInternalServerError)
 			return
 		}
+		log.Printf("Token gerado com sucesso: %s", token)
 
 		// Salvar token no banco
 		expiresAt := time.Now().Add(15 * time.Minute)
@@ -77,6 +94,7 @@ func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Erro interno do servidor", http.StatusInternalServerError)
 			return
 		}
+		log.Printf("Token salvo no banco para usuário %d", userID)
 
 		// Preparar dados do email
 		data := map[string]string{
@@ -87,12 +105,14 @@ func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Enviar email
+		log.Printf("Tentando enviar email para %s", email)
 		err = SendEmail(email, "Recuperação de Chave de Acesso - PSIDOCS", data)
 		if err != nil {
 			log.Printf("Erro ao enviar email: %v", err)
 			http.Error(w, "Erro ao enviar email de recuperação", http.StatusInternalServerError)
 			return
 		}
+		log.Printf("Email enviado com sucesso para %s", email)
 
 		// Resposta de sucesso
 		w.Write([]byte("Se os dados estiverem corretos, você receberá um email com instruções"))
