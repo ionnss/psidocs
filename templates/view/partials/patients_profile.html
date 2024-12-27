@@ -12,7 +12,7 @@
         </div>
         <div class="btn-group">
             <button class="btn btn-warning" 
-                    hx-get="/patients/{{.Patient.ID}}/edit" 
+                    hx-get="/patients/{{.Patient.ID}}/edit"
                     hx-target="#content-area">
                 <i class="bi bi-pencil-fill me-2"></i>Editar
             </button>
@@ -20,19 +20,21 @@
             <button class="btn btn-danger"
                     hx-post="/patients/{{.Patient.ID}}/archive"
                     hx-confirm="Tem certeza que deseja arquivar este paciente?"
-                    hx-target="#content-area">
+                    hx-target="#message-area">
                 <i class="bi bi-archive-fill me-2"></i>Arquivar
             </button>
             {{else}}
             <button class="btn btn-success"
                     hx-post="/patients/{{.Patient.ID}}/unarchive"
                     hx-confirm="Tem certeza que deseja reativar este paciente?"
-                    hx-target="#content-area">
+                    hx-target="#message-area">
                 <i class="bi bi-arrow-counterclockwise me-2"></i>Reativar
             </button>
             {{end}}
         </div>
     </div>
+
+    <div id="message-area"></div>
 
     <div class="row g-4">
         <!-- Dados Pessoais -->
@@ -78,7 +80,7 @@
 
                         <dt class="col-sm-4">Telefone</dt>
                         <dd class="col-sm-8">
-                            {{.Patient.DDD}} {{.Patient.Telefone}}
+                            ({{.Patient.DDD}}) {{.Patient.Telefone}}
                             {{if .Patient.WhatsApp}}
                             <i class="bi bi-whatsapp text-success ms-2"></i>
                             {{end}}

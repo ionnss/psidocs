@@ -177,8 +177,8 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
      - [X] Contato (email, telefone)
      - [X] Status (ativo/inativo)
      - [X] Vinculação com psicólogo
-   - [ ] CRUD completo de pacientes
-   - [ ] Interface intuitiva para gestão
+   - [X] CRUD completo de pacientes
+   - [X] Interface intuitiva para gestão
 
 3. **Configuração do Psicólogo**
    - [X] Tabela `users_config` com:
@@ -186,7 +186,7 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
      - [X] Dados pessoais para documentos psicológicos
      - [X] Status (ativo/inativo)
      - [X] Vinculação com psicólogo
-   - [ ] CRUD completo de configuração
+   - [X] CRUD completo de configuração
    - [ ] Interface intuitiva para gestão
    - [X] Recuperar chave do usuário página login
 
@@ -215,7 +215,7 @@ Vou criar um roadmap organizado dos próximos passos para o desenvolvimento do P
    - [ ] Métricas de segurança
 
 7. **Dashboard Aprimorado**
-   - [ ] Visão geral de pacientes
+   - [X] Visão geral de pacientes
    - [ ] Documentos recentes
    - [ ] Alertas e notificações
    - [ ] Métricas e estatísticas

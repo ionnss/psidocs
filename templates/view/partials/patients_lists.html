@@ -1,44 +1,59 @@
 <!-- Adicionar CSS -->
 <link rel="stylesheet" href="/static/css/patients_lists.css">
 
+<!-- Área de mensagens no topo -->
+<div id="patients-message-area"></div>
+
 <div class="container-fluid">
+    <!-- Cabeçalho com botão de novo paciente -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Pacientes</h2>
-        <button class="btn btn-primary" hx-get="/patients/create" hx-target="#content-area">
-            <i class="bi bi-person-plus-fill me-2"></i>Novo Paciente
+        <button class="btn btn-primary" 
+                hx-get="/patients/create"
+                hx-target="#content-area">
+            <i class="bi bi-plus-circle-fill me-2"></i>Novo Paciente
         </button>
     </div>
 
     <!-- Filtros -->
-    <div class="card bg-dark shadow-sm mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Filtros</h5>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" 
+                       class="form-control" 
+                       placeholder="Buscar por nome ou CPF..."
+                       name="search"
+                       hx-get="/patients"
+                       hx-trigger="keyup changed delay:500ms"
+                       hx-target="#patients-table"
+                       hx-include="[name='status']">
+                <button class="btn btn-outline-secondary" type="button">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
         </div>
-        <div class="card-body">
-            <form class="row g-3" hx-get="/patients" hx-target="#patients-table" hx-trigger="change">
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="search" placeholder="Buscar por nome ou CPF...">
-                </div>
-                <div class="col-md-3">
-                    <select class="form-control" name="status">
-                        <option value="">Todos os Status</option>
-                        <option value="ativo">Ativos</option>
-                        <option value="inativo">Inativos</option>
-                        <option value="arquivado">Arquivados</option>
-                    </select>
-                </div>
-            </form>
+        <div class="col-md-6">
+            <select class="form-select" 
+                    name="status"
+                    hx-get="/patients"
+                    hx-trigger="change"
+                    hx-target="#patients-table"
+                    hx-include="[name='search']">
+                <option value="">Todos os status</option>
+                <option value="ativo">Ativos</option>
+                <option value="inativo">Inativos</option>
+            </select>
         </div>
     </div>
 
-    <!-- Tabela de Pacientes -->
+    <!-- Tabela de pacientes -->
     <div class="table-responsive">
         <table class="table table-dark table-hover">
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>CPF</th>
-                    <th>Contato</th>
+                    <th>Telefone</th>
                     <th>Status</th>
                     <th>Ações</th>
                 </tr>
@@ -49,53 +64,43 @@
                     <td>{{.Nome}}</td>
                     <td>{{.CPF}}</td>
                     <td>
-                        {{.DDD}} {{.Telefone}}
-                        {{if .WhatsApp}}
-                        <i class="bi bi-whatsapp text-success"></i>
-                        {{end}}
+                        {{if .DDD}}({{.DDD}}) {{end}}{{.Telefone}}
+                        {{if .WhatsApp}}<i class="bi bi-whatsapp text-success"></i>{{end}}
                     </td>
                     <td>
-                        <span class="badge {{if eq .Status "ativo"}}bg-success{{else if eq .Status "inativo"}}bg-warning{{else}}bg-secondary{{end}}">
+                        <span class="badge {{if eq .Status "ativo"}}bg-success{{else}}bg-warning{{end}}">
                             {{.Status}}
                         </span>
                     </td>
                     <td>
-                        <div class="btn-group">
-                            <button class="btn btn-sm btn-outline-primary" 
-                                    hx-get="/patients/{{.ID}}" 
-                                    hx-target="#content-area"
-                                    title="Ver detalhes">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-info" 
+                                    hx-get="/patients/{{.ID}}"
+                                    hx-target="#content-area">
                                 <i class="bi bi-eye-fill"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-warning"
+                            <button class="btn btn-warning"
                                     hx-get="/patients/{{.ID}}/edit"
-                                    hx-target="#content-area"
-                                    title="Editar">
+                                    hx-target="#content-area">
                                 <i class="bi bi-pencil-fill"></i>
                             </button>
                             {{if eq .Status "ativo"}}
-                            <button class="btn btn-sm btn-outline-danger"
+                            <button class="btn btn-danger"
                                     hx-post="/patients/{{.ID}}/archive"
                                     hx-confirm="Tem certeza que deseja arquivar este paciente?"
-                                    hx-target="#patients-table"
-                                    title="Arquivar">
+                                    hx-target="#patients-message-area">
                                 <i class="bi bi-archive-fill"></i>
                             </button>
                             {{else}}
-                            <button class="btn btn-sm btn-outline-success"
+                            <button class="btn btn-success"
                                     hx-post="/patients/{{.ID}}/unarchive"
                                     hx-confirm="Tem certeza que deseja reativar este paciente?"
-                                    hx-target="#patients-table"
-                                    title="Reativar">
+                                    hx-target="#patients-message-area">
                                 <i class="bi bi-arrow-counterclockwise"></i>
                             </button>
                             {{end}}
                         </div>
                     </td>
-                </tr>
-                {{else}}
-                <tr>
-                    <td colspan="5" class="text-center">Nenhum paciente encontrado</td>
                 </tr>
                 {{end}}
             </tbody>

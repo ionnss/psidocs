@@ -194,7 +194,7 @@ func CreatePatientHandler(w http.ResponseWriter, r *http.Request) {
 	</div>
 	<script>
 		setTimeout(function() {
-			window.location.href = "/patients";
+			htmx.ajax('GET', '/patients', {target: '#content-area'});
 		}, 2000);
 	</script>`))
 }
@@ -620,9 +620,175 @@ func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ArchivePatientHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("ArchivePatientHandler iniciado - Método: %s", r.Method)
 
+	if r.Method != "POST" {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Obter ID do paciente da URL
+	vars := mux.Vars(r)
+	patientID := vars["id"]
+
+	// Obter ID do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Atualizar status do paciente para inativo
+	result, err := db.Exec(`
+		UPDATE patients 
+		SET status = 'inativo', updated_at = CURRENT_TIMESTAMP
+		WHERE id = $1 AND psicologo_id = $2`,
+		patientID, psicologoID,
+	)
+
+	if err != nil {
+		log.Printf("Erro ao arquivar paciente: %v", err)
+		w.Write([]byte(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			<i class="bi bi-exclamation-triangle-fill me-2"></i>
+			Erro ao arquivar paciente. Por favor, tente novamente.
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		</div>`))
+		return
+	}
+
+	// Verificar se algum registro foi atualizado
+	rows, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("Erro ao verificar linhas afetadas: %v", err)
+		http.Error(w, "Erro ao verificar atualização", http.StatusInternalServerError)
+		return
+	}
+
+	if rows == 0 {
+		log.Printf("Nenhum paciente encontrado para arquivar")
+		w.Write([]byte(`<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			<i class="bi bi-exclamation-triangle-fill me-2"></i>
+			Paciente não encontrado
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		</div>`))
+		return
+	}
+
+	// Retornar mensagem de sucesso e recarregar o perfil
+	w.Write([]byte(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+		<i class="bi bi-check-circle-fill me-2"></i>
+		Paciente arquivado com sucesso!
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+	</div>
+	<script>
+		setTimeout(function() {
+			htmx.ajax('GET', '/patients/' + ` + patientID + `, {target: '#content-area'});
+		}, 2000);
+	</script>`))
 }
 
 func UnarchivePatientHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("UnarchivePatientHandler iniciado - Método: %s", r.Method)
 
+	if r.Method != "POST" {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Obter ID do paciente da URL
+	vars := mux.Vars(r)
+	patientID := vars["id"]
+
+	// Obter ID do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Atualizar status do paciente para ativo
+	result, err := db.Exec(`
+		UPDATE patients 
+		SET status = 'ativo', updated_at = CURRENT_TIMESTAMP
+		WHERE id = $1 AND psicologo_id = $2`,
+		patientID, psicologoID,
+	)
+
+	if err != nil {
+		log.Printf("Erro ao desarquivar paciente: %v", err)
+		w.Write([]byte(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			<i class="bi bi-exclamation-triangle-fill me-2"></i>
+			Erro ao desarquivar paciente. Por favor, tente novamente.
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		</div>`))
+		return
+	}
+
+	// Verificar se algum registro foi atualizado
+	rows, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("Erro ao verificar linhas afetadas: %v", err)
+		http.Error(w, "Erro ao verificar atualização", http.StatusInternalServerError)
+		return
+	}
+
+	if rows == 0 {
+		log.Printf("Nenhum paciente encontrado para desarquivar")
+		w.Write([]byte(`<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			<i class="bi bi-exclamation-triangle-fill me-2"></i>
+			Paciente não encontrado
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		</div>`))
+		return
+	}
+
+	// Retornar mensagem de sucesso e recarregar o perfil
+	w.Write([]byte(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+		<i class="bi bi-check-circle-fill me-2"></i>
+		Paciente desarquivado com sucesso!
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+	</div>
+	<script>
+		setTimeout(function() {
+			htmx.ajax('GET', '/patients/' + ` + patientID + `, {target: '#content-area'});
+		}, 2000);
+	</script>`))
 }
