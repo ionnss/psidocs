@@ -293,12 +293,85 @@ func ListPatientsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Se for uma requisição HTMX para a tabela
-	if r.Header.Get("HX-Target") == "patients-table" {
-		tmpl := template.Must(template.ParseFiles("templates/view/partials/patients_lists.html"))
-		err = tmpl.ExecuteTemplate(w, "patients-table", data)
-		if err != nil {
-			log.Printf("Erro ao renderizar tabela: %v", err)
-			http.Error(w, "Erro ao renderizar tabela", http.StatusInternalServerError)
+	if r.Header.Get("HX-Target") == "patients-tbody" {
+		// Renderizar apenas as linhas da tabela
+		w.Header().Set("Content-Type", "text/html")
+		for _, p := range patients {
+			fmt.Fprintf(w, `
+				<tr>
+					<td>%s</td>
+					<td>%s</td>
+					<td>
+						%s%s
+						%s
+					</td>
+					<td>
+						<span class="badge %s">
+							%s
+						</span>
+					</td>
+					<td>
+						<div class="btn-group btn-group-sm">
+							<button class="btn btn-info" 
+									hx-get="/patients/%d"
+									hx-target="#content-area">
+								<i class="bi bi-eye-fill"></i>
+							</button>
+							<button class="btn btn-warning"
+									hx-get="/patients/%d/edit"
+									hx-target="#content-area">
+								<i class="bi bi-pencil-fill"></i>
+							</button>
+							%s
+						</div>
+					</td>
+				</tr>`,
+				p.Nome,
+				p.CPF,
+				func() string {
+					if p.DDD != "" {
+						return fmt.Sprintf("(%s) ", p.DDD)
+					}
+					return ""
+				}(),
+				p.Telefone,
+				func() string {
+					if p.WhatsApp {
+						return `<i class="bi bi-whatsapp text-success"></i>`
+					}
+					return ""
+				}(),
+				func() string {
+					if p.Status == "ativo" {
+						return "bg-success"
+					}
+					return "bg-warning"
+				}(),
+				p.Status,
+				p.ID,
+				p.ID,
+				func() string {
+					if p.Status == "ativo" {
+						return fmt.Sprintf(`
+							<button class="btn btn-danger"
+									hx-post="/patients/%d/archive"
+									hx-confirm="Tem certeza que deseja arquivar este paciente?"
+									hx-target="#patients-message-area">
+								<i class="bi bi-archive-fill"></i>
+							</button>`, p.ID)
+					}
+					return fmt.Sprintf(`
+							<button class="btn btn-success"
+									hx-post="/patients/%d/unarchive"
+									hx-confirm="Tem certeza que deseja reativar este paciente?"
+									hx-target="#patients-message-area">
+								<i class="bi bi-arrow-counterclockwise"></i>
+							</button>`, p.ID)
+				}(),
+			)
+		}
+		if len(patients) == 0 {
+			fmt.Fprintf(w, `<tr><td colspan="5" class="text-center">Nenhum paciente encontrado</td></tr>`)
 		}
 		return
 	}

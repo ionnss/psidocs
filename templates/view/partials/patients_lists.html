@@ -16,33 +16,37 @@
     </div>
 
     <!-- Filtros -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="input-group">
-                <input type="text" 
-                       class="form-control" 
-                       placeholder="Buscar por nome ou CPF..."
-                       name="search"
-                       hx-get="/patients"
-                       hx-trigger="keyup changed delay:500ms"
-                       hx-target="#patients-table"
-                       hx-include="[name='status']">
-                <button class="btn btn-outline-secondary" type="button">
-                    <i class="bi bi-search"></i>
-                </button>
+    <div class="card bg-dark shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" 
+                               class="form-control bg-dark border-secondary text-white" 
+                               placeholder="Buscar por nome ou CPF..."
+                               name="search"
+                               hx-get="/patients"
+                               hx-trigger="keyup changed delay:500ms"
+                               hx-target="#patients-tbody"
+                               hx-include="[name='status']">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select bg-dark border-secondary text-white" 
+                            name="status"
+                            hx-get="/patients"
+                            hx-trigger="change"
+                            hx-target="#patients-tbody"
+                            hx-include="[name='search']">
+                        <option value="">Todos os status</option>
+                        <option value="ativo">Ativos</option>
+                        <option value="inativo">Inativos</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <select class="form-select" 
-                    name="status"
-                    hx-get="/patients"
-                    hx-trigger="change"
-                    hx-target="#patients-table"
-                    hx-include="[name='search']">
-                <option value="">Todos os status</option>
-                <option value="ativo">Ativos</option>
-                <option value="inativo">Inativos</option>
-            </select>
         </div>
     </div>
 
@@ -58,7 +62,7 @@
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody id="patients-table">
+            <tbody id="patients-tbody">
                 {{range .Patients}}
                 <tr>
                     <td>{{.Nome}}</td>
@@ -101,6 +105,10 @@
                             {{end}}
                         </div>
                     </td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="5" class="text-center">Nenhum paciente encontrado</td>
                 </tr>
                 {{end}}
             </tbody>
