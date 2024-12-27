@@ -317,6 +317,7 @@ func ListPatientsHandler(w http.ResponseWriter, r *http.Request) {
 	// Se não for HTMX, renderiza o layout completo
 	tmpl := template.Must(template.ParseFiles(
 		"templates/view/dashboard_layout.html",
+		"templates/view/partials/dashboard_content.html",
 		"templates/view/partials/patients_lists.html",
 	))
 	err = tmpl.Execute(w, data)
@@ -414,6 +415,7 @@ func GetPatientHandler(w http.ResponseWriter, r *http.Request) {
 	// Se não for HTMX, renderiza o layout completo
 	tmpl := template.Must(template.ParseFiles(
 		"templates/view/dashboard_layout.html",
+		"templates/view/partials/dashboard_content.html",
 		"templates/view/partials/patients_profile.html",
 	))
 	err = tmpl.Execute(w, data)
@@ -423,8 +425,198 @@ func GetPatientHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// UpdatePatientHandler processa a edição de um paciente
 func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("UpdatePatientHandler iniciado - Método: %s", r.Method)
 
+	// Obter ID do paciente da URL
+	vars := mux.Vars(r)
+	patientID := vars["id"]
+
+	// Obter ID do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Se for GET, mostra o formulário de edição
+	if r.Method == "GET" {
+		// Buscar dados do paciente
+		var patient Patient
+		err = db.QueryRow(`
+			SELECT 
+				id, psicologo_id, nome, email, 
+				ddd, telefone, whatsapp,
+				cpf, data_nascimento, sexo,
+				endereco, numero, bairro,
+				cidade, estado, cep,
+				observacoes, status
+			FROM patients 
+			WHERE id = $1 AND psicologo_id = $2`,
+			patientID, psicologoID,
+		).Scan(
+			&patient.ID, &patient.PsicologoID, &patient.Nome, &patient.Email,
+			&patient.DDD, &patient.Telefone, &patient.WhatsApp,
+			&patient.CPF, &patient.DataNascimento, &patient.Sexo,
+			&patient.Endereco, &patient.Numero, &patient.Bairro,
+			&patient.Cidade, &patient.Estado, &patient.CEP,
+			&patient.Observacoes, &patient.Status,
+		)
+
+		if err == sql.ErrNoRows {
+			log.Printf("Paciente não encontrado ou não pertence ao psicólogo: %v", err)
+			http.Error(w, "Paciente não encontrado", http.StatusNotFound)
+			return
+		}
+		if err != nil {
+			log.Printf("Erro ao buscar paciente: %v", err)
+			http.Error(w, "Erro ao buscar paciente", http.StatusInternalServerError)
+			return
+		}
+
+		// Preparar dados para o template
+		data := map[string]interface{}{
+			"Patient": patient,
+		}
+
+		// Se for uma requisição HTMX
+		if r.Header.Get("HX-Request") == "true" {
+			tmpl := template.Must(template.ParseFiles("templates/view/partials/patients_edit_form.html"))
+			err = tmpl.Execute(w, data)
+			if err != nil {
+				log.Printf("Erro ao renderizar template: %v", err)
+				http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+			}
+			return
+		}
+
+		// Se não for HTMX, renderiza o layout completo
+		tmpl := template.Must(template.ParseFiles(
+			"templates/view/dashboard_layout.html",
+			"templates/view/partials/dashboard_content.html",
+			"templates/view/partials/patients_edit_form.html",
+		))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			log.Printf("Erro ao renderizar template: %v", err)
+			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Se for POST, processa a atualização
+	if r.Method == "POST" {
+		// Processar dados do formulário
+		dataNascimento, err := time.Parse("2006-01-02", r.FormValue("data_nascimento"))
+		if err != nil {
+			log.Printf("Erro ao processar data de nascimento: %v", err)
+			w.Write([]byte(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<i class="bi bi-exclamation-triangle-fill me-2"></i>
+				Data de nascimento inválida
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>`))
+			return
+		}
+
+		// Verificar se CPF já existe para outro paciente deste psicólogo
+		cpf := r.FormValue("cpf")
+		if cpf != "" {
+			var exists bool
+			err = db.QueryRow(`
+				SELECT EXISTS(
+					SELECT 1 FROM patients 
+					WHERE cpf = $1 AND psicologo_id = $2 AND id != $3
+				)`, cpf, psicologoID, patientID).Scan(&exists)
+			if err != nil {
+				log.Printf("Erro ao verificar CPF: %v", err)
+				http.Error(w, "Erro ao verificar CPF", http.StatusInternalServerError)
+				return
+			}
+			if exists {
+				w.Write([]byte(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<i class="bi bi-exclamation-triangle-fill me-2"></i>
+					CPF já cadastrado para outro paciente
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+				</div>`))
+				return
+			}
+		}
+
+		// Atualizar paciente
+		_, err = db.Exec(`
+			UPDATE patients SET
+				nome = $1, email = $2,
+				ddd = $3, telefone = $4, whatsapp = $5,
+				cpf = $6, data_nascimento = $7, sexo = $8,
+				endereco = $9, numero = $10, bairro = $11,
+				cidade = $12, estado = $13, cep = $14,
+				observacoes = $15,
+				updated_at = CURRENT_TIMESTAMP
+			WHERE id = $16 AND psicologo_id = $17`,
+			r.FormValue("nome"),
+			r.FormValue("email"),
+			r.FormValue("ddd"),
+			r.FormValue("telefone"),
+			r.FormValue("whatsapp") == "on",
+			cpf,
+			dataNascimento,
+			r.FormValue("sexo"),
+			r.FormValue("endereco"),
+			r.FormValue("numero"),
+			r.FormValue("bairro"),
+			r.FormValue("cidade"),
+			r.FormValue("estado"),
+			r.FormValue("cep"),
+			r.FormValue("observacoes"),
+			patientID,
+			psicologoID,
+		)
+
+		if err != nil {
+			log.Printf("Erro ao atualizar paciente: %v", err)
+			w.Write([]byte(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<i class="bi bi-exclamation-triangle-fill me-2"></i>
+				Erro ao atualizar paciente. Por favor, tente novamente.
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>`))
+			return
+		}
+
+		// Retornar mensagem de sucesso e redirecionar via HTMX
+		w.Write([]byte(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+			<i class="bi bi-check-circle-fill me-2"></i>
+			Paciente atualizado com sucesso!
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		</div>
+		<script>
+			setTimeout(function() {
+				htmx.ajax('GET', '/patients/` + patientID + `', {target: '#content-area'});
+			}, 2000);
+		</script>`))
+		return
+	}
+
+	http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
 }
 
 func ArchivePatientHandler(w http.ResponseWriter, r *http.Request) {

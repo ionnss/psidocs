@@ -76,7 +76,13 @@
         <!-- Content Area -->
         <div id="content-area" class="content-area">
             <!-- Conteúdo dinâmico será carregado aqui -->
-            {{template "dashboard_content" .}}
+            {{if .Patient}}
+                {{template "patients_profile" .}}
+            {{else if .Patients}}
+                {{template "patients_lists" .}}
+            {{else}}
+                {{template "dashboard_content" .}}
+            {{end}}
         </div>
     </div>
 

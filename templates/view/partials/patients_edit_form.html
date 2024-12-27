@@ -1,0 +1,224 @@
+<!-- CSS -->
+<link rel="stylesheet" href="/static/css/patients_edit_form.css">
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Editar Paciente</h2>
+    </div>
+
+    <!-- Área de mensagens -->
+    <div id="message-area"></div>
+
+    <form hx-post="/patients/{{.Patient.ID}}/edit" hx-target="#message-area">
+        <div class="row g-4">
+            <!-- Dados Pessoais -->
+            <div class="col-md-6">
+                <div class="card bg-dark shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-vcard-fill me-2"></i>
+                            Dados Pessoais
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="nome" class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="nome" name="nome" value="{{.Patient.Nome}}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cpf" class="form-label">CPF</label>
+                                <input type="text" class="form-control" id="cpf" name="cpf" value="{{.Patient.CPF}}" maxlength="14" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+                                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{.Patient.DataNascimento.Format "2006-01-02"}}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sexo" class="form-label">Sexo</label>
+                                <select class="form-control" id="sexo" name="sexo" required>
+                                    <option value="M" {{if eq .Patient.Sexo "M"}}selected{{end}}>Masculino</option>
+                                    <option value="F" {{if eq .Patient.Sexo "F"}}selected{{end}}>Feminino</option>
+                                    <option value="O" {{if eq .Patient.Sexo "O"}}selected{{end}}>Outro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contato -->
+            <div class="col-md-6">
+                <div class="card bg-dark shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-telephone-fill me-2"></i>
+                            Contato
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{.Patient.Email}}">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="ddd" class="form-label">DDD</label>
+                                <input type="text" class="form-control" id="ddd" name="ddd" value="{{.Patient.DDD}}" maxlength="2" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="text" class="form-control" id="telefone" name="telefone" value="{{.Patient.Telefone}}" maxlength="10" required>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="whatsapp" name="whatsapp" {{if .Patient.WhatsApp}}checked{{end}}>
+                                    <label class="form-check-label" for="whatsapp">
+                                        <i class="bi bi-whatsapp text-success"></i> WhatsApp
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Endereço -->
+            <div class="col-md-6">
+                <div class="card bg-dark shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-geo-alt-fill me-2"></i>
+                            Endereço
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="cep" class="form-label">CEP</label>
+                                <input type="text" class="form-control" id="cep" name="cep" value="{{.Patient.CEP}}" maxlength="9" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="endereco" class="form-label">Logradouro</label>
+                                <input type="text" class="form-control" id="endereco" name="endereco" value="{{.Patient.Endereco}}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="numero" class="form-label">Número</label>
+                                <input type="text" class="form-control" id="numero" name="numero" value="{{.Patient.Numero}}" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="bairro" class="form-label">Bairro</label>
+                                <input type="text" class="form-control" id="bairro" name="bairro" value="{{.Patient.Bairro}}" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="cidade" class="form-label">Cidade</label>
+                                <input type="text" class="form-control" id="cidade" name="cidade" value="{{.Patient.Cidade}}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-control" id="estado" name="estado" required>
+                                    <option value="AC" {{if eq .Patient.Estado "AC"}}selected{{end}}>AC</option>
+                                    <option value="AL" {{if eq .Patient.Estado "AL"}}selected{{end}}>AL</option>
+                                    <option value="AP" {{if eq .Patient.Estado "AP"}}selected{{end}}>AP</option>
+                                    <option value="AM" {{if eq .Patient.Estado "AM"}}selected{{end}}>AM</option>
+                                    <option value="BA" {{if eq .Patient.Estado "BA"}}selected{{end}}>BA</option>
+                                    <option value="CE" {{if eq .Patient.Estado "CE"}}selected{{end}}>CE</option>
+                                    <option value="DF" {{if eq .Patient.Estado "DF"}}selected{{end}}>DF</option>
+                                    <option value="ES" {{if eq .Patient.Estado "ES"}}selected{{end}}>ES</option>
+                                    <option value="GO" {{if eq .Patient.Estado "GO"}}selected{{end}}>GO</option>
+                                    <option value="MA" {{if eq .Patient.Estado "MA"}}selected{{end}}>MA</option>
+                                    <option value="MT" {{if eq .Patient.Estado "MT"}}selected{{end}}>MT</option>
+                                    <option value="MS" {{if eq .Patient.Estado "MS"}}selected{{end}}>MS</option>
+                                    <option value="MG" {{if eq .Patient.Estado "MG"}}selected{{end}}>MG</option>
+                                    <option value="PA" {{if eq .Patient.Estado "PA"}}selected{{end}}>PA</option>
+                                    <option value="PB" {{if eq .Patient.Estado "PB"}}selected{{end}}>PB</option>
+                                    <option value="PR" {{if eq .Patient.Estado "PR"}}selected{{end}}>PR</option>
+                                    <option value="PE" {{if eq .Patient.Estado "PE"}}selected{{end}}>PE</option>
+                                    <option value="PI" {{if eq .Patient.Estado "PI"}}selected{{end}}>PI</option>
+                                    <option value="RJ" {{if eq .Patient.Estado "RJ"}}selected{{end}}>RJ</option>
+                                    <option value="RN" {{if eq .Patient.Estado "RN"}}selected{{end}}>RN</option>
+                                    <option value="RS" {{if eq .Patient.Estado "RS"}}selected{{end}}>RS</option>
+                                    <option value="RO" {{if eq .Patient.Estado "RO"}}selected{{end}}>RO</option>
+                                    <option value="RR" {{if eq .Patient.Estado "RR"}}selected{{end}}>RR</option>
+                                    <option value="SC" {{if eq .Patient.Estado "SC"}}selected{{end}}>SC</option>
+                                    <option value="SP" {{if eq .Patient.Estado "SP"}}selected{{end}}>SP</option>
+                                    <option value="SE" {{if eq .Patient.Estado "SE"}}selected{{end}}>SE</option>
+                                    <option value="TO" {{if eq .Patient.Estado "TO"}}selected{{end}}>TO</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Observações -->
+            <div class="col-md-6">
+                <div class="card bg-dark shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-journal-text me-2"></i>
+                            Observações
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <textarea class="form-control" id="observacoes" name="observacoes" rows="4">{{.Patient.Observacoes}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="d-flex justify-content-end mt-4">
+            <button type="button" class="btn btn-secondary me-2" hx-get="/patients/{{.Patient.ID}}" hx-target="#content-area">
+                <i class="bi bi-x-lg me-2"></i>Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">
+                <span class="htmx-indicator spinner-border spinner-border-sm me-1" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </span>
+                <i class="bi bi-check-lg me-2"></i>Salvar Alterações
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript para máscaras e validações -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Máscara para CPF
+    const cpfInput = document.getElementById('cpf');
+    cpfInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        }
+    });
+
+    // Máscara para telefone
+    const telefoneInput = document.getElementById('telefone');
+    telefoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 9) {
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        }
+    });
+
+    // Máscara para CEP
+    const cepInput = document.getElementById('cep');
+    cepInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 8) {
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        }
+    });
+});
+</script> 
