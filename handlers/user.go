@@ -480,7 +480,7 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 				   ddd, telefone, whatsapp,
 				   endereco, numero, bairro,
 				   cidade, estado, cep
-			FROM users_config 
+			FROM users_data
 			WHERE user_id = $1
 		`, userID).Scan(
 			&config.FirstName, &config.MiddleName, &config.LastName,
@@ -499,7 +499,7 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 		// Se for uma requisição HTMX, renderiza só o conteúdo
 		if r.Header.Get("HX-Request") == "true" {
 			log.Printf("Renderizando template para requisição HTMX")
-			tmpl := template.Must(template.ParseFiles("templates/view/partials/user_config.html"))
+			tmpl := template.Must(template.ParseFiles("templates/view/partials/user_data.html"))
 			if err := tmpl.Execute(w, config); err != nil {
 				log.Printf("Erro ao renderizar template: %v", err)
 				http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
@@ -512,7 +512,7 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Renderizando layout completo")
 		tmpl := template.Must(template.ParseFiles(
 			"templates/view/dashboard_layout.html",
-			"templates/view/partials/user_config.html",
+			"templates/view/partials/user_data.html",
 		))
 		if err := tmpl.Execute(w, config); err != nil {
 			log.Printf("Erro ao renderizar template: %v", err)
@@ -533,7 +533,7 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Verificar se já existe configuração
 		var exists bool
-		err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM users_config WHERE user_id = $1)", userID).Scan(&exists)
+		err = db.QueryRow("SELECT EXISTS(SELECT 1 FROM users_data WHERE user_id = $1)", userID).Scan(&exists)
 		if err != nil {
 			http.Error(w, "Erro ao verificar configuração existente", http.StatusInternalServerError)
 			return
@@ -542,7 +542,7 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 		if exists {
 			// Update
 			_, err = db.Exec(`
-				UPDATE users_config 
+				UPDATE users_data 
 				SET first_name = $1, middle_name = $2, last_name = $3, 
 					cpf = $4, rg = $5, date_of_birth = $6,
 					ddd = $7, telefone = $8, whatsapp = $9,
@@ -569,7 +569,7 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			// Insert
 			_, err = db.Exec(`
-				INSERT INTO users_config (
+				INSERT INTO users_data (
 					user_id, first_name, middle_name, last_name,
 					cpf, rg, date_of_birth,
 					ddd, telefone, whatsapp,

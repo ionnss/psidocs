@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Criar tabela de configurações de usuários
-CREATE TABLE IF NOT EXISTS users_config (
+CREATE TABLE IF NOT EXISTS users_data (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
     first_name VARCHAR(100) NOT NULL,
@@ -29,11 +29,31 @@ CREATE TABLE IF NOT EXISTS users_config (
     cidade VARCHAR(100) NOT NULL,
     estado VARCHAR(2) NOT NULL,
     cep VARCHAR(9) NOT NULL,
-    plan VARCHAR(20) DEFAULT 'free',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Criar tabela de planos
+CREATE TABLE IF NOT EXISTS users_plan (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    plan_name VARCHAR (100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    duration VARCHAR(100) NOT NULL, -- mensal, trimestral, anual
+    status VARCHAR(20) NOT NULL DEFAULT 'ativo' CHECK (status IN ('ativo', 'inativo')),
+    last_payment_date DATE,
+    next_payment_date DATE,
+    auto_renewal BOOLEAN DEFAULT true,
+    cancel_date DATE, 
+    cancellation_policy TEXT, -- texto explicativo da política de cancelamento
+    payment_method VARCHAR(100) NOT NULL, -- pix, boleto, cartão, etc
+    payment_status VARCHAR(20) NOT NULL DEFAULT 'pendente' CHECK (payment_status IN ('pendente', 'pago', 'cancelado')),
+    transaction_id VARCHAR(100), -- id da transação no gateway de pagamento
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Criar índices
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-CREATE INDEX IF NOT EXISTS idx_users_config_user_id ON users_config(user_id); 
+CREATE INDEX IF NOT EXISTS idx_users_data_user_id ON users_data(user_id); 
+CREATE INDEX IF NOT EXISTS idx_users_plan_user_id ON users_plan(user_id); 
