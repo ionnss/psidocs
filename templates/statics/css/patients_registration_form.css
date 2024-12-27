@@ -1,0 +1,54 @@
+.patientRegistrationForm {
+    color: #ffffff;
+}
+
+.patientRegistrationForm label {
+    color: #ffffff;
+}
+
+.patientRegistrationForm .card-body {
+    color: #beafaf;
+    background-color: rgba(18, 17, 22);
+}
+
+.patientRegistrationForm .card-header {
+    color: #e4dbdb;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.patientRegistrationForm .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.patientRegistrationForm .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.3);
+}
+
+.patientRegistrationForm select.form-control option {
+    background-color: rgb(165, 9, 243);
+    color: #ffffff;
+}
+
+.alert {
+    color: #ffffff;
+    background-color: rgb(12, 121, 20);
+    text-align: center;
+}
+
+/* Estilo específico para campos obrigatórios com erro */
+.card-body-psidocs {
+    border: red 5px solid;
+    border-radius: 10px;
+    border-color: red;
+}
+
+.card-body-psidocs .form-control {
+    border: red 5px solid;
+    border-radius: 10px;
+    border-color: red;
+}

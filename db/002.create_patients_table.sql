@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS pacientes (
+CREATE TABLE IF NOT EXISTS patients (
     id SERIAL PRIMARY KEY,
     psicologo_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     nome VARCHAR(255) NOT NULL,
@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS pacientes (
 );
 
 -- Índices para melhorar performance
-CREATE INDEX IF NOT EXISTS idx_pacientes_psicologo ON pacientes(psicologo_id);
-CREATE INDEX IF NOT EXISTS idx_pacientes_status ON pacientes(status);
-CREATE INDEX IF NOT EXISTS idx_pacientes_cpf ON pacientes(cpf);
+CREATE INDEX IF NOT EXISTS idx_patients_psicologo ON patients(psicologo_id);
+CREATE INDEX IF NOT EXISTS idx_patients_status ON patients(status);
+CREATE INDEX IF NOT EXISTS idx_patients_cpf ON patients(cpf);
 
 -- Trigger para atualizar updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -37,9 +37,9 @@ $$ language 'plpgsql';
 
 DO $$ 
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'update_pacientes_updated_at') THEN
-        CREATE TRIGGER update_pacientes_updated_at
-            BEFORE UPDATE ON pacientes
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'update_patients_updated_at') THEN
+        CREATE TRIGGER update_patients_updated_at
+            BEFORE UPDATE ON patients
             FOR EACH ROW
             EXECUTE FUNCTION update_updated_at_column();
     END IF;

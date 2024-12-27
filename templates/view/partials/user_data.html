@@ -1,5 +1,7 @@
 <!-- Adicionar CSS -->
 <link rel="stylesheet" href="/static/css/user_data.css">
+<!-- Adicionar JS de máscaras -->
+<script src="/static/js/input-masks.js"></script>
 
 <div class="container-fluid">
     <h2 class="mb-4">Dados Pessoais Conta</h2>
@@ -33,7 +35,10 @@
                     </div>
                     <div class="col-md-4">
                         <label for="cpf" class="form-label">CPF</label>
-                        <input type="text" class="form-control" id="cpf" name="cpf" value="{{.CPF}}" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}">
+                        <input type="text" class="form-control" id="cpf" name="cpf" value="{{.CPF}}" 
+                               pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" 
+                               oninput="formatCPF(this)"
+                               maxlength="14">
                     </div>
                     <div class="col-md-4">
                         <label for="rg" class="form-label">RG</label>
@@ -52,11 +57,15 @@
                 <div class="row g-3">
                     <div class="col-md-2">
                         <label for="ddd" class="form-label">DDD</label>
-                        <input type="text" class="form-control" id="ddd" name="ddd" value="{{.DDD}}" required>
+                        <input type="text" class="form-control" id="ddd" name="ddd" value="{{.DDD}}" 
+                               oninput="formatDDD(this)"
+                               maxlength="3" required>
                     </div>
                     <div class="col-md-4">
                         <label for="telefone" class="form-label">Telefone</label>
-                        <input type="text" class="form-control" id="telefone" name="telefone" value="{{.Telefone}}" required>
+                        <input type="text" class="form-control" id="telefone" name="telefone" value="{{.Telefone}}" 
+                               oninput="formatTelefone(this)"
+                               maxlength="9" required>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label d-block">WhatsApp</label>
@@ -127,7 +136,9 @@
                     </div>
                     <div class="col-md-4">
                         <label for="cep" class="form-label">CEP</label>
-                        <input type="text" class="form-control" id="cep" name="cep" value="{{.CEP}}" required>
+                        <input type="text" class="form-control" id="cep" name="cep" value="{{.CEP}}" 
+                               oninput="formatCEP(this)"
+                               maxlength="9" required>
                     </div>
                 </div>
             </div>

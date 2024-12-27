@@ -73,6 +73,8 @@ func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 	r.HandleFunc("/dashboard", handlers.AuthHandler).Methods("POST")
 	r.Handle("/dashboard/dados_pessoais", handlers.AuthMiddleware(http.HandlerFunc(handlers.UpdateUserConfigHandler))).Methods("GET", "POST")
 	r.Handle("/dashboard/credenciais", handlers.AuthMiddleware(http.HandlerFunc(handlers.UpdateUserCredentialsHandler))).Methods("GET", "POST")
+	// Rotas de pacientes
+	r.Handle("/patients/create", handlers.AuthMiddleware(http.HandlerFunc(handlers.CreatePatientHandler))).Methods("GET", "POST")
 }
 
 // HealthCheckHandler retorna 200 OK para health checks
