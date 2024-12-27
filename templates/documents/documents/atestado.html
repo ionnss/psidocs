@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atestado Psicológico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        .content {
+            text-align: justify;
+            margin-bottom: 40px;
+        }
+        .warning {
+            margin: 30px 0;
+            font-style: italic;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .signature-line {
+            width: 200px;
+            border-top: 1px solid black;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+        .date {
+            margin-top: 40px;
+            text-align: center;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            @page {
+                margin: 2.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{.LogoUrl}}" alt="Logo" style="max-width: 200px; height: auto;">
+    </div>
+
+    <h1>ATESTADO PSICOLÓGICO</h1>
+
+    <div class="content">
+        Certifico, com fundamento em diagnóstico psicológico, que {{.PacienteNome}}, 
+        portador(a) do RG {{.PacienteRG}} e do CPF {{.PacienteCPF}}, foi submetido(a) 
+        a um processo de avaliação psicológica no período de {{.DataInicialAvaliacao}} 
+        a {{.DataFinalAvaliacao}}.
+    </div>
+
+    <div class="content">
+        Durante o referido processo de avaliação, foram verificados aspectos psicológicos 
+        relacionados a {{.NaturezaAvaliacao}}.
+    </div>
+
+    <div class="content">
+        Com base na avaliação realizada, atesto que {{.PacienteNome}} apresenta 
+        {{.EstadoPsicologico}}.
+    </div>
+
+    <div class="content">
+        Este atestado tem validade até {{.DataValidade}}.
+    </div>
+
+    <div class="warning">
+        Declaramos ainda que o presente atestado possui caráter sigiloso e destina-se 
+        exclusivamente para {{.FinalidadeAtestado}}. Qualquer uso indevido ou divulgação 
+        não autorizada deste documento é vedado.
+    </div>
+
+    <div class="date">
+        {{.Cidade}}, {{.DataAtestado}}
+    </div>
+
+    <div class="signature">
+        <div class="signature-line">{{.PsicologoNome}}</div>
+        <div>CRP {{.PsicologoCRP}}</div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anamnese Psicológica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        .field-label {
+            font-weight: bold;
+        }
+        .field-content {
+            min-height: 20px;
+            border-bottom: 1px dotted #999;
+            margin-top: 5px;
+        }
+        .text-area {
+            min-height: 100px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .signature-line {
+            width: 200px;
+            border-top: 1px solid black;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            @page {
+                margin: 2.5cm;
+            }
+            .text-area {
+                border: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>ANAMNESE PSICOLÓGICA</h1>
+
+    <div class="section">
+        <div class="section-title">1. DADOS DE IDENTIFICAÇÃO</div>
+        <div class="field">
+            <span class="field-label">Nome:</span>
+            <div class="field-content">{{.PacienteNome}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Data de Nascimento:</span>
+            <div class="field-content">{{.PacienteDataNascimento}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Gênero:</span>
+            <div class="field-content">{{.PacienteGenero}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Estado Civil:</span>
+            <div class="field-content">{{.PacienteEstadoCivil}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Profissão/Ocupação:</span>
+            <div class="field-content">{{.PacienteProfissao}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Endereço:</span>
+            <div class="field-content">{{.PacienteEndereco}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Psicólogo(a) Responsável:</span>
+            <div class="field-content">{{.PsicologoNome}} - CRP: {{.PsicologoCRP}}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">2. QUEIXA PRINCIPAL</div>
+        <div class="text-area">{{.QueixaPrincipal}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">3. HISTÓRIA DO PROBLEMA</div>
+        <div class="text-area">{{.HistoriaProblema}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">4. SINTOMATOLOGIA</div>
+        <div class="text-area">{{.Sintomatologia}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">5. ANTECEDENTES PESSOAIS</div>
+        <div class="field">
+            <span class="field-label">Histórico Médico:</span>
+            <div class="text-area">{{.HistoricoMedico}}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">6. HISTÓRICO OCUPACIONAL</div>
+        <div class="field">
+            <span class="field-label">Tempo de trabalho na ocupação atual:</span>
+            <div class="field-content">{{.TempoTrabalhoAtual}}</div>
+        </div>
+        <div class="text-area">{{.HistoricoOcupacional}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">7. HISTÓRIA PSICOSSOCIAL</div>
+        <div class="text-area">{{.HistoriaPsicossocial}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">8. TRATAMENTOS ANTERIORES</div>
+        <div class="text-area">{{.TratamentosAnteriores}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">9. HÁBITOS DE VIDA</div>
+        <div class="field">
+            <span class="field-label">Alimentação:</span>
+            <div class="field-content">{{.HabitosAlimentacao}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Exercícios físicos:</span>
+            <div class="field-content">{{.HabitosExercicios}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Hábitos de sono:</span>
+            <div class="field-content">{{.HabitosSono}}</div>
+        </div>
+        <div class="field">
+            <span class="field-label">Uso de substâncias:</span>
+            <div class="field-content">{{.HabitosSubstancias}}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">10. OUTRAS INFORMAÇÕES RELEVANTES</div>
+        <div class="text-area">{{.OutrasInformacoes}}</div>
+    </div>
+
+    <div class="signature">
+        <div class="field">Data: {{.DataAvaliacao}}</div>
+        <div style="margin-top: 30px;">
+            <div class="signature-line">{{.PsicologoNome}}</div>
+            <div>CRP {{.PsicologoCRP}}</div>
+        </div>
+    </div>
+</body>
+</html> 

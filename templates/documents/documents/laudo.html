@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laudo Psicológico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .content {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        .field {
+            margin-bottom: 10px;
+        }
+        .field-label {
+            font-weight: bold;
+            display: inline-block;
+            min-width: 150px;
+        }
+        .references {
+            margin-top: 40px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+        .reference-item {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            text-indent: -20px;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .signature-line {
+            width: 200px;
+            border-top: 1px solid black;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            @page {
+                margin: 2.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{.LogoUrl}}" alt="Logo" style="max-width: 200px; height: auto;">
+    </div>
+
+    <h1>LAUDO PSICOLÓGICO</h1>
+
+    <div class="section">
+        <div class="section-title">IDENTIFICAÇÃO</div>
+        <div class="field">
+            <span class="field-label">Nome:</span> {{.PacienteNome}}
+        </div>
+        <div class="field">
+            <span class="field-label">Data de nascimento:</span> {{.PacienteDataNascimento}}
+        </div>
+        <div class="field">
+            <span class="field-label">Estado civil:</span> {{.PacienteEstadoCivil}}
+        </div>
+        <div class="field">
+            <span class="field-label">Escolaridade:</span> {{.PacienteEscolaridade}}
+        </div>
+        <div class="field">
+            <span class="field-label">Profissão:</span> {{.PacienteProfissao}}
+        </div>
+        <div class="field">
+            <span class="field-label">Endereço:</span> {{.PacienteEndereco}}
+        </div>
+        <div class="field">
+            <span class="field-label">Telefone:</span> {{.PacienteTelefone}}
+        </div>
+        <div class="field">
+            <span class="field-label">E-mail:</span> {{.PacienteEmail}}
+        </div>
+        <div class="field">
+            <span class="field-label">Nome do solicitante:</span> {{.Solicitante}}
+        </div>
+        <div class="field">
+            <span class="field-label">Finalidade:</span> {{.Finalidade}}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">DESCRIÇÃO DA DEMANDA</div>
+        <div class="content">{{.DescricaoDemanda}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">PROCEDIMENTO</div>
+        <div class="content">{{.Procedimento}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">ANÁLISE</div>
+        <div class="content">{{.Analise}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">CONCLUSÃO</div>
+        <div class="content">{{.Conclusao}}</div>
+    </div>
+
+    <div class="references">
+        <div class="section-title">REFERÊNCIAS</div>
+        {{range .Referencias}}
+        <div class="reference-item">{{.}}</div>
+        {{end}}
+    </div>
+
+    <div class="signature">
+        <div class="signature-line">{{.PsicologoNome}}</div>
+        <div>CRP {{.PsicologoCRP}}</div>
+    </div>
+</body>
+</html> 

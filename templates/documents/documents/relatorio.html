@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Psicológico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .content {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        .field {
+            margin-bottom: 10px;
+        }
+        .field-label {
+            font-weight: bold;
+            display: inline-block;
+            min-width: 150px;
+        }
+        .warning {
+            margin: 30px 0;
+            font-style: italic;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .signature-line {
+            width: 200px;
+            border-top: 1px solid black;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            @page {
+                margin: 2.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{.LogoUrl}}" alt="Logo" style="max-width: 200px; height: auto;">
+    </div>
+
+    <h1>RELATÓRIO PSICOLÓGICO</h1>
+
+    <div class="section">
+        <div class="section-title">IDENTIFICAÇÃO</div>
+        <div class="field">
+            <span class="field-label">Nome:</span> {{.PacienteNome}}
+        </div>
+        <div class="field">
+            <span class="field-label">Data de nascimento:</span> {{.PacienteDataNascimento}}
+        </div>
+        <div class="field">
+            <span class="field-label">Idade:</span> {{.PacienteIdade}}
+        </div>
+        <div class="field">
+            <span class="field-label">Escolaridade:</span> {{.PacienteEscolaridade}}
+        </div>
+        <div class="field">
+            <span class="field-label">Nome do solicitante:</span> {{.Solicitante}}
+        </div>
+        <div class="field">
+            <span class="field-label">Finalidade:</span> {{.Finalidade}}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">PERÍODO DO ACOMPANHAMENTO</div>
+        <div class="content">
+            Período de {{.DataInicioAcompanhamento}} a {{.DataFimAcompanhamento}}, 
+            com frequência {{.FrequenciaAtendimento}} e duração de {{.DuracaoSessoes}} por sessão.
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">DEMANDA INICIAL</div>
+        <div class="content">{{.DemandaInicial}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">EVOLUÇÃO DO PROCESSO</div>
+        <div class="content">{{.EvolucaoProcesso}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">RECURSOS E INSTRUMENTOS UTILIZADOS</div>
+        <div class="content">{{.RecursosUtilizados}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">RESULTADOS E ENCAMINHAMENTOS</div>
+        <div class="content">{{.ResultadosEncaminhamentos}}</div>
+    </div>
+
+    <div class="warning">
+        Este relatório tem caráter sigiloso, conforme previsto no Código de Ética Profissional 
+        do Psicólogo, e destina-se exclusivamente ao uso profissional para {{.FinalidadeRelatorio}}. 
+        É vedada sua utilização para outros fins ou sua divulgação a terceiros.
+    </div>
+
+    <div class="section">
+        <div class="content" style="text-align: center;">
+            {{.Cidade}}, {{.DataRelatorio}}
+        </div>
+    </div>
+
+    <div class="signature">
+        <div class="signature-line">{{.PsicologoNome}}</div>
+        <div>CRP {{.PsicologoCRP}}</div>
+    </div>
+</body>
+</html> 
