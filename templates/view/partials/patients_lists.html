@@ -1,0 +1,104 @@
+<!-- Adicionar CSS -->
+<link rel="stylesheet" href="/static/css/patients_lists.css">
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Pacientes</h2>
+        <button class="btn btn-primary" hx-get="/patients/create" hx-target="#content-area">
+            <i class="bi bi-person-plus-fill me-2"></i>Novo Paciente
+        </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card bg-dark shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Filtros</h5>
+        </div>
+        <div class="card-body">
+            <form class="row g-3" hx-get="/patients" hx-target="#patients-table" hx-trigger="change">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="search" placeholder="Buscar por nome ou CPF...">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" name="status">
+                        <option value="">Todos os Status</option>
+                        <option value="ativo">Ativos</option>
+                        <option value="inativo">Inativos</option>
+                        <option value="arquivado">Arquivados</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabela de Pacientes -->
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Contato</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="patients-table">
+                {{range .Patients}}
+                <tr>
+                    <td>{{.Nome}}</td>
+                    <td>{{.CPF}}</td>
+                    <td>
+                        {{.DDD}} {{.Telefone}}
+                        {{if .WhatsApp}}
+                        <i class="bi bi-whatsapp text-success"></i>
+                        {{end}}
+                    </td>
+                    <td>
+                        <span class="badge {{if eq .Status "ativo"}}bg-success{{else if eq .Status "inativo"}}bg-warning{{else}}bg-secondary{{end}}">
+                            {{.Status}}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-primary" 
+                                    hx-get="/patients/{{.ID}}" 
+                                    hx-target="#content-area"
+                                    title="Ver detalhes">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning"
+                                    hx-get="/patients/{{.ID}}/edit"
+                                    hx-target="#content-area"
+                                    title="Editar">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            {{if eq .Status "ativo"}}
+                            <button class="btn btn-sm btn-outline-danger"
+                                    hx-post="/patients/{{.ID}}/archive"
+                                    hx-confirm="Tem certeza que deseja arquivar este paciente?"
+                                    hx-target="#patients-table"
+                                    title="Arquivar">
+                                <i class="bi bi-archive-fill"></i>
+                            </button>
+                            {{else}}
+                            <button class="btn btn-sm btn-outline-success"
+                                    hx-post="/patients/{{.ID}}/unarchive"
+                                    hx-confirm="Tem certeza que deseja reativar este paciente?"
+                                    hx-target="#patients-table"
+                                    title="Reativar">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                            {{end}}
+                        </div>
+                    </td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="5" class="text-center">Nenhum paciente encontrado</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>

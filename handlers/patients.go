@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -194,8 +195,119 @@ func DeletePatientHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// ListPatientsHandler lista os pacientes do psicólogo
 func ListPatientsHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("ListPatientsHandler iniciado - Método: %s", r.Method)
 
+	// Obter ID do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Preparar query base
+	query := `
+		SELECT id, nome, cpf, ddd, telefone, whatsapp, status
+		FROM patients 
+		WHERE psicologo_id = $1`
+	args := []interface{}{psicologoID}
+	argCount := 1
+
+	// Adicionar filtros se fornecidos
+	search := r.URL.Query().Get("search")
+	if search != "" {
+		query += fmt.Sprintf(" AND (nome ILIKE $%d OR cpf ILIKE $%d)", argCount+1, argCount+1)
+		args = append(args, "%"+search+"%")
+		argCount++
+	}
+
+	status := r.URL.Query().Get("status")
+	if status != "" {
+		query += fmt.Sprintf(" AND status = $%d", argCount+1)
+		args = append(args, status)
+	}
+
+	// Ordenar por nome
+	query += " ORDER BY nome"
+
+	// Executar query
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		log.Printf("Erro ao buscar pacientes: %v", err)
+		http.Error(w, "Erro ao buscar pacientes", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	// Processar resultados
+	var patients []Patient
+	for rows.Next() {
+		var p Patient
+		err := rows.Scan(&p.ID, &p.Nome, &p.CPF, &p.DDD, &p.Telefone, &p.WhatsApp, &p.Status)
+		if err != nil {
+			log.Printf("Erro ao processar paciente: %v", err)
+			continue
+		}
+		patients = append(patients, p)
+	}
+
+	// Preparar dados do template
+	data := map[string]interface{}{
+		"Patients": patients,
+	}
+
+	// Se for uma requisição HTMX para a tabela
+	if r.Header.Get("HX-Target") == "patients-table" {
+		tmpl := template.Must(template.ParseFiles("templates/view/partials/patients_lists.html"))
+		err = tmpl.ExecuteTemplate(w, "patients-table", data)
+		if err != nil {
+			log.Printf("Erro ao renderizar tabela: %v", err)
+			http.Error(w, "Erro ao renderizar tabela", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Se for uma requisição HTMX normal
+	if r.Header.Get("HX-Request") == "true" {
+		tmpl := template.Must(template.ParseFiles("templates/view/partials/patients_lists.html"))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			log.Printf("Erro ao renderizar template: %v", err)
+			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Se não for HTMX, renderiza o layout completo
+	tmpl := template.Must(template.ParseFiles(
+		"templates/view/dashboard_layout.html",
+		"templates/view/partials/patients_lists.html",
+	))
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		log.Printf("Erro ao renderizar template: %v", err)
+		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+	}
 }
 
 func ArchivePatientHandler(w http.ResponseWriter, r *http.Request) {
