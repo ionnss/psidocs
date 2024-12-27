@@ -1,11 +1,14 @@
 <!-- CSS -->
 <link rel="stylesheet" href="/static/css/patients_profile.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
 
 <div class="container-fluid">
     <!-- Cabeçalho -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2>{{.Patient.Nome}}</h2>
+        <div class="name-top px-3 py-3">
+            <div class="name-top-text">
+                <h2>{{.Patient.Nome}}</h2>
+            </div>
             <span class="badge {{if eq .Patient.Status "ativo"}}bg-success{{else if eq .Patient.Status "inativo"}}bg-warning{{else}}bg-secondary{{end}}">
                 {{.Patient.Status}}
             </span>

@@ -20,7 +20,7 @@
 }
 
 .card-header .card-title {
-    color: #fff;
+    color: #ffffff80;
     display: flex;
     align-items: center;
 }
@@ -30,9 +30,19 @@
     font-size: 1.2rem;
 }
 
+.card-body {
+    color: #beafaf;
+    background-color: rgba(18, 17, 22);
+}
+
 /* Tabelas */
 .table {
     margin-bottom: 0;
+    background-color: rgba(18, 17, 22) !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(18, 17, 22) !important;
 }
 
 .table th {
@@ -41,11 +51,11 @@
     font-weight: 500;
     text-transform: uppercase;
     font-size: 0.875rem;
-    color: #6c757d;
+    color: #6c757d;background-color: rgba(18, 17, 22) !important;
 }
 
 .table td {
-    vertical-align: middle;
+    vertical-align: middle;background-color: rgba(18, 17, 22) !important;
 }
 
 /* Badges */

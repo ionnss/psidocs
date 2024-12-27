@@ -287,3 +287,125 @@ E os contratos poderia também sofrerem edições e serem enviados para os pacie
    - Sistema de assinatura digital
    - Gestão de status dos documentos (enviado, assinado, etc)
 
+---
+
+Sim, exatamente! Vou fornecer um panorama detalhado de todo o sistema de documentos:
+
+### 1. Estrutura de Dados
+
+**Templates de Documentos** (`document_templates`):
+```sql
+- id
+- psicologo_id (FK users)
+- nome
+- descricao
+- tipo (contrato/psicologico)
+- subtipo (laudo/relatorio/prontuario/etc)
+- conteudo (HTML com placeholders)
+- created_at
+- updated_at
+```
+
+**Documentos Gerados** (`documents`):
+```sql
+- id
+- template_id (FK document_templates)
+- psicologo_id (FK users)
+- paciente_id (FK patients)
+- nome
+- conteudo (HTML preenchido)
+- status (rascunho/finalizado)
+- created_at
+- updated_at
+```
+
+### 2. Fluxos de Uso
+
+**A. Gestão de Templates:**
+1. Sistema carrega templates padrão da pasta `files`
+2. Psicólogo pode:
+   - Usar templates padrão
+   - Criar novos templates
+   - Personalizar templates existentes
+
+**B. Geração de Documentos:**
+1. No perfil do paciente:
+   - Botão "Novo Documento"
+   - Lista de documentos existentes
+2. Ao gerar documento:
+   - Seleciona template
+   - Preenche dados específicos
+   - Salva como rascunho ou finaliza
+3. Documentos finalizados ficam no histórico do paciente
+
+### 3. Interfaces
+
+**A. Página de Documentos (Geral):**
+- Lista de templates disponíveis
+- Documentos recentes
+- Filtros por tipo/status
+
+**B. Perfil do Paciente:**
+- Aba/seção de documentos
+- Lista de documentos do paciente
+- Botão para gerar novo documento
+
+**C. Editor de Documentos:**
+- Interface para edição
+- Preview em tempo real
+- Opções de salvar/finalizar
+
+### 4. Funcionalidades Principais
+
+1. **Templates:**
+   - CRUD de templates
+   - Importação de templates padrão
+   - Personalização de conteúdo
+
+2. **Documentos:**
+   - Geração a partir de templates
+   - Preenchimento automático de dados do paciente
+   - Versionamento (rascunho/final)
+   - Exportação (PDF)
+
+3. **Integração:**
+   - Vinculação com pacientes
+   - Histórico por paciente
+   - Busca e filtros
+
+### 5. Considerações Técnicas
+
+1. **Segurança:**
+   - Acesso restrito por psicólogo
+   - Proteção de dados sensíveis
+   - Backup de documentos
+
+2. **Performance:**
+   - Cache de templates
+   - Otimização de busca
+   - Paginação de resultados
+
+3. **UX:**
+   - Interface intuitiva
+   - Feedback claro
+   - Confirmações importantes
+
+### 6. Próximos Passos Sugeridos
+
+1. Criar as tabelas no banco de dados
+2. Implementar CRUD básico de templates
+3. Desenvolver interface de listagem
+4. Implementar geração de documentos
+5. Integrar com perfil do paciente
+6. Adicionar exportação PDF
+7. Implementar busca e filtros
+
+### Perguntas para Discussão:
+
+1. Como você quer lidar com a personalização de templates? Total liberdade ou campos predefinidos?
+2. Precisamos de um sistema de aprovação/revisão de documentos?
+3. Que formato de exportação é prioritário? (PDF, DOC, etc)
+4. Como você quer implementar o versionamento dos documentos?
+5. Que tipos de dados do paciente devem ser preenchidos automaticamente?
+
+Podemos começar por qualquer parte que você considere mais prioritária. Qual aspecto você gostaria de abordar primeiro?
