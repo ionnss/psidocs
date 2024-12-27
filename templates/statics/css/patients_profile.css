@@ -10,6 +10,7 @@
 
 .card-body {
     padding: 1.25rem;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 dt {
@@ -34,5 +35,5 @@ h2 {
 }
 
 .text-muted {
-    color: rgba(255, 255, 255, 0.5) !important;
+    color: rgb(61, 50, 50) !important;
 }
