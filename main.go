@@ -5,6 +5,7 @@ import (
 
 	"net/http"
 	"psidocs/db"
+	"psidocs/handlers"
 	"psidocs/routes"
 
 	"github.com/gorilla/mux"
@@ -24,6 +25,14 @@ func main() {
 	// Configura o roteador
 	r := mux.NewRouter()
 	routes.ConfigureRoutes(r, conn)
+
+	// Rotas de documentos
+	r.HandleFunc("/documents/template", handlers.DocumentTemplateHandler)
+	r.HandleFunc("/documents/save", handlers.SaveDocumentHandler)
+
+	// Servir arquivos estáticos
+	fs := http.FileServer(http.Dir("static"))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
 	// Inicia o servidor
 	log.Println("Servidor iniciado na porta 8080 em http://localhost:8080")
