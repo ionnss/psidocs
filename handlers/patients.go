@@ -12,6 +12,20 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Document representa a estrutura de dados de um documento
+type Document struct {
+	ID               int
+	PsicologoID      int
+	PacienteID       int
+	Tipo             string
+	Nome             string
+	Descricao        string
+	Conteudo         string
+	RequerAssinatura bool
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
+}
+
 // Patient representa a estrutura de dados de um paciente
 type Patient struct {
 	ID             int
@@ -881,4 +895,150 @@ func UnarchivePatientHandler(w http.ResponseWriter, r *http.Request) {
 			htmx.ajax('GET', '/patients/' + ` + patientID + `, {target: '#content-area'});
 		}, 2000);
 	</script>`))
+}
+
+// GetPatientProfileHandler carrega o perfil do paciente
+func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
+	// Obter ID do paciente da URL
+	vars := mux.Vars(r)
+	patientID := vars["id"]
+
+	// Obter dados do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Obter dados do paciente
+	var patient Patient
+	err = db.QueryRow(`
+		SELECT 
+			id, nome, email, cpf, data_nascimento, sexo,
+			endereco, numero, bairro, cidade, estado, cep,
+			estado_civil, nacionalidade, profissao,
+			ddd, telefone, whatsapp, rg, status, observacoes
+		FROM patients 
+		WHERE id = $1 AND psicologo_id = $2`,
+		patientID, psicologoID,
+	).Scan(
+		&patient.ID, &patient.Nome, &patient.Email, &patient.CPF,
+		&patient.DataNascimento, &patient.Sexo, &patient.Endereco,
+		&patient.Numero, &patient.Bairro, &patient.Cidade,
+		&patient.Estado, &patient.CEP, &patient.EstadoCivil,
+		&patient.Nacionalidade, &patient.Profissao,
+		&patient.DDD, &patient.Telefone, &patient.WhatsApp,
+		&patient.RG, &patient.Status, &patient.Observacoes,
+	)
+	if err != nil {
+		log.Printf("Erro ao obter dados do paciente: %v", err)
+		http.Error(w, "Erro ao obter dados do paciente", http.StatusInternalServerError)
+		return
+	}
+
+	// Obter contratos do paciente
+	rows, err := db.Query(`
+		SELECT id, tipo, nome, conteudo, requer_assinatura, created_at, updated_at
+		FROM documents 
+		WHERE paciente_id = $1 AND psicologo_id = $2 AND tipo LIKE 'contracts/%'
+		ORDER BY updated_at DESC`,
+		patientID, psicologoID,
+	)
+	if err != nil {
+		log.Printf("Erro ao obter contratos: %v", err)
+		http.Error(w, "Erro ao obter contratos", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var contracts []Document
+	for rows.Next() {
+		var doc Document
+		err := rows.Scan(
+			&doc.ID, &doc.Tipo, &doc.Nome, &doc.Conteudo,
+			&doc.RequerAssinatura, &doc.CreatedAt, &doc.UpdatedAt,
+		)
+		if err != nil {
+			log.Printf("Erro ao ler contrato: %v", err)
+			continue
+		}
+		contracts = append(contracts, doc)
+	}
+
+	// Obter documentos psicológicos do paciente
+	rows, err = db.Query(`
+		SELECT id, tipo, nome, conteudo, requer_assinatura, created_at, updated_at
+		FROM documents 
+		WHERE paciente_id = $1 AND psicologo_id = $2 AND tipo LIKE 'psychological-documents/%'
+		ORDER BY updated_at DESC`,
+		patientID, psicologoID,
+	)
+	if err != nil {
+		log.Printf("Erro ao obter documentos psicológicos: %v", err)
+		http.Error(w, "Erro ao obter documentos psicológicos", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var psychologicalDocs []Document
+	for rows.Next() {
+		var doc Document
+		err := rows.Scan(
+			&doc.ID, &doc.Tipo, &doc.Nome, &doc.Conteudo,
+			&doc.RequerAssinatura, &doc.CreatedAt, &doc.UpdatedAt,
+		)
+		if err != nil {
+			log.Printf("Erro ao ler documento psicológico: %v", err)
+			continue
+		}
+		psychologicalDocs = append(psychologicalDocs, doc)
+	}
+
+	// Preparar dados para o template
+	data := map[string]interface{}{
+		"Patient":           patient,
+		"Contracts":         contracts,
+		"PsychologicalDocs": psychologicalDocs,
+	}
+
+	// Se for uma requisição HTMX
+	if r.Header.Get("HX-Request") == "true" {
+		tmpl := template.Must(template.ParseFiles("templates/view/partials/patients_profile.html"))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			log.Printf("Erro ao renderizar template: %v", err)
+			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Se não for HTMX, renderiza o layout completo
+	tmpl := template.Must(template.ParseFiles(
+		"templates/view/dashboard_layout.html",
+		"templates/view/partials/patients_profile.html",
+	))
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		log.Printf("Erro ao renderizar template: %v", err)
+		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+	}
 }

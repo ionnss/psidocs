@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"log"
@@ -43,9 +44,26 @@ func formatDate(date string) string {
 }
 
 // DocumentTemplateHandler carrega o template do documento selecionado
+//
+// Recebe:
+// - value: tipo do documento
+// - document-type: tipo do documento
+// - patient_id: ID do paciente
+// - editor_contents: conteúdo do editor de documentos
+// - data_inicio_ferias: data de início das férias
+// - data_fim_ferias: data de fim das férias
+// - faltas: número de faltas
+// - data_inicio: data de início do tratamento
+// - data_fim_tratamento: data de fim do tratamento
+//
+// Retorna:
+// - template do documento preenchido com os dados recebidos
 func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	// Obter tipo do documento
 	templatePath := r.URL.Query().Get("value")
+	if templatePath == "" {
+		templatePath = r.URL.Query().Get("document-type")
+	}
 	if templatePath == "" {
 		http.Error(w, "Tipo de documento não especificado", http.StatusBadRequest)
 		return
@@ -200,6 +218,8 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		"DataInicioFerias":    r.FormValue("data_inicio_ferias"),
 		"DataFimFerias":       r.FormValue("data_fim_ferias"),
 		"DataFimTratamento":   r.FormValue("data_fim_tratamento"),
+		"NumeroFaltas":        r.FormValue("numero_faltas"),
+		"DataInicio":          r.FormValue("data_inicio"),
 	}
 
 	// Formata as datas antes de passar para o template
@@ -256,12 +276,19 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	documentType := r.FormValue("document-type")
-	documentName := r.FormValue("document-name")
-	editorContents := r.FormValue("editor_contents")
+	// Log de todos os campos recebidos
+	log.Printf("Campos recebidos no formulário:")
+	for key, values := range r.Form {
+		log.Printf("Campo %s: %v", key, values)
+	}
 
-	// Validar inputs
-	if documentType == "" || documentName == "" || editorContents == "" {
+	// Obter tipo do documento e ID do paciente
+	documentType := r.FormValue("value")
+	patientID := r.FormValue("patient_id")
+
+	if documentType == "" || patientID == "" {
+		log.Printf("Campos obrigatórios não preenchidos - type: %v, patient: %v",
+			documentType != "", patientID != "")
 		http.Error(w, "Campos obrigatórios não preenchidos", http.StatusBadRequest)
 		return
 	}
@@ -292,6 +319,77 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Obter dados do paciente
+	var patient Patient
+	err = db.QueryRow(`
+		SELECT id, nome 
+		FROM patients 
+		WHERE id = $1 AND psicologo_id = $2`,
+		patientID, psicologoID,
+	).Scan(&patient.ID, &patient.Nome)
+	if err != nil {
+		log.Printf("Erro ao obter dados do paciente: %v", err)
+		http.Error(w, "Erro ao obter dados do paciente", http.StatusInternalServerError)
+		return
+	}
+
+	// Gerar nome do documento
+	documentName := generateDocumentName(documentType, patient.Nome)
+	log.Printf("Nome do documento gerado: %s", documentName)
+
+	// Ler o template do documento
+	templateFile := fmt.Sprintf("templates/documents/%s.html", documentType)
+	content, err := os.ReadFile(templateFile)
+	if err != nil {
+		log.Printf("Erro ao ler template %s: %v", templateFile, err)
+		http.Error(w, "Template não encontrado", http.StatusNotFound)
+		return
+	}
+
+	// Preparar dados para o template
+	data := map[string]interface{}{
+		"ClienteNome":          patient.Nome,
+		"ClienteNacionalidade": r.FormValue("nacionalidade"),
+		"ClienteEstadoCivil":   r.FormValue("estado_civil"),
+		"ClienteRG":            r.FormValue("rg"),
+		"ClienteCPF":           r.FormValue("cpf"),
+		"ClienteCidade":        r.FormValue("cidade"),
+		"ClienteRua":           r.FormValue("endereco"),
+		"ClienteNumero":        r.FormValue("numero"),
+		"ClienteCEP":           r.FormValue("cep"),
+		"ClienteTelefone":      fmt.Sprintf("(%s) %s", r.FormValue("ddd"), r.FormValue("telefone")),
+
+		// Campos do formulário
+		"Abordagem":           r.FormValue("abordagem"),
+		"ValorSessao":         r.FormValue("valor_sessao"),
+		"DiaSemana":           r.FormValue("dia_semana"),
+		"HorarioSessao":       r.FormValue("horario_sessao"),
+		"DataLimitePagamento": r.FormValue("data_limite_pagamento"),
+		"MetodosPagamento":    r.FormValue("metodos_pagamento"),
+		"DataInicioFerias":    formatDate(r.FormValue("data_inicio_ferias")),
+		"DataFimFerias":       formatDate(r.FormValue("data_fim_ferias")),
+		"DataFimTratamento":   formatDate(r.FormValue("data_fim_tratamento")),
+		"NumeroFaltas":        r.FormValue("numero_faltas"),
+		"DataInicio":          formatDate(r.FormValue("data_inicio")),
+		"Frequencia":          r.FormValue("frequencia"),
+	}
+
+	// Renderizar template
+	var buffer bytes.Buffer
+	tmpl, err := template.New("document").Parse(string(content))
+	if err != nil {
+		log.Printf("Erro ao parsear template: %v", err)
+		http.Error(w, "Erro ao parsear template", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(&buffer, data)
+	if err != nil {
+		log.Printf("Erro ao renderizar template: %v", err)
+		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+		return
+	}
+
 	// Determinar se requer assinatura baseado no tipo
 	requerAssinatura := strings.HasPrefix(documentType, "contracts/")
 
@@ -302,10 +400,10 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 			conteudo, requer_assinatura
 		) VALUES ($1, $2, $3, $4, $5, $6)`,
 		psicologoID,
-		r.FormValue("patient_id"),
+		patientID,
 		documentType,
 		documentName,
-		editorContents,
+		buffer.String(),
 		requerAssinatura,
 	)
 
@@ -330,6 +428,44 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 			htmx.ajax('GET', '/patients/' + document.querySelector('[name="patient_id"]').value, {target: '#content-area'});
 		}, 2000);
 	</script>`))
+}
+
+// generateDocumentName gera o nome do documento baseado no tipo e nome do paciente
+func generateDocumentName(documentType, patientName string) string {
+	// Extrair categoria e tipo do documento
+	parts := strings.Split(documentType, "/")
+	var categoria, tipo string
+	if len(parts) == 2 {
+		switch parts[0] {
+		case "contracts":
+			categoria = "Contrato"
+			if parts[1] == "presencial" {
+				tipo = "Presencial"
+			} else if parts[1] == "online" {
+				tipo = "Online"
+			}
+		case "psychological-documents":
+			categoria = "Documento"
+			switch parts[1] {
+			case "anamnese":
+				tipo = "Anamnese"
+			case "atestado":
+				tipo = "Atestado"
+			case "declaracao":
+				tipo = "Declaração"
+			case "laudo":
+				tipo = "Laudo"
+			case "relatorio":
+				tipo = "Relatório"
+			}
+		}
+	}
+
+	// Formatar data atual
+	now := time.Now()
+	data := now.Format("02/01/2006")
+
+	return fmt.Sprintf("%s - %s - %s - %s", categoria, tipo, patientName, data)
 }
 
 // DocumentEditorHandler renderiza a página do editor de documentos

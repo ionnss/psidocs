@@ -76,7 +76,7 @@ func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 	// Rotas de pacientes
 	r.Handle("/patients", handlers.AuthMiddleware(http.HandlerFunc(handlers.ListPatientsHandler))).Methods("GET")
 	r.Handle("/patients/create", handlers.AuthMiddleware(http.HandlerFunc(handlers.CreatePatientHandler))).Methods("GET", "POST")
-	r.Handle("/patients/{id:[0-9]+}", handlers.AuthMiddleware(http.HandlerFunc(handlers.GetPatientHandler))).Methods("GET")
+	r.Handle("/patients/{id:[0-9]+}", handlers.AuthMiddleware(http.HandlerFunc(handlers.GetPatientProfileHandler))).Methods("GET")
 	r.Handle("/patients/{id:[0-9]+}/edit", handlers.AuthMiddleware(http.HandlerFunc(handlers.UpdatePatientHandler))).Methods("GET", "POST")
 	r.Handle("/patients/{id:[0-9]+}/archive", handlers.AuthMiddleware(http.HandlerFunc(handlers.ArchivePatientHandler))).Methods("POST")
 	r.Handle("/patients/{id:[0-9]+}/unarchive", handlers.AuthMiddleware(http.HandlerFunc(handlers.UnarchivePatientHandler))).Methods("POST")
@@ -84,6 +84,7 @@ func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 	r.Handle("/patients/{id:[0-9]+}/documents/editor", handlers.AuthMiddleware(http.HandlerFunc(handlers.DocumentEditorHandler))).Methods("GET")
 	r.Handle("/patients/{id:[0-9]+}/documents/template", handlers.AuthMiddleware(http.HandlerFunc(handlers.DocumentTemplateHandler))).Methods("GET")
 	r.Handle("/documents/save", handlers.AuthMiddleware(http.HandlerFunc(handlers.SaveDocumentHandler))).Methods("POST")
+	//r.Handle("/documents/{id:[0-9]+}/preview", handlers.AuthMiddleware(http.HandlerFunc(handlers.DocumentPreviewHandler))).Methods("GET")
 }
 
 // HealthCheckHandler retorna 200 OK para health checks
