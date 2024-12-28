@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS users_data (
     first_name VARCHAR(100) NOT NULL,
     middle_name VARCHAR(100),
     last_name VARCHAR(100) NOT NULL,
+    estado_civil VARCHAR(100) NOT NULL,
+    nacionalidade VARCHAR(100) NOT NULL,
     cpf VARCHAR(14) NOT NULL,
     rg VARCHAR(20) NOT NULL,
     date_of_birth DATE NOT NULL,

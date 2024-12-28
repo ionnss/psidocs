@@ -51,6 +51,21 @@
                         <label for="rg" class="form-label">RG</label>
                         <input type="text" class="form-control" id="rg" name="rg" value="{{.RG}}">
                     </div>
+                    <div class="col-md-4">
+                        <label for="estado_civil" class="form-label">Estado Civil</label>
+                        <select class="form-control" id="estado_civil" name="estado_civil" required>
+                            <option value="">Selecione...</option>
+                            <option value="Solteiro(a)" {{if eq .EstadoCivil "Solteiro(a)"}}selected{{end}}>Solteiro(a)</option>
+                            <option value="Casado(a)" {{if eq .EstadoCivil "Casado(a)"}}selected{{end}}>Casado(a)</option>
+                            <option value="Divorciado(a)" {{if eq .EstadoCivil "Divorciado(a)"}}selected{{end}}>Divorciado(a)</option>
+                            <option value="Viúvo(a)" {{if eq .EstadoCivil "Viúvo(a)"}}selected{{end}}>Viúvo(a)</option>
+                            <option value="União Estável" {{if eq .EstadoCivil "União Estável"}}selected{{end}}>União Estável</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="nacionalidade" class="form-label">Nacionalidade</label>
+                        <input type="text" class="form-control" id="nacionalidade" name="nacionalidade" value="{{.Nacionalidade}}">
+                    </div>
                 </div>
             </div>
         </div>

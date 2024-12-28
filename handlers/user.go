@@ -409,21 +409,23 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 
 // UserConfig representa os dados de configuração do usuário
 type UserConfig struct {
-	FirstName   string
-	MiddleName  string
-	LastName    string
-	DateOfBirth time.Time
-	CPF         string
-	RG          string
-	DDD         string
-	Telefone    string
-	WhatsApp    bool
-	Endereco    string
-	Numero      string
-	Bairro      string
-	Cidade      string
-	Estado      string
-	CEP         string
+	FirstName     string
+	MiddleName    string
+	LastName      string
+	EstadoCivil   string
+	Nacionalidade string
+	DateOfBirth   time.Time
+	CPF           string
+	RG            string
+	DDD           string
+	Telefone      string
+	WhatsApp      bool
+	Endereco      string
+	Numero        string
+	Bairro        string
+	Cidade        string
+	Estado        string
+	CEP           string
 }
 
 // CreateUserConfig cria a configuração do usuário (dados pessoais para contratos de pacientes e documentos psicológicos)
@@ -479,7 +481,8 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 				   cpf, rg, date_of_birth,
 				   ddd, telefone, whatsapp,
 				   endereco, numero, bairro,
-				   cidade, estado, cep
+				   cidade, estado, cep,
+				   estado_civil, nacionalidade
 			FROM users_data
 			WHERE user_id = $1
 		`, userID).Scan(
@@ -488,6 +491,7 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 			&config.DDD, &config.Telefone, &config.WhatsApp,
 			&config.Endereco, &config.Numero, &config.Bairro,
 			&config.Cidade, &config.Estado, &config.CEP,
+			&config.EstadoCivil, &config.Nacionalidade,
 		)
 		if err != nil && err != sql.ErrNoRows {
 			log.Printf("Erro ao buscar dados: %v", err)
@@ -547,8 +551,9 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 					cpf = $4, rg = $5, date_of_birth = $6,
 					ddd = $7, telefone = $8, whatsapp = $9,
 					endereco = $10, numero = $11, bairro = $12,
-					cidade = $13, estado = $14, cep = $15
-				WHERE user_id = $16`,
+					cidade = $13, estado = $14, cep = $15,
+					estado_civil = $16, nacionalidade = $17
+				WHERE user_id = $18`,
 				r.FormValue("first_name"),
 				r.FormValue("middle_name"),
 				r.FormValue("last_name"),
@@ -564,6 +569,8 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 				r.FormValue("cidade"),
 				r.FormValue("estado"),
 				r.FormValue("cep"),
+				r.FormValue("estado_civil"),
+				r.FormValue("nacionalidade"),
 				userID,
 			)
 		} else {
@@ -574,8 +581,9 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 					cpf, rg, date_of_birth,
 					ddd, telefone, whatsapp,
 					endereco, numero, bairro,
-					cidade, estado, cep
-				) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
+					cidade, estado, cep,
+					estado_civil, nacionalidade
+				) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
 				userID,
 				r.FormValue("first_name"),
 				r.FormValue("middle_name"),
@@ -592,6 +600,8 @@ func UpdateUserConfigHandler(w http.ResponseWriter, r *http.Request) {
 				r.FormValue("cidade"),
 				r.FormValue("estado"),
 				r.FormValue("cep"),
+				r.FormValue("estado_civil"),
+				r.FormValue("nacionalidade"),
 			)
 		}
 

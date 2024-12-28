@@ -32,6 +32,9 @@ type Patient struct {
 	CEP            string
 	Status         string
 	Observacoes    string
+	EstadoCivil    string
+	Nacionalidade  string
+	Profissao      string
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 }
@@ -155,8 +158,8 @@ func CreatePatientHandler(w http.ResponseWriter, r *http.Request) {
 			cpf, data_nascimento, sexo,
 			endereco, numero, bairro,
 			cidade, estado, cep,
-			observacoes, status
-		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+			observacoes, status, estado_civil, nacionalidade, profissao
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`,
 		psicologoID,
 		r.FormValue("nome"),
 		r.FormValue("email"),
@@ -174,6 +177,9 @@ func CreatePatientHandler(w http.ResponseWriter, r *http.Request) {
 		r.FormValue("cep"),
 		r.FormValue("observacoes"),
 		"ativo", // Status inicial
+		r.FormValue("estado_civil"),
+		r.FormValue("nacionalidade"),
+		r.FormValue("profissao"),
 	)
 
 	if err != nil {
@@ -444,6 +450,7 @@ func GetPatientHandler(w http.ResponseWriter, r *http.Request) {
 			endereco, numero, bairro,
 			cidade, estado, cep,
 			observacoes, status,
+			estado_civil, nacionalidade, profissao,
 			created_at, updated_at
 		FROM patients 
 		WHERE id = $1 AND psicologo_id = $2`,
@@ -455,6 +462,7 @@ func GetPatientHandler(w http.ResponseWriter, r *http.Request) {
 		&patient.Endereco, &patient.Numero, &patient.Bairro,
 		&patient.Cidade, &patient.Estado, &patient.CEP,
 		&patient.Observacoes, &patient.Status,
+		&patient.EstadoCivil, &patient.Nacionalidade, &patient.Profissao,
 		&patient.CreatedAt, &patient.UpdatedAt,
 	)
 
@@ -543,7 +551,8 @@ func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
 				cpf, data_nascimento, sexo,
 				endereco, numero, bairro,
 				cidade, estado, cep,
-				observacoes, status
+				observacoes, status,
+				estado_civil, nacionalidade, profissao
 			FROM patients 
 			WHERE id = $1 AND psicologo_id = $2`,
 			patientID, psicologoID,
@@ -554,6 +563,7 @@ func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
 			&patient.Endereco, &patient.Numero, &patient.Bairro,
 			&patient.Cidade, &patient.Estado, &patient.CEP,
 			&patient.Observacoes, &patient.Status,
+			&patient.EstadoCivil, &patient.Nacionalidade, &patient.Profissao,
 		)
 
 		if err == sql.ErrNoRows {
@@ -644,8 +654,9 @@ func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
 				endereco = $9, numero = $10, bairro = $11,
 				cidade = $12, estado = $13, cep = $14,
 				observacoes = $15,
+				estado_civil = $16, nacionalidade = $17, profissao = $18,
 				updated_at = CURRENT_TIMESTAMP
-			WHERE id = $16 AND psicologo_id = $17`,
+			WHERE id = $19 AND psicologo_id = $20`,
 			r.FormValue("nome"),
 			r.FormValue("email"),
 			r.FormValue("ddd"),
@@ -661,6 +672,9 @@ func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
 			r.FormValue("estado"),
 			r.FormValue("cep"),
 			r.FormValue("observacoes"),
+			r.FormValue("estado_civil"),
+			r.FormValue("nacionalidade"),
+			r.FormValue("profissao"),
 			patientID,
 			psicologoID,
 		)
