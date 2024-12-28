@@ -157,31 +157,78 @@
                         </div>
 
                         <!-- Formulário de dados psicológicos -->
-                        <div id="psychological-data" class="mb-4" style="display: none;">
+                        <!-- Anamnese -->   
+                        <div id="psychological-data-anamnese" class="mb-4" style="display: none;">
+                            <h6 class="mb-3">Dados do Documento</h6>
+                        </div>
+                        <!-- Atestado -->   
+                        <div id="psychological-data-atestado" class="mb-4" style="display: none;">
                             <h6 class="mb-3">Dados do Documento</h6>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Data de Início</label>
-                                    <input type="date" class="form-control" name="data_inicio" 
+                                    <label class="form-label">Data Inicial da Avaliação</label>
+                                    <input type="date" class="form-control" name="data_inicial_avaliacao" 
                                            hx-get="/patients/{{.Patient.ID}}/documents/template"
                                            hx-target="#document-preview"
                                            hx-include="closest form"
                                            hx-trigger="input">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Frequência</label>
-                                    <select class="form-control" name="frequencia"
-                                            hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                            hx-target="#document-preview"
-                                            hx-include="closest form"
-                                            hx-trigger="change">
-                                        <option value="">Selecione...</option>
-                                        <option value="semanal">Semanal</option>
-                                        <option value="quinzenal">Quinzenal</option>
-                                        <option value="mensal">Mensal</option>
-                                    </select>
+                                    <label class="form-label">Data Final da Avaliação</label>
+                                    <input type="date" class="form-control" name="data_final_avaliacao"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Natureza da Avaliação</label>
+                                    <input type="text" class="form-control" name="natureza_avaliacao"
+                                           placeholder="Ex: Avaliação psicológica clínica"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Estado Psicológico</label>
+                                    <textarea class="form-control" name="estado_psicologico" rows="3"
+                                              placeholder="Descreva o estado psicológico do paciente"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Data de Validade</label>
+                                    <input type="date" class="form-control" name="data_validade"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Finalidade do Atestado</label>
+                                    <input type="text" class="form-control" name="finalidade_atestado"
+                                           placeholder="Ex: Apresentação em ambiente de trabalho"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
                                 </div>
                             </div>
+                        </div>
+                        <!-- Declaração --> 
+                        <div id="psychological-data-declaracao" class="mb-4" style="display: none;">
+                            <h6 class="mb-3">Dados do Documento</h6>
+                        </div> 
+                        <!-- Laudo --> 
+                        <div id="psychological-data-laudo" class="mb-4" style="display: none;">
+                            <h6 class="mb-3">Dados do Documento</h6>
+                        </div>
+                        <!-- Relatório --> 
+                        <div id="psychological-data-relatorio" class="mb-4" style="display: none;">
+                            <h6 class="mb-3">Dados do Documento</h6>
                         </div>
 
                         <!-- Campo oculto para o conteúdo do documento -->
@@ -222,20 +269,36 @@
 </div>
 
 <script>
-// Apenas mostra/oculta os campos do formulário baseado no tipo
+// Mostra/oculta os campos do formulário baseado no tipo
 function showFormFields(value) {
     const contractForm = document.getElementById('contract-data');
-    const psychologicalForm = document.getElementById('psychological-data');
+    const anamneseForm = document.getElementById('psychological-data-anamnese');
+    const atestadoForm = document.getElementById('psychological-data-atestado');
+    const declaracaoForm = document.getElementById('psychological-data-declaracao');
+    const laudoForm = document.getElementById('psychological-data-laudo');
+    const relatorioForm = document.getElementById('psychological-data-relatorio');
     
+    // Esconde todos os formulários primeiro
+    contractForm.style.display = 'none';
+    anamneseForm.style.display = 'none';
+    atestadoForm.style.display = 'none';
+    declaracaoForm.style.display = 'none';
+    laudoForm.style.display = 'none';
+    relatorioForm.style.display = 'none';
+    
+    // Mostra o formulário apropriado
     if (value.startsWith('contracts/')) {
         contractForm.style.display = 'block';
-        psychologicalForm.style.display = 'none';
-    } else if (value.startsWith('psychological-documents/')) {
-        contractForm.style.display = 'none';
-        psychologicalForm.style.display = 'block';
-    } else {
-        contractForm.style.display = 'none';
-        psychologicalForm.style.display = 'none';
+    } else if (value === 'psychological-documents/anamnese') {
+        anamneseForm.style.display = 'block';
+    } else if (value === 'psychological-documents/atestado') {
+        atestadoForm.style.display = 'block';
+    } else if (value === 'psychological-documents/declaracao') {
+        declaracaoForm.style.display = 'block';
+    } else if (value === 'psychological-documents/laudo') {
+        laudoForm.style.display = 'block';
+    } else if (value === 'psychological-documents/relatorio') {
+        relatorioForm.style.display = 'block';
     }
 }
 </script>

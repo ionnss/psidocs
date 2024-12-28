@@ -54,6 +54,10 @@
             margin: 0 auto;
             padding-top: 5px;
         }
+        .paragraph {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
         @media print {
             body {
                 padding: 0;
@@ -105,24 +109,24 @@
 
     <div class="section">
         <div class="section-title">2. QUEIXA PRINCIPAL</div>
-        <div class="text-area">{{.QueixaPrincipal}}</div>
+        <div class="text-area paragraph">{{.QueixaPrincipal}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">3. HISTÓRIA DO PROBLEMA</div>
-        <div class="text-area">{{.HistoriaProblema}}</div>
+        <div class="text-area paragraph">{{.HistoriaProblema}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">4. SINTOMATOLOGIA</div>
-        <div class="text-area">{{.Sintomatologia}}</div>
+        <div class="text-area paragraph">{{.Sintomatologia}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">5. ANTECEDENTES PESSOAIS</div>
         <div class="field">
             <span class="field-label">Histórico Médico:</span>
-            <div class="text-area">{{.HistoricoMedico}}</div>
+            <div class="text-area paragraph">{{.HistoricoMedico}}</div>
         </div>
     </div>
 
@@ -132,17 +136,17 @@
             <span class="field-label">Tempo de trabalho na ocupação atual:</span>
             <div class="field-content">{{.TempoTrabalhoAtual}}</div>
         </div>
-        <div class="text-area">{{.HistoricoOcupacional}}</div>
+        <div class="text-area paragraph">{{.HistoricoOcupacional}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">7. HISTÓRIA PSICOSSOCIAL</div>
-        <div class="text-area">{{.HistoriaPsicossocial}}</div>
+        <div class="text-area paragraph">{{.HistoriaPsicossocial}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">8. TRATAMENTOS ANTERIORES</div>
-        <div class="text-area">{{.TratamentosAnteriores}}</div>
+        <div class="text-area paragraph">{{.TratamentosAnteriores}}</div>
     </div>
 
     <div class="section">

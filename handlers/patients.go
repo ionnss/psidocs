@@ -936,7 +936,8 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 			id, nome, email, cpf, data_nascimento, sexo,
 			endereco, numero, bairro, cidade, estado, cep,
 			estado_civil, nacionalidade, profissao,
-			ddd, telefone, whatsapp, rg, status, observacoes
+			ddd, telefone, whatsapp, rg, status, observacoes,
+			created_at, updated_at
 		FROM patients 
 		WHERE id = $1 AND psicologo_id = $2`,
 		patientID, psicologoID,
@@ -948,12 +949,30 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 		&patient.Nacionalidade, &patient.Profissao,
 		&patient.DDD, &patient.Telefone, &patient.WhatsApp,
 		&patient.RG, &patient.Status, &patient.Observacoes,
+		&patient.CreatedAt, &patient.UpdatedAt,
 	)
+
 	if err != nil {
 		log.Printf("Erro ao obter dados do paciente: %v", err)
 		http.Error(w, "Erro ao obter dados do paciente", http.StatusInternalServerError)
 		return
 	}
+
+	// Converter timestamps para timezone do Brasil
+	brazilLoc, err := time.LoadLocation("America/Sao_Paulo")
+	if err != nil {
+		log.Printf("Erro ao carregar timezone do Brasil: %v", err)
+		// Não retornamos erro aqui para não quebrar a exibição
+		// Apenas logamos o erro e mantemos UTC
+	} else {
+		patient.CreatedAt = patient.CreatedAt.In(brazilLoc)
+		patient.UpdatedAt = patient.UpdatedAt.In(brazilLoc)
+	}
+
+	// Log para debug
+	log.Printf("Datas do paciente (BR) - Criação: %v, Atualização: %v",
+		patient.CreatedAt.Format("02/01/2006 15:04"),
+		patient.UpdatedAt.Format("02/01/2006 15:04"))
 
 	// Obter contratos do paciente
 	rows, err := db.Query(`
@@ -980,6 +999,11 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Printf("Erro ao ler contrato: %v", err)
 			continue
+		}
+		// Converter timestamps do documento para timezone do Brasil
+		if brazilLoc != nil { // Só converte se o timezone foi carregado com sucesso
+			doc.CreatedAt = doc.CreatedAt.In(brazilLoc)
+			doc.UpdatedAt = doc.UpdatedAt.In(brazilLoc)
 		}
 		contracts = append(contracts, doc)
 	}
@@ -1009,6 +1033,11 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Printf("Erro ao ler documento psicológico: %v", err)
 			continue
+		}
+		// Converter timestamps do documento para timezone do Brasil
+		if brazilLoc != nil { // Só converte se o timezone foi carregado com sucesso
+			doc.CreatedAt = doc.CreatedAt.In(brazilLoc)
+			doc.UpdatedAt = doc.UpdatedAt.In(brazilLoc)
 		}
 		psychologicalDocs = append(psychologicalDocs, doc)
 	}

@@ -208,7 +208,7 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		"MesAssinatura":    time.Now().Format("January"),
 		"AnoAssinatura":    time.Now().Format("2006"),
 
-		// Campos do formulário
+		// Campos do formulário de contrato
 		"Abordagem":           r.FormValue("abordagem"),
 		"ValorSessao":         r.FormValue("valor_sessao"),
 		"DiaSemana":           r.FormValue("dia_semana"),
@@ -220,6 +220,15 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		"DataFimTratamento":   r.FormValue("data_fim_tratamento"),
 		"NumeroFaltas":        r.FormValue("numero_faltas"),
 		"DataInicio":          r.FormValue("data_inicio"),
+
+		// Campos específicos do atestado
+		"DataInicialAvaliacao": formatDate(r.FormValue("data_inicial_avaliacao")),
+		"DataFinalAvaliacao":   formatDate(r.FormValue("data_final_avaliacao")),
+		"NaturezaAvaliacao":    r.FormValue("natureza_avaliacao"),
+		"EstadoPsicologico":    r.FormValue("estado_psicologico"),
+		"DataValidade":         formatDate(r.FormValue("data_validade")),
+		"FinalidadeAtestado":   r.FormValue("finalidade_atestado"),
+		"DataAtestado":         formatDate(r.FormValue("data_atestado")),
 	}
 
 	// Formata as datas antes de passar para o template
@@ -372,6 +381,15 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 		"NumeroFaltas":        r.FormValue("numero_faltas"),
 		"DataInicio":          formatDate(r.FormValue("data_inicio")),
 		"Frequencia":          r.FormValue("frequencia"),
+
+		// Campos específicos do atestado
+		"DataInicialAvaliacao": formatDate(r.FormValue("data_inicial_avaliacao")),
+		"DataFinalAvaliacao":   formatDate(r.FormValue("data_final_avaliacao")),
+		"NaturezaAvaliacao":    r.FormValue("natureza_avaliacao"),
+		"EstadoPsicologico":    r.FormValue("estado_psicologico"),
+		"DataValidade":         formatDate(r.FormValue("data_validade")),
+		"FinalidadeAtestado":   r.FormValue("finalidade_atestado"),
+		"DataAtestado":         formatDate(r.FormValue("data_atestado")),
 	}
 
 	// Renderizar template

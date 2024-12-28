@@ -43,6 +43,10 @@
             margin-top: 40px;
             text-align: center;
         }
+        .paragraph {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
         @media print {
             body {
                 padding: 0;
@@ -60,35 +64,35 @@
 
     <h1>ATESTADO PSICOLÓGICO</h1>
 
-    <div class="content">
-        Certifico, com fundamento em diagnóstico psicológico, que {{.PacienteNome}}, 
-        portador(a) do RG {{.PacienteRG}} e do CPF {{.PacienteCPF}}, foi submetido(a) 
-        a um processo de avaliação psicológica no período de {{.DataInicialAvaliacao}} 
-        a {{.DataFinalAvaliacao}}.
+    <div class="content paragraph">
+        Certifico, com fundamento em diagnóstico psicológico, que <strong>{{.PacienteNome}}</strong>, 
+        portador(a) do RG <strong>{{.PacienteRG}}</strong> e do CPF <strong>{{.PacienteCPF}}</strong>, foi submetido(a) 
+        a um processo de avaliação psicológica no período de <strong>{{.DataInicialAvaliacao}}</strong> 
+        a <strong>{{.DataFinalAvaliacao}}</strong>.
     </div>
 
-    <div class="content">
+    <div class="content paragraph">
         Durante o referido processo de avaliação, foram verificados aspectos psicológicos 
-        relacionados a {{.NaturezaAvaliacao}}.
+        relacionados a <strong>{{.NaturezaAvaliacao}}</strong>.
     </div>
 
-    <div class="content">
-        Com base na avaliação realizada, atesto que {{.PacienteNome}} apresenta 
-        {{.EstadoPsicologico}}.
+    <div class="content paragraph">
+        Com base na avaliação realizada, atesto que <strong>{{.PacienteNome}}</strong> apresenta 
+        <strong>{{.EstadoPsicologico}}</strong>.
     </div>
 
-    <div class="content">
-        Este atestado tem validade até {{.DataValidade}}.
+    <div class="content paragraph">
+        Este atestado tem validade até <strong>{{.DataValidade}}</strong>.
     </div>
 
-    <div class="warning">
+    <div class="warning paragraph">
         Declaramos ainda que o presente atestado possui caráter sigiloso e destina-se 
-        exclusivamente para {{.FinalidadeAtestado}}. Qualquer uso indevido ou divulgação 
+        exclusivamente para <strong>{{.FinalidadeAtestado}}</strong>. Qualquer uso indevido ou divulgação 
         não autorizada deste documento é vedado.
     </div>
 
     <div class="date">
-        {{.Cidade}}, {{.DataAtestado}}
+        {{.DataAssinatura}}
     </div>
 
     <div class="signature">

@@ -43,6 +43,10 @@
             margin-top: 40px;
             text-align: center;
         }
+        .paragraph {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
         @media print {
             body {
                 padding: 0;
@@ -60,30 +64,30 @@
 
     <h1>DECLARAÇÃO PSICOLÓGICA</h1>
 
-    <div class="content">
-        Declaro, para os devidos fins, que {{.PacienteNome}}, portador(a) do RG {{.PacienteRG}} 
-        e do CPF {{.PacienteCPF}}, compareceu ao meu atendimento psicológico no período 
-        de {{.DataInicialAtendimento}} a {{.DataFinalAtendimento}}.
+    <div class="content paragraph">
+        Declaro, para os devidos fins, que <strong>{{.PacienteNome}}</strong>, portador(a) do RG <strong>{{.PacienteRG}}</strong> 
+        e do CPF <strong>{{.PacienteCPF}}</strong>, compareceu ao meu atendimento psicológico no período 
+        de <strong>{{.DataInicialAtendimento}}</strong> a <strong>{{.DataFinalAtendimento}}</strong>.
     </div>
 
-    <div class="content">
-        {{.PacienteNome}} recebeu acompanhamento psicológico com a frequência {{.FrequenciaAtendimento}} 
-        e com duração média de {{.DuracaoSessoes}}.
+    <div class="content paragraph">
+        <strong>{{.PacienteNome}}</strong> recebeu acompanhamento psicológico com a frequência <strong>{{.FrequenciaAtendimento}}</strong> 
+        e com duração média de <strong>{{.DuracaoSessoes}}</strong>.
     </div>
 
-    <div class="content">
-        Esta declaração tem como finalidade {{.FinalidadeDeclaracao}}.
+    <div class="content paragraph">
+        Esta declaração tem como finalidade <strong>{{.FinalidadeDeclaracao}}</strong>.
     </div>
 
-    <div class="warning">
+    <div class="warning paragraph">
         Ressalto que esta declaração não contém registros de sintomas, estados psicológicos 
         ou qualquer informação relacionada ao funcionamento psicológico da pessoa atendida, 
         em conformidade com a Resolução CFP nº 6/2019.
     </div>
 
-    <div class="warning">
+    <div class="warning paragraph">
         Declaramos, ainda, que este documento possui caráter sigiloso e destina-se 
-        exclusivamente para {{.MotivoSolicitacao}}. Qualquer uso indevido ou divulgação 
+        exclusivamente para <strong>{{.MotivoSolicitacao}}</strong>. Qualquer uso indevido ou divulgação 
         não autorizada deste documento é vedado.
     </div>
 

@@ -62,6 +62,10 @@
             margin: 0 auto;
             padding-top: 5px;
         }
+        .paragraph {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
         @media print {
             body {
                 padding: 0;
@@ -82,55 +86,55 @@
     <div class="section">
         <div class="section-title">IDENTIFICAÇÃO</div>
         <div class="field">
-            <span class="field-label">Nome:</span> {{.PacienteNome}}
+            <span class="field-label">Nome:</span> <strong>{{.PacienteNome}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Data de nascimento:</span> {{.PacienteDataNascimento}}
+            <span class="field-label">Data de nascimento:</span> <strong>{{.PacienteDataNascimento}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Estado civil:</span> {{.PacienteEstadoCivil}}
+            <span class="field-label">Estado civil:</span> <strong>{{.PacienteEstadoCivil}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Escolaridade:</span> {{.PacienteEscolaridade}}
+            <span class="field-label">Escolaridade:</span> <strong>{{.PacienteEscolaridade}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Profissão:</span> {{.PacienteProfissao}}
+            <span class="field-label">Profissão:</span> <strong>{{.PacienteProfissao}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Endereço:</span> {{.PacienteEndereco}}
+            <span class="field-label">Endereço:</span> <strong>{{.PacienteEndereco}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Telefone:</span> {{.PacienteTelefone}}
+            <span class="field-label">Telefone:</span> <strong>{{.PacienteTelefone}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">E-mail:</span> {{.PacienteEmail}}
+            <span class="field-label">E-mail:</span> <strong>{{.PacienteEmail}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Nome do solicitante:</span> {{.Solicitante}}
+            <span class="field-label">Nome do solicitante:</span> <strong>{{.Solicitante}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Finalidade:</span> {{.Finalidade}}
+            <span class="field-label">Finalidade:</span> <strong>{{.Finalidade}}</strong>
         </div>
     </div>
 
     <div class="section">
         <div class="section-title">DESCRIÇÃO DA DEMANDA</div>
-        <div class="content">{{.DescricaoDemanda}}</div>
+        <div class="content paragraph">{{.DescricaoDemanda}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">PROCEDIMENTO</div>
-        <div class="content">{{.Procedimento}}</div>
+        <div class="content paragraph">{{.Procedimento}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">ANÁLISE</div>
-        <div class="content">{{.Analise}}</div>
+        <div class="content paragraph">{{.Analise}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">CONCLUSÃO</div>
-        <div class="content">{{.Conclusao}}</div>
+        <div class="content paragraph">{{.Conclusao}}</div>
     </div>
 
     <div class="references">

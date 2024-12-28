@@ -56,6 +56,10 @@
             margin: 0 auto;
             padding-top: 5px;
         }
+        .paragraph {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
         @media print {
             body {
                 padding: 0;
@@ -76,56 +80,56 @@
     <div class="section">
         <div class="section-title">IDENTIFICAÇÃO</div>
         <div class="field">
-            <span class="field-label">Nome:</span> {{.PacienteNome}}
+            <span class="field-label">Nome:</span> <strong>{{.PacienteNome}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Data de nascimento:</span> {{.PacienteDataNascimento}}
+            <span class="field-label">Data de nascimento:</span> <strong>{{.PacienteDataNascimento}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Idade:</span> {{.PacienteIdade}}
+            <span class="field-label">Idade:</span> <strong>{{.PacienteIdade}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Escolaridade:</span> {{.PacienteEscolaridade}}
+            <span class="field-label">Escolaridade:</span> <strong>{{.PacienteEscolaridade}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Nome do solicitante:</span> {{.Solicitante}}
+            <span class="field-label">Nome do solicitante:</span> <strong>{{.Solicitante}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Finalidade:</span> {{.Finalidade}}
+            <span class="field-label">Finalidade:</span> <strong>{{.Finalidade}}</strong>
         </div>
     </div>
 
     <div class="section">
         <div class="section-title">PERÍODO DO ACOMPANHAMENTO</div>
-        <div class="content">
-            Período de {{.DataInicioAcompanhamento}} a {{.DataFimAcompanhamento}}, 
-            com frequência {{.FrequenciaAtendimento}} e duração de {{.DuracaoSessoes}} por sessão.
+        <div class="content paragraph">
+            Período de <strong>{{.DataInicioAcompanhamento}}</strong> a <strong>{{.DataFimAcompanhamento}}</strong>, 
+            com frequência <strong>{{.FrequenciaAtendimento}}</strong> e duração de <strong>{{.DuracaoSessoes}}</strong> por sessão.
         </div>
     </div>
 
     <div class="section">
         <div class="section-title">DEMANDA INICIAL</div>
-        <div class="content">{{.DemandaInicial}}</div>
+        <div class="content paragraph">{{.DemandaInicial}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">EVOLUÇÃO DO PROCESSO</div>
-        <div class="content">{{.EvolucaoProcesso}}</div>
+        <div class="content paragraph">{{.EvolucaoProcesso}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">RECURSOS E INSTRUMENTOS UTILIZADOS</div>
-        <div class="content">{{.RecursosUtilizados}}</div>
+        <div class="content paragraph">{{.RecursosUtilizados}}</div>
     </div>
 
     <div class="section">
         <div class="section-title">RESULTADOS E ENCAMINHAMENTOS</div>
-        <div class="content">{{.ResultadosEncaminhamentos}}</div>
+        <div class="content paragraph">{{.ResultadosEncaminhamentos}}</div>
     </div>
 
-    <div class="warning">
+    <div class="warning paragraph">
         Este relatório tem caráter sigiloso, conforme previsto no Código de Ética Profissional 
-        do Psicólogo, e destina-se exclusivamente ao uso profissional para {{.FinalidadeRelatorio}}. 
+        do Psicólogo, e destina-se exclusivamente ao uso profissional para <strong>{{.FinalidadeRelatorio}}</strong>. 
         É vedada sua utilização para outros fins ou sua divulgação a terceiros.
     </div>
 
