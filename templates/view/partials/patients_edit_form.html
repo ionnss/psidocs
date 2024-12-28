@@ -30,6 +30,10 @@
                                 <label for="cpf" class="form-label">CPF</label>
                                 <input type="text" class="form-control" id="cpf" name="cpf" value="{{.Patient.CPF}}" maxlength="14" required>
                             </div>
+                            <div class="col-md-3">
+                                <label for="rg" class="form-label">RG</label>
+                                <input type="text" class="form-control" id="rg" name="rg" value="{{.Patient.RG}}" maxlength="20">
+                            </div>
                             <div class="col-md-6">
                                 <label for="data_nascimento" class="form-label">Data de Nascimento</label>
                                 <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{.Patient.DataNascimento.Format "2006-01-02"}}" required>

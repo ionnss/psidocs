@@ -102,7 +102,8 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		SELECT 
 			id, nome, email, cpf, data_nascimento, sexo,
 			endereco, numero, bairro, cidade, estado, cep,
-			estado_civil, nacionalidade, profissao
+			estado_civil, nacionalidade, profissao,
+			ddd, telefone, rg
 		FROM patients 
 		WHERE id = $1 AND psicologo_id = $2`,
 		patientID, psicologo.ID,
@@ -112,6 +113,7 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		&paciente.Numero, &paciente.Bairro, &paciente.Cidade,
 		&paciente.Estado, &paciente.CEP, &paciente.EstadoCivil,
 		&paciente.Nacionalidade, &paciente.Profissao,
+		&paciente.DDD, &paciente.Telefone, &paciente.RG,
 	)
 	if err != nil {
 		log.Printf("Erro ao obter dados do paciente: %v", err)
@@ -133,6 +135,7 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		"ClienteNome":          paciente.Nome,
 		"ClienteNacionalidade": paciente.Nacionalidade,
 		"ClienteEstadoCivil":   paciente.EstadoCivil,
+		"ClienteRG":            paciente.RG,
 		"ClienteCPF":           paciente.CPF,
 		"ClienteCidade":        paciente.Cidade,
 		"ClienteRua":           paciente.Endereco,
@@ -158,16 +161,16 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		"MesAssinatura":    time.Now().Format("January"),
 		"AnoAssinatura":    time.Now().Format("2006"),
 
-		// Campos editáveis
-		"EditavelAbordagem":           `<input type="text" class="form-control" name="abordagem" placeholder="Digite a abordagem">`,
-		"EditavelValorSessao":         `<input type="number" class="form-control" name="valor_sessao" placeholder="Digite o valor da sessão">`,
-		"EditavelDiaSemana":           `<input type="text" class="form-control" name="dia_semana" placeholder="Digite o dia da semana">`,
-		"EditavelHorarioSessao":       `<input type="text" class="form-control" name="horario_sessao" placeholder="Digite o horário">`,
-		"EditavelDataLimitePagamento": `<input type="text" class="form-control" name="data_limite_pagamento" placeholder="Digite a data limite">`,
-		"EditavelMetodosPagamento":    `<input type="text" class="form-control" name="metodos_pagamento" placeholder="Digite os métodos de pagamento">`,
-		"EditavelDataInicioFerias":    `<input type="date" class="form-control" name="data_inicio_ferias">`,
-		"EditavelDataFimFerias":       `<input type="date" class="form-control" name="data_fim_ferias">`,
-		"EditavelDataFimTratamento":   `<input type="date" class="form-control" name="data_fim_tratamento">`,
+		// Campos do formulário
+		"Abordagem":           r.FormValue("abordagem"),
+		"ValorSessao":         r.FormValue("valor_sessao"),
+		"DiaSemana":           r.FormValue("dia_semana"),
+		"HorarioSessao":       r.FormValue("horario_sessao"),
+		"DataLimitePagamento": r.FormValue("data_limite_pagamento"),
+		"MetodosPagamento":    r.FormValue("metodos_pagamento"),
+		"DataInicioFerias":    r.FormValue("data_inicio_ferias"),
+		"DataFimFerias":       r.FormValue("data_fim_ferias"),
+		"DataFimTratamento":   r.FormValue("data_fim_tratamento"),
 	}
 
 	// Renderizar template

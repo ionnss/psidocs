@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS patients (
     ddd VARCHAR(3) NOT NULL,
     telefone VARCHAR(20) NOT NULL,
     whatsapp BOOLEAN NOT NULL DEFAULT FALSE,
+    rg VARCHAR(20),
     cpf VARCHAR(14) UNIQUE,
     data_nascimento DATE,
     sexo VARCHAR(1) NOT NULL CHECK (sexo IN ('M', 'F', 'O')),

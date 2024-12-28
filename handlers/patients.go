@@ -22,6 +22,7 @@ type Patient struct {
 	Telefone       string
 	WhatsApp       bool
 	CPF            string
+	RG             string
 	DataNascimento time.Time
 	Sexo           string
 	Endereco       string
@@ -155,11 +156,11 @@ func CreatePatientHandler(w http.ResponseWriter, r *http.Request) {
 		INSERT INTO patients (
 			psicologo_id, nome, email, 
 			ddd, telefone, whatsapp,
-			cpf, data_nascimento, sexo,
+			cpf, rg, data_nascimento, sexo,
 			endereco, numero, bairro,
 			cidade, estado, cep,
 			observacoes, status, estado_civil, nacionalidade, profissao
-		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`,
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`,
 		psicologoID,
 		r.FormValue("nome"),
 		r.FormValue("email"),
@@ -167,6 +168,7 @@ func CreatePatientHandler(w http.ResponseWriter, r *http.Request) {
 		r.FormValue("telefone"),
 		r.FormValue("whatsapp") == "on",
 		cpf,
+		r.FormValue("rg"),
 		dataNascimento,
 		r.FormValue("sexo"),
 		r.FormValue("endereco"),
@@ -446,7 +448,7 @@ func GetPatientHandler(w http.ResponseWriter, r *http.Request) {
 		SELECT 
 			id, psicologo_id, nome, email, 
 			ddd, telefone, whatsapp,
-			cpf, data_nascimento, sexo,
+			cpf, rg, data_nascimento, sexo,
 			endereco, numero, bairro,
 			cidade, estado, cep,
 			observacoes, status,
@@ -458,7 +460,7 @@ func GetPatientHandler(w http.ResponseWriter, r *http.Request) {
 	).Scan(
 		&patient.ID, &patient.PsicologoID, &patient.Nome, &patient.Email,
 		&patient.DDD, &patient.Telefone, &patient.WhatsApp,
-		&patient.CPF, &patient.DataNascimento, &patient.Sexo,
+		&patient.CPF, &patient.RG, &patient.DataNascimento, &patient.Sexo,
 		&patient.Endereco, &patient.Numero, &patient.Bairro,
 		&patient.Cidade, &patient.Estado, &patient.CEP,
 		&patient.Observacoes, &patient.Status,
@@ -548,7 +550,7 @@ func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
 			SELECT 
 				id, psicologo_id, nome, email, 
 				ddd, telefone, whatsapp,
-				cpf, data_nascimento, sexo,
+				cpf, rg, data_nascimento, sexo,
 				endereco, numero, bairro,
 				cidade, estado, cep,
 				observacoes, status,
@@ -559,7 +561,7 @@ func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
 		).Scan(
 			&patient.ID, &patient.PsicologoID, &patient.Nome, &patient.Email,
 			&patient.DDD, &patient.Telefone, &patient.WhatsApp,
-			&patient.CPF, &patient.DataNascimento, &patient.Sexo,
+			&patient.CPF, &patient.RG, &patient.DataNascimento, &patient.Sexo,
 			&patient.Endereco, &patient.Numero, &patient.Bairro,
 			&patient.Cidade, &patient.Estado, &patient.CEP,
 			&patient.Observacoes, &patient.Status,
@@ -650,19 +652,20 @@ func UpdatePatientHandler(w http.ResponseWriter, r *http.Request) {
 			UPDATE patients SET
 				nome = $1, email = $2,
 				ddd = $3, telefone = $4, whatsapp = $5,
-				cpf = $6, data_nascimento = $7, sexo = $8,
-				endereco = $9, numero = $10, bairro = $11,
-				cidade = $12, estado = $13, cep = $14,
-				observacoes = $15,
-				estado_civil = $16, nacionalidade = $17, profissao = $18,
+				cpf = $6, rg = $7, data_nascimento = $8, sexo = $9,
+				endereco = $10, numero = $11, bairro = $12,
+				cidade = $13, estado = $14, cep = $15,
+				observacoes = $16,
+				estado_civil = $17, nacionalidade = $18, profissao = $19,
 				updated_at = CURRENT_TIMESTAMP
-			WHERE id = $19 AND psicologo_id = $20`,
+			WHERE id = $20 AND psicologo_id = $21`,
 			r.FormValue("nome"),
 			r.FormValue("email"),
 			r.FormValue("ddd"),
 			r.FormValue("telefone"),
 			r.FormValue("whatsapp") == "on",
 			cpf,
+			r.FormValue("rg"),
 			dataNascimento,
 			r.FormValue("sexo"),
 			r.FormValue("endereco"),
