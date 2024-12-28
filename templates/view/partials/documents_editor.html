@@ -15,172 +15,165 @@
                     <h5 class="mb-0">Configuração do Documento</h5>
                 </div>
                 <div class="card-body">
-                    <!-- Seleção do tipo de documento -->
-                    <div class="mb-4">
-                        <label class="form-label">Tipo de Documento</label>
-                        <select class="form-control" id="document-type" name="value"
-                                hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                hx-target="#document-preview"
-                                hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                          [name='dia_semana'], [name='horario_sessao'], 
-                                          [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                          [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                          [name='data_fim_ferias']"
-                                hx-trigger="change">
-                            <option value="">Selecione o tipo de documento...</option>
-                            <optgroup label="Contratos">
-                                <option value="contracts/presencial">Contrato Presencial</option>
-                                <option value="contracts/online">Contrato Online</option>
-                            </optgroup>
-                            <optgroup label="Documentos Psicológicos">
-                                <option value="psychological/declaracao">Declaração</option>
-                                <option value="psychological/atestado">Atestado</option>
-                                <option value="psychological/relatorio">Relatório</option>
-                                <option value="psychological/parecer">Parecer</option>
-                            </optgroup>
-                        </select>
-                    </div>
+                    <form id="document-form">
+                        <!-- Seleção do tipo de documento -->
+                        <div class="mb-4">
+                            <label class="form-label">Tipo de Documento</label>
+                            <select class="form-control" id="document-type" name="value"
+                                    hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                    hx-target="#document-preview"
+                                    hx-include="closest form"
+                                    hx-trigger="change">
+                                <option value="">Selecione o tipo de documento...</option>
+                                <optgroup label="Contratos">
+                                    <option value="contracts/presencial">Contrato Presencial</option>
+                                    <option value="contracts/online">Contrato Online</option>
+                                </optgroup>
+                                <optgroup label="Documentos Psicológicos">
+                                    <option value="psychological-documents/anamnese">Anamnese</option>
+                                    <option value="psychological-documents/atestado">Atestado</option>
+                                    <option value="psychological-documents/declaracao">Declaração</option>
+                                    <option value="psychological-documents/laudo">Laudo</option>
+                                    <option value="psychological-documents/relatorio">Relatório</option>
+                                </optgroup>
+                            </select>
+                        </div>
 
-                    <!-- Formulário de dados do contrato -->
-                    <div id="contract-data" class="mb-4" style="display: none;">
-                        <h6 class="mb-3">Dados do Contrato</h6>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label">Abordagem</label>
-                                <input type="text" class="form-control" name="abordagem" 
-                                       placeholder="Ex: Terapia Cognitivo-Comportamental"
-                                       hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                       hx-target="#document-preview"
-                                       hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                 [name='dia_semana'], [name='horario_sessao'], 
-                                                 [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                 [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                 [name='data_fim_ferias']"
-                                       hx-trigger="input">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Valor da Sessão</label>
-                                <input type="text" class="form-control" name="valor_sessao" 
-                                       placeholder="Ex: 150,00"
-                                       hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                       hx-target="#document-preview"
-                                       hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                 [name='dia_semana'], [name='horario_sessao'], 
-                                                 [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                 [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                 [name='data_fim_ferias']"
-                                       hx-trigger="input">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Dia da Semana</label>
-                                <select class="form-control" name="dia_semana"
-                                        hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                        hx-target="#document-preview"
-                                        hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                  [name='dia_semana'], [name='horario_sessao'], 
-                                                  [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                  [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                  [name='data_fim_ferias']"
-                                        hx-trigger="change">
-                                    <option value="">Selecione...</option>
-                                    <option value="segundas-feiras">Segunda-feira</option>
-                                    <option value="terças-feiras">Terça-feira</option>
-                                    <option value="quartas-feiras">Quarta-feira</option>
-                                    <option value="quintas-feiras">Quinta-feira</option>
-                                    <option value="sextas-feiras">Sexta-feira</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Horário da Sessão</label>
-                                <input type="time" class="form-control" name="horario_sessao"
-                                       hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                       hx-target="#document-preview"
-                                       hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                 [name='dia_semana'], [name='horario_sessao'], 
-                                                 [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                 [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                 [name='data_fim_ferias']"
-                                       hx-trigger="input">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Data Limite Pagamento</label>
-                                <input type="text" class="form-control" name="data_limite_pagamento" 
-                                       placeholder="Ex: dia 10"
-                                       hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                       hx-target="#document-preview"
-                                       hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                 [name='dia_semana'], [name='horario_sessao'], 
-                                                 [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                 [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                 [name='data_fim_ferias']"
-                                       hx-trigger="input">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Métodos de Pagamento</label>
-                                <input type="text" class="form-control" name="metodos_pagamento" 
-                                       placeholder="Ex: PIX, transferência bancária"
-                                       hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                       hx-target="#document-preview"
-                                       hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                 [name='dia_semana'], [name='horario_sessao'], 
-                                                 [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                 [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                 [name='data_fim_ferias']"
-                                       hx-trigger="input">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Data de Término</label>
-                                <input type="date" class="form-control" name="data_fim_tratamento"
-                                       hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                       hx-target="#document-preview"
-                                       hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                 [name='dia_semana'], [name='horario_sessao'], 
-                                                 [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                 [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                 [name='data_fim_ferias']"
-                                       hx-trigger="input">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Início das Férias</label>
-                                <input type="date" class="form-control" name="data_inicio_ferias"
-                                       hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                       hx-target="#document-preview"
-                                       hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                 [name='dia_semana'], [name='horario_sessao'], 
-                                                 [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                 [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                 [name='data_fim_ferias']"
-                                       hx-trigger="input">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Fim das Férias</label>
-                                <input type="date" class="form-control" name="data_fim_ferias"
-                                       hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                       hx-target="#document-preview"
-                                       hx-include="[name='value'], [name='abordagem'], [name='valor_sessao'], 
-                                                 [name='dia_semana'], [name='horario_sessao'], 
-                                                 [name='data_limite_pagamento'], [name='metodos_pagamento'],
-                                                 [name='data_fim_tratamento'], [name='data_inicio_ferias'],
-                                                 [name='data_fim_ferias']"
-                                       hx-trigger="input">
+                        <!-- Formulário de dados do contrato -->
+                        <div id="contract-data" class="mb-4" style="display: none;">
+                            <h6 class="mb-3">Dados do Contrato</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Abordagem</label>
+                                    <input type="text" class="form-control" name="abordagem" 
+                                           placeholder="Ex: Terapia Cognitivo-Comportamental"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Valor da Sessão</label>
+                                    <input type="text" class="form-control" name="valor_sessao" 
+                                           placeholder="Ex: 150,00"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Dia da Semana</label>
+                                    <select class="form-control" name="dia_semana"
+                                            hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                            hx-target="#document-preview"
+                                            hx-include="closest form"
+                                            hx-trigger="change">
+                                        <option value="">Selecione...</option>
+                                        <option value="segundas-feiras">Segunda-feira</option>
+                                        <option value="terças-feiras">Terça-feira</option>
+                                        <option value="quartas-feiras">Quarta-feira</option>
+                                        <option value="quintas-feiras">Quinta-feira</option>
+                                        <option value="sextas-feiras">Sexta-feira</option>
+                                        <option value="sabados">Sábado</option>
+                                        <option value="domingos">Domingo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Horário da Sessão</label>
+                                    <input type="time" class="form-control" name="horario_sessao"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Data Limite Pagamento</label>
+                                    <input type="text" class="form-control" name="data_limite_pagamento" 
+                                           placeholder="Ex: dia 10"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Métodos de Pagamento</label>
+                                    <input type="text" class="form-control" name="metodos_pagamento" 
+                                           placeholder="Ex: PIX, transferência bancária"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Data de Término</label>
+                                    <input type="date" class="form-control" name="data_fim_tratamento"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Início das Férias</label>
+                                    <input type="date" class="form-control" name="data_inicio_ferias"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Fim das Férias</label>
+                                    <input type="date" class="form-control" name="data_fim_ferias"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Botões de ação -->
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="button" class="btn btn-secondary me-2" 
-                                hx-get="/patients/{{.Patient.ID}}"
-                                hx-target="#content-area">
-                            Cancelar
-                        </button>
-                        <button type="button" class="btn btn-primary"
-                                hx-post="/documents/save"
-                                hx-include="[name='value'], [name='document-name'], #document-preview"
-                                hx-target="#documents-message-area">
-                            Salvar Documento
-                        </button>
-                    </div>
+                        <!-- Formulário de dados psicológicos -->
+                        <div id="psychological-data" class="mb-4" style="display: none;">
+                            <h6 class="mb-3">Dados do Documento</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Data de Início</label>
+                                    <input type="date" class="form-control" name="data_inicio" 
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Frequência</label>
+                                    <select class="form-control" name="frequencia"
+                                            hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                            hx-target="#document-preview"
+                                            hx-include="closest form"
+                                            hx-trigger="change">
+                                        <option value="">Selecione...</option>
+                                        <option value="semanal">Semanal</option>
+                                        <option value="quinzenal">Quinzenal</option>
+                                        <option value="mensal">Mensal</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões de ação -->
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="button" class="btn btn-secondary me-2" 
+                                    hx-get="/patients/{{.Patient.ID}}"
+                                    hx-target="#content-area">
+                                Cancelar
+                            </button>
+                            <button type="button" class="btn btn-primary"
+                                    hx-post="/documents/save"
+                                    hx-include="closest form"
+                                    hx-target="#documents-message-area">
+                                Salvar Documento
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -260,13 +253,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Mostrar/ocultar formulário de dados do contrato baseado no tipo selecionado
+// Mostrar/ocultar formulários baseado no tipo selecionado
 document.getElementById('document-type').addEventListener('change', function() {
     const contractData = document.getElementById('contract-data');
+    const psychologicalData = document.getElementById('psychological-data');
+    
     if (this.value.startsWith('contracts/')) {
         contractData.style.display = 'block';
+        psychologicalData.style.display = 'none';
+    } else if (this.value.startsWith('psychological-documents/')) {
+        contractData.style.display = 'none';
+        psychologicalData.style.display = 'block';
     } else {
         contractData.style.display = 'none';
+        psychologicalData.style.display = 'none';
     }
 });
 

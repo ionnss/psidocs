@@ -13,6 +13,35 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var meses = map[string]string{
+	"January":   "Janeiro",
+	"February":  "Fevereiro",
+	"March":     "Março",
+	"April":     "Abril",
+	"May":       "Maio",
+	"June":      "Junho",
+	"July":      "Julho",
+	"August":    "Agosto",
+	"September": "Setembro",
+	"October":   "Outubro",
+	"November":  "Novembro",
+	"December":  "Dezembro",
+}
+
+// Função auxiliar para formatar datas
+func formatDate(date string) string {
+	if date == "" {
+		return ""
+	}
+	// Converte a data do formato "2006-01-02" para time.Time
+	t, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return date
+	}
+	// Formata para o padrão brasileiro
+	return t.Format("02/01/2006")
+}
+
 // DocumentTemplateHandler carrega o template do documento selecionado
 func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	// Obter tipo do documento
@@ -172,6 +201,29 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		"DataFimFerias":       r.FormValue("data_fim_ferias"),
 		"DataFimTratamento":   r.FormValue("data_fim_tratamento"),
 	}
+
+	// Formata as datas antes de passar para o template
+	if data["DataFimTratamento"] != nil && data["DataFimTratamento"].(string) != "" {
+		data["DataFimTratamento"] = formatDate(data["DataFimTratamento"].(string))
+	}
+	if data["DataInicioFerias"] != nil && data["DataInicioFerias"].(string) != "" {
+		data["DataInicioFerias"] = formatDate(data["DataInicioFerias"].(string))
+	}
+	if data["DataFimFerias"] != nil && data["DataFimFerias"].(string) != "" {
+		data["DataFimFerias"] = formatDate(data["DataFimFerias"].(string))
+	}
+	if data["DataInicio"] != nil && data["DataInicio"].(string) != "" {
+		data["DataInicio"] = formatDate(data["DataInicio"].(string))
+	}
+
+	// Formata a data de assinatura com mês em português
+	now := time.Now()
+	mes := meses[now.Format("January")]
+	data["DataAssinatura"] = fmt.Sprintf("%s, %s de %s de %s",
+		data["DiaAssinatura"],
+		now.Format("02"),
+		mes,
+		now.Format("2006"))
 
 	// Renderizar template
 	tmpl, err := template.New("document").Parse(string(content))
