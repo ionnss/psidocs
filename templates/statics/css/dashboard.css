@@ -15,15 +15,17 @@
     min-width: 250px;
     max-width: 250px;
     height: 100vh;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
     background: rgba(18, 17, 22);
     backdrop-filter: blur(10px);
     color: #fff;
-    transition: all 0.3s;
+    transition: all 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 9999;
 }
 
 .sidebar.active {
@@ -87,10 +89,11 @@
 
 /* Content Area */
 .content-area {
-    width: 100%;
+    width: calc(100% - 250px);
+    margin-left: 250px;
     padding: 20px;
     min-height: 100vh;
-    transition: all 0.3s;
+    transition: all 0.3s ease-in-out;
     --x: calc(var(--posX, 0) * 1px);
     --y: calc(var(--posY, 0) * 1px);
     background-image:
@@ -101,6 +104,12 @@
         linear-gradient(60deg, rgba(98, 0, 255, 0.1), rgba(13, 255, 0, 0.1));
     background-blend-mode: overlay, screen, color-dodge, overlay, normal;
     backdrop-filter: blur(20px);
+}
+
+/* Quando o sidebar está colapsado, o content ocupa toda a largura */
+.sidebar.active + .content-area {
+    width: 100%;
+    margin-left: 0;
 }
 
 /* Background Gradient Animation */

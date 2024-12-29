@@ -1,6 +1,20 @@
 <!-- CSS -->
 <link rel="stylesheet" href="/static/css/documents_editor.css">
 
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#" class="text-light" hx-get="/patients/{{.Patient.ID}}" hx-target="#content-area">
+                <i class="bi bi-person-fill"></i> {{.Patient.Nome}}
+            </a>
+        </li>
+        <li class="breadcrumb-item active text-light" aria-current="page">
+            <i class="bi bi-file-earmark-text"></i> Editor de Documentos
+        </li>
+    </ol>
+</nav>
+
 <!-- Área de mensagens -->
 <div id="documents-message-area"></div>
 

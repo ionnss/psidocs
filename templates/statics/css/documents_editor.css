@@ -154,3 +154,29 @@
 .mb-4 {
     margin-bottom: 1.5rem !important;
 }
+
+/* Breadcrumb */
+.breadcrumb {
+    background: rgba(18, 17, 22, 0.7) !important; 
+    backdrop-filter: blur(10px) !important;
+    padding: 15px !important    ;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.breadcrumb-item a {
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.breadcrumb-item a:hover {
+    opacity: 0.8 !important;
+}
+
+.breadcrumb-item.active {
+    opacity: 0.7 !important;
+}

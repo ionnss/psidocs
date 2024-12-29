@@ -46,4 +46,27 @@ document.addEventListener('DOMContentLoaded', function() {
         // Implementar tour guide aqui
         localStorage.setItem('dashboardTourComplete', 'true');
     }
+});
+
+// Função para colapsar o sidebar
+function toggleSidebar(collapse = true) {
+    const sidebar = document.getElementById('sidebar');
+    if (collapse) {
+        sidebar.classList.add('active');
+    } else {
+        sidebar.classList.remove('active');
+    }
+}
+
+// Observa mudanças no content-area para auto-colapsar no editor de documentos
+document.addEventListener('htmx:afterSettle', function(event) {
+    if (event.detail.target.id === 'content-area') {
+        // Se o conteúdo carregado contém o editor de documentos, colapsa o sidebar
+        if (event.detail.target.querySelector('#document-form') || 
+            event.detail.target.querySelector('#document-preview')) {
+            toggleSidebar(true);
+        } else {
+            toggleSidebar(false);
+        }
+    }
 }); 
