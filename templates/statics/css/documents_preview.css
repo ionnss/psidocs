@@ -1,0 +1,51 @@
+.document-header {
+    padding: 1rem;
+    background-color: #2b2b2b;
+    border-radius: 0.5rem;
+}
+
+.document-header h2 {
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.document-content {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ffffff;
+    padding: 2rem;
+    background-color: #2b2b2b;
+    border-radius: 0.5rem;
+    white-space: pre-line; /* Preserva quebras de linha */
+}
+
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Estilo para impressão */
+@media print {
+    .btn-group {
+        display: none !important;
+    }
+
+    .document-content {
+        background-color: white !important;
+        color: black !important;
+    }
+
+    .document-header {
+        background-color: white !important;
+    }
+
+    .document-header h2 {
+        color: black !important;
+    }
+} 

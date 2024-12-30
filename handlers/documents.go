@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"bytes"
+	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"psidocs/db"
+	"psidocs/models"
 	"strings"
 	"time"
 
@@ -349,6 +351,10 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Extrair apenas o tipo do documento (após a última barra)
+	parts := strings.Split(documentType, "/")
+	tipoDocumento := parts[len(parts)-1]
+
 	// Obter dados do psicólogo da sessão
 	email, _, err := GetCurrentUserInfo(w, r)
 	if err != nil {
@@ -509,7 +515,7 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 		) VALUES ($1, $2, $3, $4, $5, $6)`,
 		psicologoID,
 		patientID,
-		documentType,
+		tipoDocumento, // Usar apenas o tipo sem o prefixo
 		documentName,
 		buffer.String(),
 		requerAssinatura,
@@ -722,4 +728,112 @@ func PersonalizedDocumentEditorHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Erro ao renderizar template: %v", err)
 		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
 	}
+}
+
+// DocumentPreviewHandler exibe a visualização de um documento
+func DocumentPreviewHandler(w http.ResponseWriter, r *http.Request) {
+	// Obter ID do documento da URL
+	vars := mux.Vars(r)
+	documentID := vars["id"]
+
+	// Obter email do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Buscar documento
+	var doc models.Document
+	err = db.QueryRow(`
+		SELECT d.id, d.tipo, d.nome, d.conteudo, d.requer_assinatura, 
+		       d.created_at, d.updated_at, p.nome as patient_name
+		FROM documents d
+		JOIN patients p ON d.paciente_id = p.id
+		WHERE d.id = $1 AND d.psicologo_id = $2`,
+		documentID, psicologoID,
+	).Scan(
+		&doc.ID, &doc.Tipo, &doc.Nome, &doc.Conteudo,
+		&doc.RequerAssinatura, &doc.CreatedAt, &doc.UpdatedAt,
+		&doc.PatientName,
+	)
+
+	if err == sql.ErrNoRows {
+		log.Printf("Documento não encontrado: %v", err)
+		http.Error(w, "Documento não encontrado", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.Printf("Erro ao buscar documento: %v", err)
+		http.Error(w, "Erro ao buscar documento", http.StatusInternalServerError)
+		return
+	}
+
+	// Converter timestamps para timezone do Brasil
+	brazilLoc, err := time.LoadLocation("America/Sao_Paulo")
+	if err == nil { // Só converte se conseguir carregar o timezone
+		doc.CreatedAt = doc.CreatedAt.In(brazilLoc)
+		doc.UpdatedAt = doc.UpdatedAt.In(brazilLoc)
+	}
+
+	// Preparar dados para o template
+	data := map[string]interface{}{
+		"Document": doc,
+	}
+
+	// Se for uma requisição HTMX
+	if r.Header.Get("HX-Request") == "true" {
+		tmpl := template.Must(template.ParseFiles("templates/view/partials/documents_preview.html"))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			log.Printf("Erro ao renderizar template: %v", err)
+			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Se não for HTMX, renderiza o layout completo
+	tmpl := template.Must(template.ParseFiles(
+		"templates/view/dashboard_layout.html",
+		"templates/view/partials/documents_preview.html",
+	))
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		log.Printf("Erro ao renderizar template: %v", err)
+		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+	}
+}
+
+// Document representa um documento no sistema
+type Document struct {
+	ID               int
+	PsicologoID      int
+	PacienteID       int
+	Tipo             string
+	Nome             string
+	Descricao        string
+	Conteudo         string
+	RequerAssinatura bool
+	PatientName      string // Nome do paciente (usado para exibição)
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }

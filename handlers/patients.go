@@ -7,24 +7,11 @@ import (
 	"log"
 	"net/http"
 	"psidocs/db"
+	"psidocs/models"
 	"time"
 
 	"github.com/gorilla/mux"
 )
-
-// Document representa a estrutura de dados de um documento
-type Document struct {
-	ID               int
-	PsicologoID      int
-	PacienteID       int
-	Tipo             string
-	Nome             string
-	Descricao        string
-	Conteudo         string
-	RequerAssinatura bool
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
-}
 
 // Patient representa a estrutura de dados de um paciente
 type Patient struct {
@@ -897,6 +884,28 @@ func UnarchivePatientHandler(w http.ResponseWriter, r *http.Request) {
 	</script>`))
 }
 
+// formatDocumentType retorna o tipo formatado do documento
+func formatDocumentType(tipo string) string {
+	switch tipo {
+	case "anamnese":
+		return "Anamnese"
+	case "atestado":
+		return "Atestado"
+	case "declaracao":
+		return "Declaração"
+	case "laudo":
+		return "Laudo"
+	case "relatorio":
+		return "Relatório"
+	case "presencial":
+		return "Contrato Presencial"
+	case "online":
+		return "Contrato Online"
+	default:
+		return tipo
+	}
+}
+
 // GetPatientProfileHandler carrega o perfil do paciente
 func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 	// Obter ID do paciente da URL
@@ -989,9 +998,9 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	var contracts []Document
+	var contracts []models.Document
 	for rows.Next() {
-		var doc Document
+		var doc models.Document
 		err := rows.Scan(
 			&doc.ID, &doc.Tipo, &doc.Nome, &doc.Conteudo,
 			&doc.RequerAssinatura, &doc.CreatedAt, &doc.UpdatedAt,
@@ -1012,7 +1021,11 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 	rows, err = db.Query(`
 		SELECT id, tipo, nome, conteudo, requer_assinatura, created_at, updated_at
 		FROM documents 
-		WHERE paciente_id = $1 AND psicologo_id = $2 AND tipo LIKE 'psychological-documents/%'
+		WHERE paciente_id = $1 AND psicologo_id = $2 
+		AND (
+			tipo LIKE 'psychological-documents/%' OR 
+			tipo IN ('anamnese', 'atestado', 'declaracao', 'laudo', 'relatorio')
+		)
 		ORDER BY updated_at DESC`,
 		patientID, psicologoID,
 	)
@@ -1023,9 +1036,9 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	var psychologicalDocs []Document
+	var psychologicalDocs []models.Document
 	for rows.Next() {
-		var doc Document
+		var doc models.Document
 		err := rows.Scan(
 			&doc.ID, &doc.Tipo, &doc.Nome, &doc.Conteudo,
 			&doc.RequerAssinatura, &doc.CreatedAt, &doc.UpdatedAt,
@@ -1034,6 +1047,8 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Erro ao ler documento psicológico: %v", err)
 			continue
 		}
+		// Formatar o tipo do documento
+		doc.Tipo = formatDocumentType(doc.Tipo)
 		// Converter timestamps do documento para timezone do Brasil
 		if brazilLoc != nil { // Só converte se o timezone foi carregado com sucesso
 			doc.CreatedAt = doc.CreatedAt.In(brazilLoc)
