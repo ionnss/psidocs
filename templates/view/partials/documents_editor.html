@@ -73,6 +73,14 @@
                                            hx-include="closest form"
                                            hx-trigger="input">
                                 </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Data de Término</label>
+                                    <input type="date" class="form-control" name="data_fim_tratamento"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
                                 <div class="col-12">
                                     <label class="form-label">Abordagem</label>
                                     <input type="text" class="form-control" name="abordagem" 
@@ -135,14 +143,6 @@
                                            hx-trigger="input">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Data de Término</label>
-                                    <input type="date" class="form-control" name="data_fim_tratamento"
-                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
-                                           hx-target="#document-preview"
-                                           hx-include="closest form"
-                                           hx-trigger="input">
-                                </div>
-                                <div class="col-md-6">
                                     <label class="form-label">Início das Férias</label>
                                     <input type="date" class="form-control" name="data_inicio_ferias"
                                            hx-get="/patients/{{.Patient.ID}}/documents/template"
@@ -173,7 +173,147 @@
                         <!-- Formulário de dados psicológicos -->
                         <!-- Anamnese -->   
                         <div id="psychological-data-anamnese" class="mb-4" style="display: none;">
-                            <h6 class="mb-3">Dados do Documento</h6>
+                            <h6 class="mb-3">Dados da Anamnese</h6>
+                            <div class="row g-3">
+                                <!-- Queixa Principal -->
+                                <div class="col-12">
+                                    <label class="form-label">Queixa Principal</label>
+                                    <textarea class="form-control" name="queixa_principal" rows="3"
+                                              placeholder="Descreva a queixa principal do paciente"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <!-- História do Problema -->
+                                <div class="col-12">
+                                    <label class="form-label">História do Problema</label>
+                                    <textarea class="form-control" name="historia_problema" rows="3"
+                                              placeholder="Descreva a história do problema"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <!-- Sintomatologia -->
+                                <div class="col-12">
+                                    <label class="form-label">Sintomatologia</label>
+                                    <textarea class="form-control" name="sintomatologia" rows="3"
+                                              placeholder="Descreva os sintomas apresentados"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <!-- Histórico Médico -->
+                                <div class="col-12">
+                                    <label class="form-label">Histórico Médico</label>
+                                    <textarea class="form-control" name="historico_medico" rows="3"
+                                              placeholder="Descreva o histórico médico relevante"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <!-- Histórico Ocupacional -->
+                                <div class="col-12">
+                                    <label class="form-label">Tempo de Trabalho Atual</label>
+                                    <input type="text" class="form-control" name="tempo_trabalho_atual"
+                                           placeholder="Ex: 2 anos e 3 meses"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Histórico Ocupacional</label>
+                                    <textarea class="form-control" name="historico_ocupacional" rows="3"
+                                              placeholder="Descreva o histórico ocupacional"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <!-- História Psicossocial -->
+                                <div class="col-12">
+                                    <label class="form-label">História Psicossocial</label>
+                                    <textarea class="form-control" name="historia_psicossocial" rows="3"
+                                              placeholder="Descreva a história psicossocial"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <!-- Tratamentos Anteriores -->
+                                <div class="col-12">
+                                    <label class="form-label">Tratamentos Anteriores</label>
+                                    <textarea class="form-control" name="tratamentos_anteriores" rows="3"
+                                              placeholder="Descreva tratamentos anteriores relevantes"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <!-- Hábitos de Vida -->
+                                <div class="col-12">
+                                    <label class="form-label">Hábitos Alimentares</label>
+                                    <textarea class="form-control" name="habitos_alimentacao" rows="2"
+                                              placeholder="Descreva os hábitos alimentares"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Exercícios Físicos</label>
+                                    <textarea class="form-control" name="habitos_exercicios" rows="2"
+                                              placeholder="Descreva a prática de exercícios físicos"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Hábitos de Sono</label>
+                                    <textarea class="form-control" name="habitos_sono" rows="2"
+                                              placeholder="Descreva os hábitos de sono"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Uso de Substâncias</label>
+                                    <textarea class="form-control" name="habitos_substancias" rows="2"
+                                              placeholder="Descreva o uso de substâncias (se houver)"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <!-- Outras Informações -->
+                                <div class="col-12">
+                                    <label class="form-label">Outras Informações Relevantes</label>
+                                    <textarea class="form-control" name="outras_informacoes" rows="3"
+                                              placeholder="Adicione outras informações relevantes"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+                            </div>
                         </div>
                         <!-- Atestado -->   
                         <div id="psychological-data-atestado" class="mb-4" style="display: none;">
@@ -232,17 +372,251 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Declaração --> 
+                        <!-- Declaração -->   
                         <div id="psychological-data-declaracao" class="mb-4" style="display: none;">
-                            <h6 class="mb-3">Dados do Documento</h6>
-                        </div> 
+                            <h6 class="mb-3">Dados da Declaração</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Data Inicial do Atendimento</label>
+                                    <input type="date" class="form-control" name="data_inicial_atendimento"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Data Final do Atendimento</label>
+                                    <input type="date" class="form-control" name="data_final_atendimento"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Frequência do Atendimento</label>
+                                    <input type="text" class="form-control" name="frequencia_atendimento"
+                                           placeholder="Ex: semanal, quinzenal"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Duração das Sessões</label>
+                                    <input type="text" class="form-control" name="duracao_sessoes"
+                                           placeholder="Ex: 50 minutos"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Finalidade da Declaração</label>
+                                    <input type="text" class="form-control" name="finalidade_declaracao"
+                                           placeholder="Ex: comprovação de frequência"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Motivo da Solicitação</label>
+                                    <input type="text" class="form-control" name="motivo_solicitacao"
+                                           placeholder="Ex: escola, emprego"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                            </div>
+                        </div>
                         <!-- Laudo --> 
                         <div id="psychological-data-laudo" class="mb-4" style="display: none;">
-                            <h6 class="mb-3">Dados do Documento</h6>
+                            <h6 class="mb-3">Dados do Laudo</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Nome do Solicitante</label>
+                                    <input type="text" class="form-control" name="solicitante"
+                                           placeholder="Ex: Nome da instituição ou pessoa que solicitou"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Finalidade</label>
+                                    <input type="text" class="form-control" name="finalidade"
+                                           placeholder="Ex: Avaliação psicológica para processo seletivo"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Descrição da Demanda</label>
+                                    <textarea class="form-control" name="descricao_demanda" rows="3"
+                                              placeholder="Descreva a demanda que motivou a avaliação"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Procedimento</label>
+                                    <textarea class="form-control" name="procedimento" rows="3"
+                                              placeholder="Descreva os procedimentos e técnicas utilizados"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Análise</label>
+                                    <textarea class="form-control" name="analise" rows="4"
+                                              placeholder="Descreva a análise dos dados coletados"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Conclusão</label>
+                                    <textarea class="form-control" name="conclusao" rows="4"
+                                              placeholder="Descreva as conclusões e recomendações"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Referências</label>
+                                    <textarea class="form-control" name="referencias" rows="3"
+                                              placeholder="Digite cada referência em uma nova linha"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+                            </div>
                         </div>
                         <!-- Relatório --> 
                         <div id="psychological-data-relatorio" class="mb-4" style="display: none;">
-                            <h6 class="mb-3">Dados do Documento</h6>
+                            <h6 class="mb-3">Dados do Relatório</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Nome do Solicitante</label>
+                                    <input type="text" class="form-control" name="solicitante"
+                                           placeholder="Ex: Nome da instituição ou pessoa que solicitou"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Finalidade</label>
+                                    <input type="text" class="form-control" name="finalidade"
+                                           placeholder="Ex: Acompanhamento terapêutico"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Data Inicial do Acompanhamento</label>
+                                    <input type="date" class="form-control" name="data_inicio_acompanhamento"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Data Final do Acompanhamento</label>
+                                    <input type="date" class="form-control" name="data_fim_acompanhamento"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Frequência do Atendimento</label>
+                                    <input type="text" class="form-control" name="frequencia_atendimento"
+                                           placeholder="Ex: semanal, quinzenal"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Duração das Sessões</label>
+                                    <input type="text" class="form-control" name="duracao_sessoes"
+                                           placeholder="Ex: 50 minutos"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Demanda Inicial</label>
+                                    <textarea class="form-control" name="demanda_inicial" rows="3"
+                                              placeholder="Descreva a demanda inicial apresentada"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Evolução do Processo</label>
+                                    <textarea class="form-control" name="evolucao_processo" rows="4"
+                                              placeholder="Descreva a evolução do processo terapêutico"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Recursos e Instrumentos Utilizados</label>
+                                    <textarea class="form-control" name="recursos_utilizados" rows="3"
+                                              placeholder="Descreva os recursos e instrumentos utilizados no processo"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Resultados e Encaminhamentos</label>
+                                    <textarea class="form-control" name="resultados_encaminhamentos" rows="4"
+                                              placeholder="Descreva os resultados alcançados e possíveis encaminhamentos"
+                                              hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                              hx-target="#document-preview"
+                                              hx-include="closest form"
+                                              hx-trigger="input"></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Finalidade do Relatório</label>
+                                    <input type="text" class="form-control" name="finalidade_relatorio"
+                                           placeholder="Ex: uso profissional específico"
+                                           hx-get="/patients/{{.Patient.ID}}/documents/template"
+                                           hx-target="#document-preview"
+                                           hx-include="closest form"
+                                           hx-trigger="input">
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Campo oculto para o conteúdo do documento -->

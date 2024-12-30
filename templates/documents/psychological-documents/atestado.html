@@ -58,15 +58,12 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="{{.LogoUrl}}" alt="Logo" style="max-width: 200px; height: auto;">
-    </div>
 
     <h1>ATESTADO PSICOLÓGICO</h1>
 
     <div class="content paragraph">
-        Certifico, com fundamento em diagnóstico psicológico, que <strong>{{.PacienteNome}}</strong>, 
-        portador(a) do RG <strong>{{.PacienteRG}}</strong> e do CPF <strong>{{.PacienteCPF}}</strong>, foi submetido(a) 
+        Certifico, com fundamento em diagnóstico psicológico, que <strong>{{.PatientNome}}</strong>, 
+        portador(a) do RG <strong>{{.PatientRG}}</strong> e do CPF <strong>{{.PatientCPF}}</strong>, foi submetido(a) 
         a um processo de avaliação psicológica no período de <strong>{{.DataInicialAvaliacao}}</strong> 
         a <strong>{{.DataFinalAvaliacao}}</strong>.
     </div>
@@ -77,7 +74,7 @@
     </div>
 
     <div class="content paragraph">
-        Com base na avaliação realizada, atesto que <strong>{{.PacienteNome}}</strong> apresenta 
+        Com base na avaliação realizada, atesto que <strong>{{.PatientNome}}</strong> apresenta 
         <strong>{{.EstadoPsicologico}}</strong>.
     </div>
 
@@ -91,13 +88,16 @@
         não autorizada deste documento é vedado.
     </div>
 
-    <div class="date">
-        {{.DataAssinatura}}
-    </div>
 
     <div class="signature">
-        <div class="signature-line">{{.PsicologoNome}}</div>
-        <div>CRP {{.PsicologoCRP}}</div>
+        <div style="margin-top: 30px;">
+            <div class="signature-line">{{.PsicologoNome}}</div>
+            <div>CRP {{.PsicologoCRP}}</div>
+        </div>
+
+        <div class="paragraph" style="text-align: center; margin-top: 40px;">
+            {{.DiaAssinatura}}, {{.DiaMesAssinatura}} de {{.MesAssinatura}} de {{.AnoAssinatura}}
+        </div>
     </div>
 </body>
 </html> 

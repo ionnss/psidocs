@@ -58,20 +58,17 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="{{.LogoUrl}}" alt="Logo" style="max-width: 200px; height: auto;">
-    </div>
 
     <h1>DECLARAÇÃO PSICOLÓGICA</h1>
 
     <div class="content paragraph">
-        Declaro, para os devidos fins, que <strong>{{.PacienteNome}}</strong>, portador(a) do RG <strong>{{.PacienteRG}}</strong> 
-        e do CPF <strong>{{.PacienteCPF}}</strong>, compareceu ao meu atendimento psicológico no período 
+        Declaro, para os devidos fins, que <strong>{{.PatientNome}}</strong>, portador(a) do RG <strong>{{.PatientRG}}</strong> 
+        e do CPF <strong>{{.PatientCPF}}</strong>, compareceu ao meu atendimento psicológico no período 
         de <strong>{{.DataInicialAtendimento}}</strong> a <strong>{{.DataFinalAtendimento}}</strong>.
     </div>
 
     <div class="content paragraph">
-        <strong>{{.PacienteNome}}</strong> recebeu acompanhamento psicológico com a frequência <strong>{{.FrequenciaAtendimento}}</strong> 
+        <strong>{{.PatientNome}}</strong> recebeu acompanhamento psicológico com a frequência <strong>{{.FrequenciaAtendimento}}</strong> 
         e com duração média de <strong>{{.DuracaoSessoes}}</strong>.
     </div>
 
@@ -96,8 +93,14 @@
     </div>
 
     <div class="signature">
-        <div class="signature-line">{{.PsicologoNome}}</div>
-        <div>CRP {{.PsicologoCRP}}</div>
+        <div style="margin-top: 30px;">
+            <div class="signature-line">{{.PsicologoNome}}</div>
+            <div>CRP {{.PsicologoCRP}}</div>
+        </div>
+
+        <div class="paragraph" style="text-align: center; margin-top: 40px;">
+            {{.DiaAssinatura}}, {{.DiaMesAssinatura}} de {{.MesAssinatura}} de {{.AnoAssinatura}}
+        </div>
     </div>
 </body>
 </html> 

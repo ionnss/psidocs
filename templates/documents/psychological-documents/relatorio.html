@@ -71,25 +71,22 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="{{.LogoUrl}}" alt="Logo" style="max-width: 200px; height: auto;">
-    </div>
 
     <h1>RELATÓRIO PSICOLÓGICO</h1>
 
     <div class="section">
         <div class="section-title">IDENTIFICAÇÃO</div>
         <div class="field">
-            <span class="field-label">Nome:</span> <strong>{{.PacienteNome}}</strong>
+            <span class="field-label">Nome:</span> <strong>{{.PatientNome}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Data de nascimento:</span> <strong>{{.PacienteDataNascimento}}</strong>
+            <span class="field-label">Data de nascimento:</span> <strong>{{.PatientDataNascimento}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Idade:</span> <strong>{{.PacienteIdade}}</strong>
+            <span class="field-label">Idade:</span> <strong>{{.PatientIdade}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Escolaridade:</span> <strong>{{.PacienteEscolaridade}}</strong>
+            <span class="field-label">Escolaridade:</span> <strong>{{.PatientEscolaridade}}</strong>
         </div>
         <div class="field">
             <span class="field-label">Nome do solicitante:</span> <strong>{{.Solicitante}}</strong>
@@ -133,15 +130,15 @@
         É vedada sua utilização para outros fins ou sua divulgação a terceiros.
     </div>
 
-    <div class="section">
-        <div class="content" style="text-align: center;">
-            {{.Cidade}}, {{.DataRelatorio}}
-        </div>
-    </div>
-
     <div class="signature">
-        <div class="signature-line">{{.PsicologoNome}}</div>
-        <div>CRP {{.PsicologoCRP}}</div>
+        <div style="margin-top: 30px;">
+            <div class="signature-line">{{.PsicologoNome}}</div>
+            <div>CRP {{.PsicologoCRP}}</div>
+        </div>
+
+        <div class="paragraph" style="text-align: center; margin-top: 40px;">
+            {{.DiaAssinatura}}, {{.DiaMesAssinatura}} de {{.MesAssinatura}} de {{.AnoAssinatura}}
+        </div>
     </div>
 </body>
 </html> 

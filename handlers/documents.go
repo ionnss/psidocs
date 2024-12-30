@@ -179,16 +179,20 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Preparar dados para o template
 	data := map[string]interface{}{
-		"ClienteNome":          paciente.Nome,
-		"ClienteNacionalidade": paciente.Nacionalidade,
-		"ClienteEstadoCivil":   paciente.EstadoCivil,
-		"ClienteRG":            paciente.RG,
-		"ClienteCPF":           paciente.CPF,
-		"ClienteCidade":        paciente.Cidade,
-		"ClienteRua":           paciente.Endereco,
-		"ClienteNumero":        paciente.Numero,
-		"ClienteCEP":           paciente.CEP,
-		"ClienteTelefone":      fmt.Sprintf("(%s) %s", paciente.DDD, paciente.Telefone),
+		"PatientNome":           paciente.Nome,
+		"PatientNacionalidade":  paciente.Nacionalidade,
+		"PatientEstadoCivil":    paciente.EstadoCivil,
+		"PatientRG":             paciente.RG,
+		"PatientCPF":            paciente.CPF,
+		"PatientCidade":         paciente.Cidade,
+		"PatientRua":            paciente.Endereco,
+		"PatientNumero":         paciente.Numero,
+		"PatientCEP":            paciente.CEP,
+		"PatientTelefone":       fmt.Sprintf("(%s) %s", paciente.DDD, paciente.Telefone),
+		"PatientDataNascimento": formatDate(paciente.DataNascimento.Format("2006-01-02")),
+		"PatientGenero":         paciente.Sexo,
+		"PatientProfissao":      paciente.Profissao,
+		"PatientEndereco":       fmt.Sprintf("%s, %s - %s, %s", paciente.Endereco, paciente.Numero, paciente.Bairro, paciente.Cidade),
 
 		"PsicologoNome":          psicologo.Nome,
 		"PsicologoNacionalidade": psicologo.Nacionalidade,
@@ -229,6 +233,49 @@ func DocumentTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		"DataValidade":         formatDate(r.FormValue("data_validade")),
 		"FinalidadeAtestado":   r.FormValue("finalidade_atestado"),
 		"DataAtestado":         formatDate(r.FormValue("data_atestado")),
+
+		// Campos específicos da declaração
+		"DataInicialAtendimento": formatDate(r.FormValue("data_inicial_atendimento")),
+		"DataFinalAtendimento":   formatDate(r.FormValue("data_final_atendimento")),
+		"FrequenciaAtendimento":  r.FormValue("frequencia_atendimento"),
+		"DuracaoSessoes":         r.FormValue("duracao_sessoes"),
+		"FinalidadeDeclaracao":   r.FormValue("finalidade_declaracao"),
+		"MotivoSolicitacao":      r.FormValue("motivo_solicitacao"),
+
+		// Campos específicos do laudo
+		"Solicitante":      r.FormValue("solicitante"),
+		"Finalidade":       r.FormValue("finalidade"),
+		"DescricaoDemanda": r.FormValue("descricao_demanda"),
+		"Procedimento":     r.FormValue("procedimento"),
+		"Analise":          r.FormValue("analise"),
+		"Conclusao":        r.FormValue("conclusao"),
+		"Referencias":      strings.Split(r.FormValue("referencias"), "\n"),
+
+		// Campos específicos do relatório
+		"DataInicioAcompanhamento":  formatDate(r.FormValue("data_inicio_acompanhamento")),
+		"DataFimAcompanhamento":     formatDate(r.FormValue("data_fim_acompanhamento")),
+		"DemandaInicial":            r.FormValue("demanda_inicial"),
+		"EvolucaoProcesso":          r.FormValue("evolucao_processo"),
+		"RecursosUtilizados":        r.FormValue("recursos_utilizados"),
+		"ResultadosEncaminhamentos": r.FormValue("resultados_encaminhamentos"),
+		"FinalidadeRelatorio":       r.FormValue("finalidade_relatorio"),
+		"DataRelatorio":             time.Now().Format("02/01/2006"),
+
+		// Campos específicos da anamnese
+		"QueixaPrincipal":       strings.Split(r.FormValue("queixa_principal"), "\n"),
+		"HistoriaProblema":      r.FormValue("historia_problema"),
+		"Sintomatologia":        r.FormValue("sintomatologia"),
+		"HistoricoMedico":       r.FormValue("historico_medico"),
+		"TempoTrabalhoAtual":    r.FormValue("tempo_trabalho_atual"),
+		"HistoricoOcupacional":  r.FormValue("historico_ocupacional"),
+		"HistoriaPsicossocial":  r.FormValue("historia_psicossocial"),
+		"TratamentosAnteriores": r.FormValue("tratamentos_anteriores"),
+		"HabitosAlimentacao":    r.FormValue("habitos_alimentacao"),
+		"HabitosExercicios":     r.FormValue("habitos_exercicios"),
+		"HabitosSono":           r.FormValue("habitos_sono"),
+		"HabitosSubstancias":    r.FormValue("habitos_substancias"),
+		"OutrasInformacoes":     r.FormValue("outras_informacoes"),
+		"DataAvaliacao":         time.Now().Format("02/01/2006"),
 	}
 
 	// Formata as datas antes de passar para o template
@@ -357,16 +404,16 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Preparar dados para o template
 	data := map[string]interface{}{
-		"ClienteNome":          patient.Nome,
-		"ClienteNacionalidade": r.FormValue("nacionalidade"),
-		"ClienteEstadoCivil":   r.FormValue("estado_civil"),
-		"ClienteRG":            r.FormValue("rg"),
-		"ClienteCPF":           r.FormValue("cpf"),
-		"ClienteCidade":        r.FormValue("cidade"),
-		"ClienteRua":           r.FormValue("endereco"),
-		"ClienteNumero":        r.FormValue("numero"),
-		"ClienteCEP":           r.FormValue("cep"),
-		"ClienteTelefone":      fmt.Sprintf("(%s) %s", r.FormValue("ddd"), r.FormValue("telefone")),
+		"PatientNome":          patient.Nome,
+		"PatientNacionalidade": r.FormValue("nacionalidade"),
+		"PatientEstadoCivil":   r.FormValue("estado_civil"),
+		"PatientRG":            r.FormValue("rg"),
+		"PatientCPF":           r.FormValue("cpf"),
+		"PatientCidade":        r.FormValue("cidade"),
+		"PatientRua":           r.FormValue("endereco"),
+		"PatientNumero":        r.FormValue("numero"),
+		"PatientCEP":           r.FormValue("cep"),
+		"PatientTelefone":      fmt.Sprintf("(%s) %s", r.FormValue("ddd"), r.FormValue("telefone")),
 
 		// Campos do formulário
 		"Abordagem":           r.FormValue("abordagem"),
@@ -390,6 +437,49 @@ func SaveDocumentHandler(w http.ResponseWriter, r *http.Request) {
 		"DataValidade":         formatDate(r.FormValue("data_validade")),
 		"FinalidadeAtestado":   r.FormValue("finalidade_atestado"),
 		"DataAtestado":         formatDate(r.FormValue("data_atestado")),
+
+		// Campos específicos da declaração
+		"DataInicialAtendimento": formatDate(r.FormValue("data_inicial_atendimento")),
+		"DataFinalAtendimento":   formatDate(r.FormValue("data_final_atendimento")),
+		"FrequenciaAtendimento":  r.FormValue("frequencia_atendimento"),
+		"DuracaoSessoes":         r.FormValue("duracao_sessoes"),
+		"FinalidadeDeclaracao":   r.FormValue("finalidade_declaracao"),
+		"MotivoSolicitacao":      r.FormValue("motivo_solicitacao"),
+
+		// Campos específicos do laudo
+		"Solicitante":      r.FormValue("solicitante"),
+		"Finalidade":       r.FormValue("finalidade"),
+		"DescricaoDemanda": r.FormValue("descricao_demanda"),
+		"Procedimento":     r.FormValue("procedimento"),
+		"Analise":          r.FormValue("analise"),
+		"Conclusao":        r.FormValue("conclusao"),
+		"Referencias":      strings.Split(r.FormValue("referencias"), "\n"),
+
+		// Campos específicos do relatório
+		"DataInicioAcompanhamento":  formatDate(r.FormValue("data_inicio_acompanhamento")),
+		"DataFimAcompanhamento":     formatDate(r.FormValue("data_fim_acompanhamento")),
+		"DemandaInicial":            r.FormValue("demanda_inicial"),
+		"EvolucaoProcesso":          r.FormValue("evolucao_processo"),
+		"RecursosUtilizados":        r.FormValue("recursos_utilizados"),
+		"ResultadosEncaminhamentos": r.FormValue("resultados_encaminhamentos"),
+		"FinalidadeRelatorio":       r.FormValue("finalidade_relatorio"),
+		"DataRelatorio":             time.Now().Format("02/01/2006"),
+
+		// Campos específicos da anamnese
+		"QueixaPrincipal":       strings.Split(r.FormValue("queixa_principal"), "\n"),
+		"HistoriaProblema":      r.FormValue("historia_problema"),
+		"Sintomatologia":        r.FormValue("sintomatologia"),
+		"HistoricoMedico":       r.FormValue("historico_medico"),
+		"TempoTrabalhoAtual":    r.FormValue("tempo_trabalho_atual"),
+		"HistoricoOcupacional":  r.FormValue("historico_ocupacional"),
+		"HistoriaPsicossocial":  r.FormValue("historia_psicossocial"),
+		"TratamentosAnteriores": r.FormValue("tratamentos_anteriores"),
+		"HabitosAlimentacao":    r.FormValue("habitos_alimentacao"),
+		"HabitosExercicios":     r.FormValue("habitos_exercicios"),
+		"HabitosSono":           r.FormValue("habitos_sono"),
+		"HabitosSubstancias":    r.FormValue("habitos_substancias"),
+		"OutrasInformacoes":     r.FormValue("outras_informacoes"),
+		"DataAvaliacao":         time.Now().Format("02/01/2006"),
 	}
 
 	// Renderizar template

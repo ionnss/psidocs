@@ -8,41 +8,55 @@
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
-            max-width: 800px;
+            max-width: 210mm; /* Tamanho A4 */
             margin: 0 auto;
             padding: 20px;
+        }
+        @page {
+            margin: 3cm 2cm 2cm 3cm; /* Superior, Direita, Inferior, Esquerda */
+            size: A4;
         }
         h1 {
             text-align: center;
             font-size: 1.5em;
             margin-bottom: 30px;
+            margin-top: 0;
         }
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 2.5cm;
+            page-break-inside: avoid;
         }
         .section-title {
             font-weight: bold;
             font-size: 1.1em;
-            margin-bottom: 15px;
+            margin-bottom: 1.5cm;
             border-bottom: 1px solid #ccc;
             padding-bottom: 5px;
         }
         .field {
-            margin-bottom: 15px;
+            margin-bottom: 1cm;
+            display: flex;
+            align-items: center;
         }
         .field-label {
             font-weight: bold;
+            margin-right: 5px;
+            min-width: 150px;
         }
         .field-content {
+            flex: 1;
             min-height: 20px;
             border-bottom: 1px dotted #999;
-            margin-top: 5px;
+            padding: 2px 0;
         }
         .text-area {
             min-height: 100px;
             border: 1px solid #ccc;
             padding: 10px;
             margin-top: 10px;
+            white-space: pre-line;
+            text-align: justify;
+            line-height: 1.5;
         }
         .signature {
             margin-top: 50px;
@@ -62,12 +76,12 @@
             body {
                 padding: 0;
             }
-            @page {
-                margin: 2.5cm;
-            }
             .text-area {
                 border: none;
                 padding: 0;
+            }
+            .section {
+                margin-bottom: 2.5cm;
             }
         }
     </style>
@@ -78,38 +92,35 @@
     <div class="section">
         <div class="section-title">1. DADOS DE IDENTIFICAÇÃO</div>
         <div class="field">
-            <span class="field-label">Nome:</span>
-            <div class="field-content">{{.PacienteNome}}</div>
+            <span class="field-label">Nome:</span> <strong>{{.PatientNome}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Data de Nascimento:</span>
-            <div class="field-content">{{.PacienteDataNascimento}}</div>
+            <span class="field-label">Data de Nascimento:</span> <strong>{{.PatientDataNascimento}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Gênero:</span>
-            <div class="field-content">{{.PacienteGenero}}</div>
+            <span class="field-label">Gênero:</span> <strong>{{.PatientGenero}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Estado Civil:</span>
-            <div class="field-content">{{.PacienteEstadoCivil}}</div>
+            <span class="field-label">Estado Civil:</span> <strong>{{.PatientEstadoCivil}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Profissão/Ocupação:</span>
-            <div class="field-content">{{.PacienteProfissao}}</div>
+            <span class="field-label">Profissão/Ocupação:</span> <strong>{{.PatientProfissao}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Endereço:</span>
-            <div class="field-content">{{.PacienteEndereco}}</div>
+            <span class="field-label">Endereço:</span> <strong>{{.PatientEndereco}}</strong>
         </div>
         <div class="field">
-            <span class="field-label">Psicólogo(a) Responsável:</span>
-            <div class="field-content">{{.PsicologoNome}} - CRP: {{.PsicologoCRP}}</div>
+            <span class="field-label">Psicólogo(a) Responsável:</span> <strong>{{.PsicologoNome}}</strong> - CRP: <strong>{{.PsicologoCRP}}</strong>
         </div>
     </div>
 
     <div class="section">
         <div class="section-title">2. QUEIXA PRINCIPAL</div>
-        <div class="text-area paragraph">{{.QueixaPrincipal}}</div>
+        <div class="text-area paragraph">
+            {{range .QueixaPrincipal}}
+            <p>{{.}}</p>
+            {{end}}
+        </div>
     </div>
 
     <div class="section">
@@ -175,10 +186,13 @@
     </div>
 
     <div class="signature">
-        <div class="field">Data: {{.DataAvaliacao}}</div>
         <div style="margin-top: 30px;">
             <div class="signature-line">{{.PsicologoNome}}</div>
             <div>CRP {{.PsicologoCRP}}</div>
+        </div>
+
+        <div class="paragraph" style="text-align: center; margin-top: 40px;">
+            {{.DiaAssinatura}}, {{.DiaMesAssinatura}} de {{.MesAssinatura}} de {{.AnoAssinatura}}
         </div>
     </div>
 </body>
