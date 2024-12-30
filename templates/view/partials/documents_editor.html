@@ -55,8 +55,8 @@
                                     <option value="psychological-documents/anamnese">Anamnese</option>
                                     <option value="psychological-documents/atestado">Atestado</option>
                                     <option value="psychological-documents/declaracao">Declaração</option>
-                                    <option value="psychological-documents/laudo">Laudo</option>
-                                    <option value="psychological-documents/relatorio">Relatório</option>
+                                    <!-- <option value="psychological-documents/laudo">Laudo</option> -->
+                                    <!-- <option value="psychological-documents/relatorio">Relatório</option> -->
                                 </optgroup>
                             </select>
                         </div>
@@ -430,8 +430,9 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <!-- Laudo --> 
-                        <div id="psychological-data-laudo" class="mb-4" style="display: none;">
+                        <!-- <div id="psychological-data-laudo" class="mb-4" style="display: none;">
                             <h6 class="mb-3">Dados do Laudo</h6>
                             <div class="row g-3">
                                 <div class="col-12">
@@ -504,9 +505,9 @@
                                               hx-trigger="input"></textarea>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- Relatório --> 
-                        <div id="psychological-data-relatorio" class="mb-4" style="display: none;">
+                        <!-- <div id="psychological-data-relatorio" class="mb-4" style="display: none;">
                             <h6 class="mb-3">Dados do Relatório</h6>
                             <div class="row g-3">
                                 <div class="col-12">
@@ -617,7 +618,7 @@
                                            hx-trigger="input">
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Campo oculto para o conteúdo do documento -->
                         <input type="hidden" name="editor_contents" value="">
@@ -663,16 +664,16 @@ function showFormFields(value) {
     const anamneseForm = document.getElementById('psychological-data-anamnese');
     const atestadoForm = document.getElementById('psychological-data-atestado');
     const declaracaoForm = document.getElementById('psychological-data-declaracao');
-    const laudoForm = document.getElementById('psychological-data-laudo');
-    const relatorioForm = document.getElementById('psychological-data-relatorio');
+    // const laudoForm = document.getElementById('psychological-data-laudo');
+    // const relatorioForm = document.getElementById('psychological-data-relatorio');
     
     // Esconde todos os formulários primeiro
     contractForm.style.display = 'none';
     anamneseForm.style.display = 'none';
     atestadoForm.style.display = 'none';
     declaracaoForm.style.display = 'none';
-    laudoForm.style.display = 'none';
-    relatorioForm.style.display = 'none';
+    // laudoForm.style.display = 'none';
+    // relatorioForm.style.display = 'none';
     
     // Mostra o formulário apropriado
     if (value.startsWith('contracts/')) {
@@ -683,10 +684,10 @@ function showFormFields(value) {
         atestadoForm.style.display = 'block';
     } else if (value === 'psychological-documents/declaracao') {
         declaracaoForm.style.display = 'block';
-    } else if (value === 'psychological-documents/laudo') {
-        laudoForm.style.display = 'block';
-    } else if (value === 'psychological-documents/relatorio') {
-        relatorioForm.style.display = 'block';
+    // } else if (value === 'psychological-documents/laudo') {
+    //     laudoForm.style.display = 'block';
+    // } else if (value === 'psychological-documents/relatorio') {
+    //     relatorioForm.style.display = 'block';
     }
 }
 </script>
