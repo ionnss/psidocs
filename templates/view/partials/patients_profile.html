@@ -187,7 +187,6 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Descrição</th>
                             <th>Última Atualização</th>
                             <th>Ações</th>
                         </tr>
@@ -196,7 +195,6 @@
                         {{range .Contracts}}
                         <tr>
                             <td>{{.Nome}}</td>
-                            <td>{{.Descricao}}</td>
                             <td>{{.UpdatedAt.Format "02/01/2006 15:04"}}</td>
                             <td>
                                 <div class="btn-group btn-group-sm">
@@ -241,8 +239,6 @@
                         <tr>
                             <th>Nome</th>
                             <th>Tipo</th>
-                            <th>Subtipo</th>
-                            <th>Descrição</th>
                             <th>Última Atualização</th>
                             <th>Ações</th>
                         </tr>
@@ -254,10 +250,6 @@
                             <td>
                                 <span class="badge bg-info">{{.Tipo}}</span>
                             </td>
-                            <td>
-                                <span class="badge bg-info">{{.Subtipo}}</span>
-                            </td>
-                            <td>{{.Descricao}}</td>
                             <td>{{.UpdatedAt.Format "02/01/2006 15:04"}}</td>
                             <td>
                                 <div class="btn-group btn-group-sm">
