@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laudo Psicológico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .content {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        .field {
+            margin-bottom: 10px;
+        }
+        .field-label {
+            font-weight: bold;
+            display: inline-block;
+            min-width: 150px;
+        }
+        .references {
+            margin-top: 40px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+        .reference-item {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            text-indent: -20px;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .signature-line {
+            width: 200px;
+            border-top: 1px solid black;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+        .paragraph {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            @page {
+                margin: 2.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center;">LAUDO PSICOLÓGICO</h1>
+    <br>
+
+    <h2>1. IDENTIFICAÇÃO</h2>
+
+    Nome do(a) Paciente: <strong>{{.PatientNome}}</strong>
+    <br>
+    Data de Nascimento: <strong>{{.PatientDataNascimento}}</strong>
+    <br>
+    Documento de Identidade: 
+    <br>
+
+    <br>
+    <h2>2. SOLICITANTE</h2>
+    <br>
+
+    <br>
+    <h2>3. FINALIDADE</h2>
+    <br>
+
+    <br>
+    <h2>4. DEMANDA</h2>
+    <br>
+
+    <br>
+    <h2>5. PROCEDIMENTOS</h2>
+    <br>
+
+    <br>
+    <h2>6. ANÁLISE</h2>
+    <br>
+
+    <br>
+    <h2>7. CONCLUSÃO</h2>
+    <br>
+
+    <br>
+    <h2>8. REFERÊNCIAS</h2>
+    <br>
+
+    <br>
+    <div style="text-align: center;">
+    CIDADE, DIA de MÊS de ANO
+
+    <br>
+    <br>
+    _____________________________________
+    <br>
+
+    <br>
+    Nome Completo - CRP <strong>{{.PsicologoNome}}</strong>
+    </div>
+
+    <div class="section">
+        <div class="section-title">IDENTIFICAÇÃO</div>
+        <div class="field">
+            <span class="field-label">Nome:</span> <strong>{{.PatientNome}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Data de nascimento:</span> <strong>{{.PatientDataNascimento}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Estado civil:</span> <strong>{{.PatientEstadoCivil}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Escolaridade:</span> <strong>{{.PatientEscolaridade}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Profissão:</span> <strong>{{.PatientProfissao}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Endereço:</span> <strong>{{.PatientEndereco}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Telefone:</span> <strong>{{.PatientTelefone}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">E-mail:</span> <strong>{{.PatientEmail}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Nome do solicitante:</span> <strong>{{.Solicitante}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Finalidade:</span> <strong>{{.Finalidade}}</strong>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">DESCRIÇÃO DA DEMANDA</div>
+        <div class="content paragraph">{{.DescricaoDemanda}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">PROCEDIMENTO</div>
+        <div class="content paragraph">{{.Procedimento}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">ANÁLISE</div>
+        <div class="content paragraph">{{.Analise}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">CONCLUSÃO</div>
+        <div class="content paragraph">{{.Conclusao}}</div>
+    </div>
+
+    <div class="references">
+        <div class="section-title">REFERÊNCIAS</div>
+        {{range .Referencias}}
+        <div class="reference-item">{{.}}</div>
+        {{end}}
+    </div>
+
+    <div class="signature">
+        <div style="margin-top: 30px;">
+            <div class="signature-line">{{.PsicologoNome}}</div>
+            <div>CRP {{.PsicologoCRP}}</div>
+        </div>
+
+        <div class="paragraph" style="text-align: center; margin-top: 40px;">
+            {{.DiaAssinatura}}, {{.DiaMesAssinatura}} de {{.MesAssinatura}} de {{.AnoAssinatura}}
+        </div>
+    </div>
+</body>
+</html> 

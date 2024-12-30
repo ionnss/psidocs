@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato de Prestação de Serviços de Psicoterapia Presencial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 40px;
+        }
+        .paragraph {
+            margin-bottom: 30px;
+            text-align: justify;
+            line-height: 1.8;
+        }
+        .clause {
+            margin-bottom: 25px;
+            text-align: justify;
+            line-height: 1.8;
+        }
+        .clause-title {
+            font-weight: bold;
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+        .signatures {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+            page-break-inside: avoid;
+        }
+        .signature-line {
+            width: 200px;
+            border-top: 1px solid black;
+            text-align: center;
+            padding-top: 10px;
+            margin-top: 40px;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            @page {
+                margin: 2.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE PSICOTERAPIA PRESENCIAL</h1>
+
+    <div class="paragraph">
+        <strong>Dados do(a) Contratante:</strong> {{.PatientNome}}, {{.PatientNacionalidade}}, {{.PatientEstadoCivil}}, 
+        cadastrado sob o RG {{.PatientRG}} e CPF {{.PatientCPF}}, residente da cidade {{.PatientCidade}}, 
+        {{.PatientRua}} Nº {{.PatientNumero}}, CEP {{.PatientCEP}} e telefone {{.PatientTelefone}}.
+    </div>
+
+    <div class="paragraph">
+        <strong>Dados do(a) Contratado(a):</strong> {{.PsicologoNome}}, {{.PsicologoNacionalidade}}, {{.PsicologoEstadoCivil}}, 
+        psicólogo com registro {{.PsicologoCRP}}, cadastrado sob o RG {{.PsicologoRG}} e CPF {{.PsicologoCPF}}, 
+        com clínica situada na cidade de {{.PsicologoCidade}}, Rua {{.PsicologoRua}}, 
+        CEP {{.PsicologoCEP}} Nº {{.PsicologoNumero}} e telefone {{.PsicologoTelefone}}.
+    </div>
+
+    <div class="clause-title">Do objetivo do contrato</div>
+    <div class="clause">
+        Cláusula 1ª. Este contrato tem como objetivo definir direitos e deveres da contratante e contratada 
+        na prestação de serviços de psicologia clínica na modalidade presencial, a serem realizados no endereço 
+        profissional da contratada.
+    </div>
+
+    <div class="clause-title">Das bases legais</div>
+    <div class="clause">
+        Cláusula 2ª. Os serviços serão prestados de acordo com a lei 8.078/90, no que diz respeito à prestação 
+        de serviços por profissionais liberais e com o Código de Ética Profissional do Psicólogo.
+    </div>
+
+    <div class="clause-title">Da abordagem</div>
+    <div class="clause">
+        Cláusula 3ª. As sessões de terapia seguirão a abordagem {{.Abordagem}}, cabendo ao contratado utilizar 
+        recursos e técnicas adequados para exercer de maneira plena o serviço de psicoterapia.
+    </div>
+
+    <div class="clause-title">Da duração e periodicidade</div>
+    <div class="clause">
+        Cláusula 4ª. O presente contrato tem tempo de duração compreendido entre a data de {{.DataInicio}} 
+        e o dia {{.DataFimTratamento}}.
+    </div>
+
+    <div class="clause">
+        Cláusula 5ª. As sessões serão realizadas semanalmente, nas {{.DiaSemana}} no horário das {{.HorarioSessao}}, 
+        com duração de 50 minutos cada. Não será possível estender o horário para além do previsto, mesmo em caso 
+        de atraso do Patient.
+    </div>
+
+    <div class="clause">
+        Cláusula 6ª. Caso o Contratante fique impossibilitado de comparecer às sessões, é sua responsabilidade 
+        informar a Contratada com até 24 horas de antecedência. Do contrário, os honorários serão cobrados integralmente.
+    </div>
+
+    <div class="clause-title">Dos honorários</div>
+    <div class="clause">
+        Cláusula 7ª. Fica definido o valor de R$ {{.ValorSessao}} por sessão.
+    </div>
+
+    <div class="clause-title">Dos métodos de pagamento</div>
+    <div class="clause">
+        Cláusula 8ª. Os honorários devidos à contratada devem ser pagos até o dia {{.DataLimitePagamento}} 
+        de cada mês ou ao fim de cada sessão, por meio de {{.MetodosPagamento}}.
+    </div>
+
+    <div class="clause-title">Do período de férias</div>
+    <div class="clause">
+        Cláusula 9ª. Fica definido o período compreendido entre os dias {{.DataInicioFerias}} e {{.DataFimFerias}} 
+        como sendo o período de férias de ambas as partes.
+    </div>
+
+    <div class="clause-title">Da preservação do sigilo</div>
+    <div class="clause">
+        Cláusula 10ª. É vetado à Contratada compartilhar quaisquer informações do Contratado com terceiros, 
+        exceto em casos que a Contratada identifique a necessidade ao observar infração de leis, mas deve fazer 
+        isso visando o menor prejuízo, como previsto no Código de Ética Profissional do Psicólogo.
+    </div>
+
+    <div class="clause-title">Da quebra de contrato</div>
+    <div class="clause">
+        Cláusula 11ª. Fica permitida a rescisão contratual por ambas as partes, desde que haja comunicação 
+        prévia em caso de sessões já agendadas.
+    </div>
+
+    <div class="clause">
+        Cláusula 12ª. Caso o Contratante não compareça a {{.NumeroFaltas}} sessões seguidas sem informar a 
+        contratada, este contrato fica automaticamente rescindido.
+    </div>
+
+    <div class="paragraph" style="margin-top: 40px;">
+        Com a assinatura, ambas as partes atestam que tiveram a oportunidade de ler, discutir, definir e 
+        concordar com todas cláusulas deste contrato.
+    </div>
+
+    <div class="paragraph" style="text-align: center; margin-top: 40px;">
+        {{.DataAssinatura}}
+    </div>
+
+    <div class="signatures">
+        <div class="signature-line">Contratante</div>
+        <div class="signature-line">Contratada(o)</div>
+    </div>
+</body>
+</html> 

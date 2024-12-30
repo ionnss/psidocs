@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Psicológico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .content {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        .field {
+            margin-bottom: 10px;
+        }
+        .field-label {
+            font-weight: bold;
+            display: inline-block;
+            min-width: 150px;
+        }
+        .warning {
+            margin: 30px 0;
+            font-style: italic;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .signature-line {
+            width: 200px;
+            border-top: 1px solid black;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+        .paragraph {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            @page {
+                margin: 2.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center;">RELATÓRIO PSICOLÓGICO</h1>
+    <br>
+
+    <h2>1. IDENTIFICAÇÃO</h2>
+
+    Nome do(a) Paciente: <strong>{{.PatientNome}}</strong>
+    <br>
+    Data de Nascimento: <strong>{{.PatientDataNascimento}}</strong>
+    <br>
+    Documento de Identidade: 
+    <br>
+
+    <br>
+    <h2>2. PERÍODO DE ACOMPANHAMENTO</h2>
+
+    Data Inicial: <strong>{{.DataInicioAcompanhamento}}</strong>
+    <br>
+    Data Final: <strong>{{.DataFimAcompanhamento}}</strong>
+    <br>
+
+    <br>
+    <h2>3. DEMANDA INICIAL</h2>
+    <br>
+
+    <br>
+    <h2>4. EVOLUÇÃO DO PROCESSO</h2>
+    <br>
+
+    <br>
+    <h2>5. RECURSOS UTILIZADOS</h2>
+    <br>
+
+    <br>
+    <h2>6. RESULTADOS E ENCAMINHAMENTOS</h2>
+    <br>
+
+    <br>
+    <h2>7. FINALIDADE DO RELATÓRIO</h2>
+    <br>
+
+    <br>
+    <div style="text-align: center;">
+    CIDADE, DIA de MÊS de ANO
+
+    <br>
+    <br>
+    _____________________________________
+    <br>
+
+    <br>
+    Nome Completo - CRP <strong>{{.PsicologoNome}}</strong>
+    </div>
+
+    <div class="section">
+        <div class="section-title">IDENTIFICAÇÃO</div>
+        <div class="field">
+            <span class="field-label">Nome:</span> <strong>{{.PatientNome}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Data de nascimento:</span> <strong>{{.PatientDataNascimento}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Idade:</span> <strong>{{.PatientIdade}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Escolaridade:</span> <strong>{{.PatientEscolaridade}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Nome do solicitante:</span> <strong>{{.Solicitante}}</strong>
+        </div>
+        <div class="field">
+            <span class="field-label">Finalidade:</span> <strong>{{.Finalidade}}</strong>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">PERÍODO DO ACOMPANHAMENTO</div>
+        <div class="content paragraph">
+            Período de <strong>{{.DataInicioAcompanhamento}}</strong> a <strong>{{.DataFimAcompanhamento}}</strong>, 
+            com frequência <strong>{{.FrequenciaAtendimento}}</strong> e duração de <strong>{{.DuracaoSessoes}}</strong> por sessão.
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">DEMANDA INICIAL</div>
+        <div class="content paragraph">{{.DemandaInicial}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">EVOLUÇÃO DO PROCESSO</div>
+        <div class="content paragraph">{{.EvolucaoProcesso}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">RECURSOS E INSTRUMENTOS UTILIZADOS</div>
+        <div class="content paragraph">{{.RecursosUtilizados}}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">RESULTADOS E ENCAMINHAMENTOS</div>
+        <div class="content paragraph">{{.ResultadosEncaminhamentos}}</div>
+    </div>
+
+    <div class="warning paragraph">
+        Este relatório tem caráter sigiloso, conforme previsto no Código de Ética Profissional 
+        do Psicólogo, e destina-se exclusivamente ao uso profissional para <strong>{{.FinalidadeRelatorio}}</strong>. 
+        É vedada sua utilização para outros fins ou sua divulgação a terceiros.
+    </div>
+
+    <div class="signature">
+        <div style="margin-top: 30px;">
+            <div class="signature-line">{{.PsicologoNome}}</div>
+            <div>CRP {{.PsicologoCRP}}</div>
+        </div>
+
+        <div class="paragraph" style="text-align: center; margin-top: 40px;">
+            {{.DiaAssinatura}}, {{.DiaMesAssinatura}} de {{.MesAssinatura}} de {{.AnoAssinatura}}
+        </div>
+    </div>
+</body>
+</html> 

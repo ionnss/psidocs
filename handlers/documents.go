@@ -955,3 +955,44 @@ func DeleteDocumentHandler(w http.ResponseWriter, r *http.Request) {
 		}, 2000);
 	</script>`, pacienteID)))
 }
+
+// TemplateContentHandler retorna o conteúdo do template selecionado
+func TemplateContentHandler(w http.ResponseWriter, r *http.Request) {
+	templateName := r.URL.Query().Get("value")
+	log.Printf("Template solicitado: %s", templateName)
+
+	if templateName == "" {
+		log.Printf("Template não especificado")
+		http.Error(w, "Template não especificado", http.StatusBadRequest)
+		return
+	}
+
+	// Determinar o caminho do template baseado no nome
+	var templatePath string
+	if strings.Contains(templateName, "contrato") {
+		// Se for um contrato, usar o diretório de contratos e extrair apenas o tipo (presencial/online)
+		parts := strings.Split(templateName, "-")
+		if len(parts) == 2 {
+			templatePath = fmt.Sprintf("templates/documents/contracts/personalized/%s.html", parts[1])
+		}
+	} else {
+		// Se for um documento psicológico, usar o diretório correspondente
+		templatePath = fmt.Sprintf("templates/documents/psychological-documents/personalized/%s.html", templateName)
+	}
+
+	log.Printf("Tentando ler arquivo: %s", templatePath)
+
+	content, err := os.ReadFile(templatePath)
+	if err != nil {
+		log.Printf("Erro ao ler template %s: %v", templatePath, err)
+		http.Error(w, "Template não encontrado", http.StatusNotFound)
+		return
+	}
+
+	log.Printf("Template carregado com sucesso. Tamanho: %d bytes", len(content))
+
+	// Configurar os headers para servir HTML corretamente
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(content)
+	log.Printf("Template enviado com sucesso")
+}

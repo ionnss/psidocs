@@ -1,43 +1,49 @@
 <!-- Include stylesheet -->
-<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet">
 
-<!-- Create the editor container -->
-<div id="editor">
-    <h1>Relatório Psicológico</h1>
-    <p><strong>Data:</strong> </p>
-    <p><strong>Paciente:</strong> </p>
-    <p><br></p>
-    <h2>1. Identificação</h2>
-    <p>[Informações de identificação do paciente]</p>
-    <p><br></p>
-    <h2>2. Demanda</h2>
-    <p>[Motivo do atendimento/avaliação]</p>
-    <p><br></p>
-    <h2>3. Análise</h2>
-    <p>[Análise do caso]</p>
-    <p><br></p>
-    <h2>4. Conclusão</h2>
-    <p>[Conclusões e recomendações]</p>
+<!-- Main container -->
+<div class="document-editor">
+    <!-- Template selector -->
+    <div class="mb-3">
+        <select class="form-control bg-dark text-light" id="template-selector">
+            <option value="">Selecione um template...</option>
+            <optgroup label="Contratos">
+                <option value="contrato-presencial">Contrato Psicoterapia Presencial</option>
+                <option value="contrato-online">Contrato Psicoterapia Online</option>
+            </optgroup>
+            <optgroup label="Documentos Psicológicos">
+                <option value="anamnese">Anamnese</option>
+                <option value="atestado">Atestado</option>
+                <option value="declaracao">Declaração</option>
+                <option value="laudo">Laudo</option>
+                <option value="relatorio">Relatório</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <!-- Editor container -->
+    <div id="editor">
+        <p>Selecione um template acima ou comece a escrever seu documento...</p>
+    </div>
 </div>
 
 <style>
-    #editor {
-        width: 100%;
-        height: 100vh;
-        margin: 0;
-        background: white;
+    .document-editor {
         display: flex;
         flex-direction: column;
+        height: calc(100vh - 100px);
     }
 
-    /* Container do editor */
-    .ql-container.ql-snow {
-        flex: 1;
-        border: none !important;
-        font-size: 16px;
+    #template-selector {
+        border: 1px solid #444;
     }
 
-    /* Barra de ferramentas */
+    #editor {
+        flex-grow: 1;
+        background: white;
+        height: 100%;
+    }
+
     .ql-toolbar.ql-snow {
         background: #2f3742;
         border: none !important;
@@ -47,7 +53,12 @@
         z-index: 1000;
     }
 
-    /* Cores dos ícones */
+    .ql-container.ql-snow {
+        border: none !important;
+        font-size: 16px;
+        height: calc(100% - 42px);
+    }
+
     .ql-snow .ql-stroke {
         stroke: #fff !important;
     }
@@ -66,95 +77,64 @@
     }
 </style>
 
+<!-- Include Quill library -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.min.js"></script>
+
 <script>
-    let editorInstance = null;  // Variável para controlar a instância do editor
-
-    // Função para carregar script dinamicamente
-    function loadScript(url) {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = url;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
+    document.addEventListener('htmx:afterSettle', function() {
+        // Inicializar o editor
+        const editor = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'align': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    ['clean']
+                ]
+            }
         });
-    }
 
-    // Função de inicialização do Quill
-    function initQuill() {
-        console.log('Iniciando Quill');
-        // Se já existe uma instância, não cria outra
-        if (editorInstance) {
-            console.log('Editor já está inicializado');
-            return;
-        }
+        // Configurar o seletor de template
+        const templateSelector = document.getElementById('template-selector');
+        templateSelector.addEventListener('change', function(e) {
+            const templateName = e.target.value;
+            if (!templateName) return;
 
-        if (typeof Quill === 'undefined') {
-            console.log('Quill não está definido, carregando script...');
-            loadScript('https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js')
-                .then(() => {
-                    console.log('Script do Quill carregado');
-                    createEditor();
+            // Carregar o template
+            fetch(`/documents/template-content?value=${templateName}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar template');
+                    }
+                    return response.text();
+                })
+                .then(content => {
+                    // Processar o conteúdo HTML
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(content, 'text/html');
+                    
+                    // Extrair o conteúdo do body, excluindo scripts e estilos
+                    const body = doc.body;
+                    const scripts = body.getElementsByTagName('script');
+                    const styles = body.getElementsByTagName('style');
+                    
+                    // Remover scripts e estilos
+                    Array.from(scripts).forEach(script => script.remove());
+                    Array.from(styles).forEach(style => style.remove());
+                    
+                    // Pegar todo o conteúdo do body
+                    const processedContent = body.innerHTML;
+
+                    // Atualizar o editor
+                    editor.setText(''); // Limpar o editor
+                    editor.clipboard.dangerouslyPasteHTML(processedContent);
                 })
                 .catch(error => {
-                    console.error('Erro ao carregar script do Quill:', error);
+                    console.error('Erro ao carregar template:', error);
                 });
-        } else {
-            console.log('Quill já está definido');
-            createEditor();
-        }
-    }
-
-    // Função para criar o editor
-    function createEditor() {
-        try {
-            // Verifica se já existe uma instância
-            if (editorInstance) {
-                console.log('Editor já existe');
-                return;
-            }
-
-            // Remove qualquer toolbar existente antes de criar uma nova
-            const existingToolbars = document.querySelectorAll('.ql-toolbar');
-            existingToolbars.forEach(toolbar => toolbar.remove());
-
-            editorInstance = new Quill('#editor', {
-                theme: 'snow',
-                modules: {
-                    toolbar: [
-                        [{ 'header': [1, 2, false] }],
-                        ['bold', 'italic', 'underline'],
-                        [{ 'align': [] }],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        [{ 'indent': '-1'}, { 'indent': '+1' }],
-                        ['clean']
-                    ]
-                }
-            });
-            console.log('Quill inicializado com sucesso');
-        } catch (error) {
-            console.error('Erro ao inicializar Quill:', error);
-        }
-    }
-
-    // Limpa a instância existente quando o conteúdo é removido
-    document.addEventListener('htmx:beforeSwap', function(event) {
-        if (editorInstance) {
-            console.log('Limpando instância anterior do editor');
-            editorInstance = null;
-        }
-    });
-
-    // Inicializa quando o DOM estiver pronto
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initQuill);
-    } else {
-        initQuill();
-    }
-
-    // Também inicializa após o HTMX carregar o conteúdo
-    document.addEventListener('htmx:afterSwap', function(event) {
-        console.log('htmx:afterSwap triggered');
-        initQuill();
+        });
     });
 </script> 
