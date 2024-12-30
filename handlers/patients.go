@@ -985,10 +985,23 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Obter contratos do paciente
 	rows, err := db.Query(`
-		SELECT id, tipo, nome, conteudo, requer_assinatura, created_at, updated_at
-		FROM documents 
-		WHERE paciente_id = $1 AND psicologo_id = $2 AND tipo LIKE 'contracts/%'
-		ORDER BY updated_at DESC`,
+		SELECT 
+			d.id, 
+			d.tipo, 
+			d.nome, 
+			d.conteudo, 
+			d.requer_assinatura, 
+			d.created_at, 
+			d.updated_at,
+			p.nome as patient_name
+		FROM documents d
+		JOIN patients p ON d.paciente_id = p.id
+		WHERE d.paciente_id = $1 AND d.psicologo_id = $2 
+		AND (
+			d.tipo LIKE 'contracts/%' OR 
+			d.tipo IN ('presencial', 'online')
+		)
+		ORDER BY d.updated_at DESC`,
 		patientID, psicologoID,
 	)
 	if err != nil {
@@ -1002,13 +1015,21 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var doc models.Document
 		err := rows.Scan(
-			&doc.ID, &doc.Tipo, &doc.Nome, &doc.Conteudo,
-			&doc.RequerAssinatura, &doc.CreatedAt, &doc.UpdatedAt,
+			&doc.ID,
+			&doc.Tipo,
+			&doc.Nome,
+			&doc.Conteudo,
+			&doc.RequerAssinatura,
+			&doc.CreatedAt,
+			&doc.UpdatedAt,
+			&doc.PatientName,
 		)
 		if err != nil {
 			log.Printf("Erro ao ler contrato: %v", err)
 			continue
 		}
+		// Formatar o tipo do documento
+		doc.Tipo = formatDocumentType(doc.Tipo)
 		// Converter timestamps do documento para timezone do Brasil
 		if brazilLoc != nil { // Só converte se o timezone foi carregado com sucesso
 			doc.CreatedAt = doc.CreatedAt.In(brazilLoc)
@@ -1019,14 +1040,23 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Obter documentos psicológicos do paciente
 	rows, err = db.Query(`
-		SELECT id, tipo, nome, conteudo, requer_assinatura, created_at, updated_at
-		FROM documents 
-		WHERE paciente_id = $1 AND psicologo_id = $2 
+		SELECT 
+			d.id, 
+			d.tipo, 
+			d.nome, 
+			d.conteudo, 
+			d.requer_assinatura, 
+			d.created_at, 
+			d.updated_at,
+			p.nome as patient_name
+		FROM documents d
+		JOIN patients p ON d.paciente_id = p.id
+		WHERE d.paciente_id = $1 AND d.psicologo_id = $2 
 		AND (
-			tipo LIKE 'psychological-documents/%' OR 
-			tipo IN ('anamnese', 'atestado', 'declaracao', 'laudo', 'relatorio')
+			d.tipo LIKE 'psychological-documents/%' OR 
+			d.tipo IN ('anamnese', 'atestado', 'declaracao', 'laudo', 'relatorio')
 		)
-		ORDER BY updated_at DESC`,
+		ORDER BY d.updated_at DESC`,
 		patientID, psicologoID,
 	)
 	if err != nil {
@@ -1040,8 +1070,14 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var doc models.Document
 		err := rows.Scan(
-			&doc.ID, &doc.Tipo, &doc.Nome, &doc.Conteudo,
-			&doc.RequerAssinatura, &doc.CreatedAt, &doc.UpdatedAt,
+			&doc.ID,
+			&doc.Tipo,
+			&doc.Nome,
+			&doc.Conteudo,
+			&doc.RequerAssinatura,
+			&doc.CreatedAt,
+			&doc.UpdatedAt,
+			&doc.PatientName,
 		)
 		if err != nil {
 			log.Printf("Erro ao ler documento psicológico: %v", err)

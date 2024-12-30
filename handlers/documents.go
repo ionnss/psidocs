@@ -797,7 +797,25 @@ func DocumentPreviewHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Preparar dados para o template
 	data := map[string]interface{}{
-		"Document": doc,
+		"Document": struct {
+			ID               int
+			Tipo             string
+			Nome             string
+			Conteudo         template.HTML
+			RequerAssinatura bool
+			PatientName      string
+			CreatedAt        time.Time
+			UpdatedAt        time.Time
+		}{
+			ID:               doc.ID,
+			Tipo:             doc.Tipo,
+			Nome:             doc.Nome,
+			Conteudo:         template.HTML(doc.Conteudo),
+			RequerAssinatura: doc.RequerAssinatura,
+			PatientName:      doc.PatientName,
+			CreatedAt:        doc.CreatedAt,
+			UpdatedAt:        doc.UpdatedAt,
+		},
 	}
 
 	// Se for uma requisição HTMX
@@ -836,4 +854,104 @@ type Document struct {
 	PatientName      string // Nome do paciente (usado para exibição)
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+}
+
+// DeleteDocumentHandler exclui um documento
+func DeleteDocumentHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "DELETE" {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Obter ID do documento da URL
+	vars := mux.Vars(r)
+	documentID := vars["id"]
+
+	// Obter email do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Obter ID do paciente antes de excluir o documento
+	var pacienteID string
+	err = db.QueryRow(`
+		SELECT paciente_id 
+		FROM documents 
+		WHERE id = $1 AND psicologo_id = $2`,
+		documentID, psicologoID,
+	).Scan(&pacienteID)
+
+	if err != nil {
+		log.Printf("Erro ao obter ID do paciente: %v", err)
+		http.Error(w, "Erro ao obter ID do paciente", http.StatusInternalServerError)
+		return
+	}
+
+	// Excluir documento (apenas se pertencer ao psicólogo)
+	result, err := db.Exec(`
+		DELETE FROM documents 
+		WHERE id = $1 AND psicologo_id = $2`,
+		documentID, psicologoID,
+	)
+
+	if err != nil {
+		log.Printf("Erro ao excluir documento: %v", err)
+		w.Write([]byte(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			<i class="bi bi-exclamation-triangle-fill me-2"></i>
+			Erro ao excluir documento. Por favor, tente novamente.
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		</div>`))
+		return
+	}
+
+	// Verificar se algum registro foi excluído
+	rows, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("Erro ao verificar linhas afetadas: %v", err)
+		http.Error(w, "Erro ao verificar exclusão", http.StatusInternalServerError)
+		return
+	}
+
+	if rows == 0 {
+		log.Printf("Nenhum documento encontrado para excluir")
+		w.Write([]byte(`<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			<i class="bi bi-exclamation-triangle-fill me-2"></i>
+			Documento não encontrado
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		</div>`))
+		return
+	}
+
+	// Retornar mensagem de sucesso
+	w.Write([]byte(fmt.Sprintf(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+		<i class="bi bi-check-circle-fill me-2"></i>
+		Documento excluído com sucesso!
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+	</div>
+	<script>
+		setTimeout(function() {
+			htmx.ajax('GET', '/patients/%s', {target: '#content-area'});
+		}, 2000);
+	</script>`, pacienteID)))
 }
