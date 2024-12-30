@@ -559,3 +559,77 @@ func DocumentEditorHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
 	}
 }
+
+// PersonalizedDocumentEditorHandler renderiza a página do editor personalizado de documentos
+func PersonalizedDocumentEditorHandler(w http.ResponseWriter, r *http.Request) {
+	// Obter dados do psicólogo da sessão
+	email, _, err := GetCurrentUserInfo(w, r)
+	if err != nil {
+		log.Printf("Erro ao obter informações do usuário: %v", err)
+		http.Error(w, "Erro ao obter informações do usuário", http.StatusUnauthorized)
+		return
+	}
+
+	// Conectar ao banco
+	db, err := db.Connect()
+	if err != nil {
+		log.Printf("Erro ao conectar ao banco: %v", err)
+		http.Error(w, "Erro ao conectar ao banco de dados", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Obter ID do psicólogo
+	var psicologoID int
+	err = db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&psicologoID)
+	if err != nil {
+		log.Printf("Erro ao obter ID do psicólogo: %v", err)
+		http.Error(w, "Erro ao obter ID do psicólogo", http.StatusInternalServerError)
+		return
+	}
+
+	// Obter dados do paciente do contexto atual
+	vars := mux.Vars(r)
+	patientID := vars["id"]
+
+	var patient Patient
+	err = db.QueryRow(`
+		SELECT id, nome 
+		FROM patients 
+		WHERE id = $1 AND psicologo_id = $2`,
+		patientID, psicologoID,
+	).Scan(&patient.ID, &patient.Nome)
+
+	if err != nil {
+		log.Printf("Erro ao obter dados do paciente: %v", err)
+		http.Error(w, "Erro ao obter dados do paciente", http.StatusInternalServerError)
+		return
+	}
+
+	// Preparar dados para o template
+	data := map[string]interface{}{
+		"Patient": patient,
+	}
+
+	// Se for uma requisição HTMX
+	if r.Header.Get("HX-Request") == "true" {
+		tmpl := template.Must(template.ParseFiles("templates/view/partials/documents_personalized_editor.html"))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			log.Printf("Erro ao renderizar template: %v", err)
+			http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Se não for HTMX, renderiza o layout completo
+	tmpl := template.Must(template.ParseFiles(
+		"templates/view/dashboard_layout.html",
+		"templates/view/partials/documents_personalized_editor.html",
+	))
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		log.Printf("Erro ao renderizar template: %v", err)
+		http.Error(w, "Erro ao renderizar template", http.StatusInternalServerError)
+	}
+}

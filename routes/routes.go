@@ -82,6 +82,7 @@ func ConfigureRoutes(r *mux.Router, db *sql.DB) {
 	r.Handle("/patients/{id:[0-9]+}/unarchive", handlers.AuthMiddleware(http.HandlerFunc(handlers.UnarchivePatientHandler))).Methods("POST")
 	// Rotas de documentos
 	r.Handle("/patients/{id:[0-9]+}/documents/editor", handlers.AuthMiddleware(http.HandlerFunc(handlers.DocumentEditorHandler))).Methods("GET")
+	r.Handle("/patients/{id:[0-9]+}/documents/personalized/editor", handlers.AuthMiddleware(http.HandlerFunc(handlers.PersonalizedDocumentEditorHandler))).Methods("GET")
 	r.Handle("/patients/{id:[0-9]+}/documents/template", handlers.AuthMiddleware(http.HandlerFunc(handlers.DocumentTemplateHandler))).Methods("GET")
 	r.Handle("/documents/save", handlers.AuthMiddleware(http.HandlerFunc(handlers.SaveDocumentHandler))).Methods("POST")
 	//r.Handle("/documents/{id:[0-9]+}/preview", handlers.AuthMiddleware(http.HandlerFunc(handlers.DocumentPreviewHandler))).Methods("GET")
