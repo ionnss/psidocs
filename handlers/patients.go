@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"psidocs/db"
-	"psidocs/models"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -1011,9 +1010,9 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	var contracts []models.Document
+	var contracts []Document
 	for rows.Next() {
-		var doc models.Document
+		var doc Document
 		err := rows.Scan(
 			&doc.ID,
 			&doc.Tipo,
@@ -1066,9 +1065,9 @@ func GetPatientProfileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	var psychologicalDocs []models.Document
+	var psychologicalDocs []Document
 	for rows.Next() {
-		var doc models.Document
+		var doc Document
 		err := rows.Scan(
 			&doc.ID,
 			&doc.Tipo,

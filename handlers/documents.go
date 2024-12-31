@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"psidocs/db"
-	"psidocs/models"
 	"strings"
 	"time"
 
@@ -763,7 +762,7 @@ func DocumentPreviewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Buscar documento
-	var doc models.Document
+	var doc Document
 	err = db.QueryRow(`
 		SELECT d.id, d.tipo, d.nome, d.conteudo, d.requer_assinatura, 
 		       d.created_at, d.updated_at, p.nome as patient_name
